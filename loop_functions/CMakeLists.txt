@@ -17,3 +17,5 @@ endif(ARGOS_COMPILE_QTOPENGL)
 if(GALIB_FOUND)
   add_subdirectory(galib_phototaxis_loop_functions)
 endif(GALIB_FOUND)
+
+add_subdirectory(logging_loop_functions)

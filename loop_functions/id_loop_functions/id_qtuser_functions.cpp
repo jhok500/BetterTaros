@@ -11,6 +11,10 @@ CIDQTUserFunctions::CIDQTUserFunctions() {
 /****************************************/
 
 void CIDQTUserFunctions::Draw(CFootBotEntity& c_entity) {
+   /*printf("hello\n");
+   std::cout << "foo" << std::endl;*/
+
+
    /* Disable lighting, so it does not interfere with the chosen text color */
    glDisable(GL_LIGHTING);
    /* Disable face culling to be sure the text is visible from anywhere */
@@ -25,6 +29,9 @@ void CIDQTUserFunctions::Draw(CFootBotEntity& c_entity) {
     */
    GetOpenGLWidget().renderText(0.0, 0.0, 0.3,             // position
                                 c_entity.GetId().c_str()); // text
+
+
+
    /* Restore face culling */
    glEnable(GL_CULL_FACE);
    /* Restore lighting */

@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 2.8.12)
 project(argos3_examples)
+set(CMAKE_CONFIGURATION_TYPES "Debug" CACHE STRING "" FORCE)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+if(CMAKE_CURRENT_BINARY_DIR MATCHES generated)
+  EXEC_PROGRAM(rm ARGS -rf ${CMAKE_SOURCE_DIR}/build)
+  EXEC_PROGRAM(ln ARGS -s ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_SOURCE_DIR}/build)
+endif(CMAKE_CURRENT_BINARY_DIR MATCHES generated)
 
 # Deactivate RPATH for MacOSX
 set(CMAKE_MACOSX_RPATH 0)
@@ -28,6 +34,9 @@ find_package(GSL REQUIRED)
 
 # Find Lua
 find_package(Lua52 REQUIRED)
+
+# Find Boost
+find_package(Boost)
 
 # Set ARGoS include dir
 include_directories(${CMAKE_SOURCE_DIR} ${ARGOS_INCLUDE_DIRS} ${GSL_INCLUDE_DIR} ${LUA_INCLUDE_DIR})

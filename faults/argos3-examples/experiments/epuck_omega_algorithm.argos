@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+
+<argos-configuration>
+	
+	<framework>
+		<system threads="0"/>
+		<experiment length=400
+					ticks_per_second=10
+					random_seed=1/>
+	</framework>
+
+	<controllers>
+		<epuck_omega_algorithm_controller id="epuck_omega_algorithm_controller"
+										  library="build/controllers/epuck_omega_algorithm/libepuck_omega_algorithm">
+			<actuators>
+				<differential_steering implementation="default" noise_std_dev="0.1"/>
+				<leds implementation="default" medium="leds"/>
+				<range_and_bearing implementation="default" medium="rab"/>
+			</actuators>
+
+			<sensors>
+				<proximity implementation="default" show_rays="false"/>
+				<range_and_bearing implementation="medium" medium="rab" show_rays="false" noise_std_dev="0" packet_drop_prob="0"/>
+			</sensors>
+
+			<params omega=3 avoidance_radius=0.2 draw_id=false draw_sensor_range="ep0,ep3,ep7"/>
+		</epuck_omega_algorithm_controller>
+	</controllers>
+
+	<faults>
+		<!--<random time=0 id="random"/>-->
+		 <motor_complete time=0 id="random"/>
+		<!-- <motor_partial time=0 id="random"/> -->
+		<!-- <controller time=0 id="random"/> -->
+		<!-- <sensor_complete time=0 id="random"/> -->
+		<!-- <sensor_partial time=0 id="random"/> -->
+		<!-- <communication time=0 id="random"/> -->
+		<!-- <power time=0 id="random"/> -->
+	</faults>
+
+	<arena size="4, 4, 1" center="0, 0, 0">
+
+		<box id="wall_north" size="3, 0.01, 0.1" movable="false">
+			<body position="0, 1.5, 0" orientation="0, 0, 0"/>
+		</box>
+		<box id="wall_south" size="3, 0.01, 0.1" movable="false">
+			<body position="0, -1.5, 0" orientation="0, 0, 0"/>
+		</box>
+		<box id="wall_east" size="0.01, 3, 0.1" movable="false">
+			<body position="1.5, 0, 0" orientation="0, 0, 0"/>
+		</box>
+		<box id="wall_west" size="0.01, 3, 0.1" movable="false">
+			<body position="-1.5, 0, 0" orientation="0, 0, 0"/>
+		</box>
+
+		<distribute>
+			<position method="uniform" min="-0.4, -0.4, 0" max="0.4, 0.4, 0" />
+			<orientation method="uniform" min="0, 0, 0" max="360, 0, 0" />
+			<entity quantity="10" max_trials="100">
+				<e-puck id="ep" rab_range="0.4" rab_data_size="1">
+					<controller config="epuck_omega_algorithm_controller" />
+				</e-puck>
+			</entity>
+		</distribute>
+
+	</arena>
+
+	<physics_engines>
+		<dynamics2d id="dyn2d"/>
+	</physics_engines>
+
+	<media>
+		<led id="leds"/>
+		<range_and_bearing id="rab"/>
+	</media>
+
+	<loop_functions library="build/loop_functions/epuck_omega_algorithm_loop_functions/libepuck_omega_algorithm_loop_functions"
+		label="epuck_omega_algorithm_loop_functions">
+		<simulation_parameters output_folder="default"/>
+	</loop_functions>
+
+	<visualization>
+		<qt-opengl>
+			<user_functions library="build/loop_functions/epuck_id_loop_functions/libepuck_id_loop_functions"
+							label="epuck_id_qtuser_functions"/>
+			<camera>
+				<placement idx="0"
+					position="0, -2, 2"
+					look_at="0.001, 0, 0"
+					lens_focal_length="20"/>
+				<placement idx="1"
+					position="0, 0, 10"
+					look_at="0, 0, 0"
+					lens_focal_length="75"/>
+			</camera>
+		</qt-opengl>
+	</visualization>
+
+</argos-configuration>

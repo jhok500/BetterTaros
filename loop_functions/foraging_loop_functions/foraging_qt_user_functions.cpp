@@ -23,7 +23,7 @@ void CForagingQTUserFunctions::Draw(CFootBotEntity& c_entity) {
          CQuaternion(),
          0.1f,
          0.05f,
-         CColor::BLACK);
+         CColor::WHITE);
    }
 }
 

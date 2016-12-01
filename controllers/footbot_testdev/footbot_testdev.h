@@ -28,33 +28,19 @@
 #include <argos3/plugins/robots/generic/control_interface/ci_differential_steering_actuator.h>
 /* Definition of the foot-bot proximity sensor */
 #include <argos3/plugins/robots/foot-bot/control_interface/ci_footbot_proximity_sensor.h>
-#include <argos3/core/simulator/space/space.h>
-#include <argos3/plugins/robots/generic/control_interface/ci_differential_steering_sensor.h>
-#include <argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_sensor.h>
-#include <argos3/plugins/robots/generic/control_interface/ci_range_and_bearing_actuator.h>
-#include <boost/circular_buffer.hpp>
-#include <argos3/plugins/robots/foot-bot/simulator/footbot_entity.h>
-#include <numeric>
-#include <argos3/core/simulator/loop_functions.h>
+
 /*
  * All the ARGoS stuff in the 'argos' namespace.
  * With this statement, you save typing argos:: every time.
  */
 using namespace argos;
-boost::circular_buffer<Real>* FlockData0;
-boost::circular_buffer<Real>* FlockData1;
-boost::circular_buffer<Real>* FlockData2;
-boost::circular_buffer<Real>* FlockCoordData0;
-boost::circular_buffer<Real>* FlockCoordData1;
-boost::circular_buffer<Real>* FlockCoordData2;
+
 /*
  * A controller is simply an implementation of the CCI_Controller class.
  */
 class CFootBotDiffusion : public CCI_Controller {
 
 public:
-
-
 
    /* Class constructor. */
    CFootBotDiffusion();
@@ -69,14 +55,11 @@ public:
     */
    virtual void Init(TConfigurationNode& t_node);
 
-
    /*
     * This function is called once every time step.
     * The length of the time step is set in the XML file.
     */
    virtual void ControlStep();
-    CCI_RangeAndBearingSensor::TReadings GetRABSensorReadings();
-
 
    /*
     * This function resets the controller to its state right after the
@@ -96,42 +79,12 @@ public:
     */
    virtual void Destroy() {}
 
-    inline CCI_DifferentialSteeringSensor::SReading GetWheelVelocity() const {
-
-        return wheel_encoders->GetReading();
-
-    }
-
-    inline CCI_FootBotProximitySensor::TReadings GetProximity() const {
-
-        return m_pcProximity->GetReadings();
-    }
-    inline Real GetSpoofLeftWheelVelocity() const {
-
-        return LeftWheel;
-
-    }
-    inline Real GetSpoofRightWheelVelocity() const {
-
-        return RightWheel;
-
-    }
-
-    Real NoiseLeft;
-    Real NoiseRight;
-
-
 private:
 
    /* Pointer to the differential steering actuator */
    CCI_DifferentialSteeringActuator* m_pcWheels;
    /* Pointer to the foot-bot proximity sensor */
    CCI_FootBotProximitySensor* m_pcProximity;
-    CCI_DifferentialSteeringSensor* wheel_encoders;
-    Real* timestep;
-    CCI_RangeAndBearingActuator* range_and_bearing_actuator;
-    CCI_RangeAndBearingSensor* range_and_bearing_sensor;
-
 
    /*
     * The following variables are used as parameters for the
@@ -156,9 +109,6 @@ private:
    /* Angle tolerance range to go straight.
     * It is set to [-alpha,alpha]. */
    CRange<CRadians> m_cGoStraightAngleRange;
-    CRadians cAngle;
-    Real LeftWheel;
-    Real RightWheel;
 
 };
 

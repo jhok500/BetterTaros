@@ -1,0 +1,11 @@
+link_directories(${CMAKE_BINARY_DIR}/controllers/epuck_omega_algorithm)
+
+add_library(epuck_omega_algorithm_loop_functions MODULE epuck_omega_algorithm_loop_functions.cpp)
+target_link_libraries(epuck_omega_algorithm_loop_functions
+  epuck_omega_algorithm
+  argos3core_simulator
+  argos3plugin_simulator_dynamics2d
+  argos3plugin_simulator_entities
+  argos3plugin_simulator_epuck
+  argos3plugin_simulator_genericrobot
+  argos3plugin_simulator_media)

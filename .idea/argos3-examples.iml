@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CPP_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/logging_loop_functions/logging_loop_functions.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/logging_loop_functions/logging_loop_functions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/logging_loop_functions/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/foraging_loop_functions/foraging_loop_functions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/foraging_loop_functions/foraging_loop_functions.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/foraging_loop_functions/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/foraging_loop_functions/foraging_qt_user_functions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/foraging_loop_functions/foraging_qt_user_functions.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/id_loop_functions/id_qtuser_functions.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/id_loop_functions/id_qtuser_functions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/id_loop_functions/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/mpga_loop_functions/mpga_loop_functions.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/mpga_loop_functions/mpga.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/mpga_loop_functions/mpga_phototaxis_loop_functions.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/mpga_loop_functions/mpga_loop_functions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/mpga_loop_functions/mpga_phototaxis_loop_functions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/mpga_loop_functions/mpga.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/mpga_loop_functions/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/trajectory_loop_functions/trajectory_loop_functions.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/trajectory_loop_functions/trajectory_loop_functions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/trajectory_loop_functions/trajectory_qtuser_functions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/trajectory_loop_functions/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/trajectory_loop_functions/trajectory_qtuser_functions.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/manualcontrol_loop_functions/manualcontrol_qtuser_functions.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/manualcontrol_loop_functions/manualcontrol_qtuser_functions.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loop_functions/manualcontrol_loop_functions/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cmake/FindGALIB.cmake" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/embedding/mpga/main.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/embedding/mpga/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/embedding/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_foraging/footbot_foraging.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_foraging/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_foraging/footbot_foraging.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_flocking/footbot_flocking.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_flocking/footbot_flocking.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_flocking/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_diffusion/footbot_diffusion.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_diffusion/footbot_diffusion.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_diffusion/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_manualcontrol/footbot_manualcontrol.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_manualcontrol/footbot_manualcontrol.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_manualcontrol/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/eyebot_circle/eyebot_circle.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/eyebot_circle/eyebot_circle.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/eyebot_circle/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/eyebot_circle/footbot_circle.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/eyebot_circle/footbot_circle.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_nn/nn/neural_network.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_nn/nn/neural_network.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_nn/nn/perceptron.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_nn/nn/ctrnn_multilayer.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_nn/nn/ctrnn_multilayer.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_nn/nn/perceptron.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_nn/footbot_nn_controller.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_nn/footbot_nn_controller.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_nn/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_synchronization/footbot_synchronization.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_synchronization/footbot_synchronization.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_synchronization/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_gripping/footbot_gripping.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_gripping/footbot_gripping.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/footbot_gripping/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/eyebot_flocking/eyebot_flocking.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/eyebot_flocking/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/eyebot_flocking/eyebot_flocking.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/epuck_obstacleavoidance/epuck_obstacleavoidance.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/epuck_obstacleavoidance/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/epuck_obstacleavoidance/epuck_obstacleavoidance.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/controllers/CMakeLists.txt" isTestSource="false" />
+    </content>
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="Header Search Paths">
+        <CLASSES>
+          <root url="file:///usr/include" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.7/include" />
+          <root url="file:///usr/local/include" />
+        </CLASSES>
+        <SOURCES>
+          <root url="file:///usr/include" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.7/include" />
+          <root url="file:///usr/local/include" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>
