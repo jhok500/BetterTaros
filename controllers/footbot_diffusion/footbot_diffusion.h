@@ -41,12 +41,48 @@
  * With this statement, you save typing argos:: every time.
  */
 using namespace argos;
-boost::circular_buffer<Real>* FlockData0;
-boost::circular_buffer<Real>* FlockData1;
-boost::circular_buffer<Real>* FlockData2;
-boost::circular_buffer<Real>* FlockCoordData0;
-boost::circular_buffer<Real>* FlockCoordData1;
-boost::circular_buffer<Real>* FlockCoordData2;
+
+
+boost::circular_buffer<Real>* FlockData;
+boost::circular_buffer<Real>* FlockCoordData;
+std::vector<Real> FlockRange;
+std::vector<Real> FlockBearing;
+std::vector<Real> FlockID;
+std::vector<Real> FlockHeadings;
+std::vector<Real> FlockCoords;
+std::vector<int> DrRobo;
+std::vector<double> DrDistance;
+std::vector<double> Ambulance;
+int FaultID = 0;
+int DrID = 0;
+int Stop = 0;
+int Stopping = 0;
+int BeginDiagnostic = 0;
+int ping = 0;
+int returnping = 0;
+int RABCompare = 0;
+int RABReturn = 0;
+int TestLM = 0;
+int ConfirmLM = 0;
+int TestRM = 0;
+int ConfirmRM = 0;
+int TestStraight = 0;
+int ConfirmStraight = 0;
+int TestLap = 0;
+int ConfirmLap = 0;
+int Fault = 7;
+int Diagnosis = 0;
+boost::circular_buffer<int>* PingWait;
+boost::circular_buffer<int>* StopWait;
+boost::circular_buffer<int>* RABWait;
+boost::circular_buffer<int>* MotorWait;
+boost::circular_buffer<int>* StraightWait;
+boost::circular_buffer<int>* LapWait;
+std::vector<Real> AggX;
+std::vector<Real> AggY;
+
+Real Drift = 0;
+int timeweight = 0;
 /*
  * A controller is simply an implementation of the CCI_Controller class.
  */
@@ -116,9 +152,19 @@ public:
         return RightWheel;
 
     }
+    inline Real GetFaultID() const {
 
+        return FaultID;
+
+    }
     Real NoiseLeft;
     Real NoiseRight;
+
+    Real hangRight;
+    Real hangLeft;
+    int hang = 0;
+    int power = 0;
+
 
 
 private:

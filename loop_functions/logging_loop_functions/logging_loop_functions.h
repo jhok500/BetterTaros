@@ -23,6 +23,14 @@ public:
     virtual void PreStep();
     virtual void PostStep();
     Real AgentBearing_Sensor;
+    Real AgentX;
+    Real AgentY;
+    int hang;
+    int hangF1;
+    int hangF2;
+    int hangF3;
+    int hangF4;
+    int hangF5;
 
     std::vector<Real> Agent0;
     //std::vector<Real> Agent0Ex;
@@ -32,27 +40,46 @@ public:
     //std::vector<Real> Agent2Ex;
 
     std::vector<Real> Agent;
+    std::vector<Real> AgentCoord;
     std::vector<Real> AgentExt;
+
     std::vector<Real> Indices;
     std::vector<Real> Indices1;
     std::vector<Real> Indices2;
     std::vector<Real> Indices3;
     std::vector<Real> Indices4;
-
-
+    std::ofstream Discrep3;
+    std::ofstream FVout;
+    std::ofstream FVout0;
+    std::ofstream FVout1;
+    std::ofstream FVout2;
+    std::ofstream FVout3;
+    std::ofstream FVout4;
+    std::ofstream FVCoordout;
+    std::ofstream FVCoordout0;
+    std::ofstream FVCoordout1;
+    std::ofstream FVCoordout2;
+    std::ofstream FVCoordout3;
+    std::ofstream FVCoordout4;
+    int Snapshot = 0;
     boost::circular_buffer<Real>* IntCoord;
     boost::circular_buffer<Real>* ExtCoord;
     boost::circular_buffer<Real>* YawSensor;
-    boost::circular_buffer<Real>* WheelDataCurrent;
-    boost::circular_buffer<Real>* RABDataCurrent;
-    boost::circular_buffer<Real>* IntYawCoord;
     boost::circular_buffer<Real>* YawHolder;
-    boost::circular_buffer<Real>* ExtYawCoord;
     boost::circular_buffer<Real>* YawHolder1;
-    boost::circular_buffer<int>* MidCurrent;
-    boost::circular_buffer<int>* CloseCurrent;
-    boost::circular_buffer<int>* ExMidCurrent;
-    boost::circular_buffer<int>* ExCloseCurrent;
+    boost::circular_buffer<int>* FeatureVectors3;
+    boost::circular_buffer<int>* MemoryLog;
+    Real CoordDistance;
+
+    inline Real GetCoordDistanceFeature() const {
+
+        for (int i = 0; i < Agent.size(); i++ ) {
+            if (Agent[i] == -83) {
+                return Agent[i+5];
+            }
+        }
+
+    }
 
 
 
@@ -87,50 +114,8 @@ public:
 
 
 
-    boost::circular_buffer<Real>* IntCoordCurrent0;
-    boost::circular_buffer<Real>* ExtCoordCurrent01;
-    boost::circular_buffer<Real>* ExtCoordCurrent02;
-    boost::circular_buffer<Real>* WheelDataCurrent0;
-    boost::circular_buffer<Real>* RABDataCurrent0;
-    boost::circular_buffer<Real>* IntYawCoord0;
-    boost::circular_buffer<Real>* ExtYawCoord01;
-    boost::circular_buffer<Real>* ExtYawCoord02;
-    boost::circular_buffer<int>* MidCurrent0;
-    boost::circular_buffer<int>* CloseCurrent0;
-    boost::circular_buffer<int>* ExMidCurrent01;
-    boost::circular_buffer<int>* ExMidCurrent02;
-    boost::circular_buffer<int>* ExCloseCurrent01;
-    boost::circular_buffer<int>* ExCloseCurrent02;
 
-    boost::circular_buffer<Real>* IntCoordCurrent1;
-    boost::circular_buffer<Real>* ExtCoordCurrent10;
-    boost::circular_buffer<Real>* ExtCoordCurrent12;
-    boost::circular_buffer<Real>* WheelDataCurrent1;
-    boost::circular_buffer<Real>* RABDataCurrent1;
-    boost::circular_buffer<Real>* IntYawCoord1;
-    boost::circular_buffer<Real>* ExtYawCoord10;
-    boost::circular_buffer<Real>* ExtYawCoord12;
-    boost::circular_buffer<int>* MidCurrent1;
-    boost::circular_buffer<int>* CloseCurrent1;
-    boost::circular_buffer<int>* ExMidCurrent10;
-    boost::circular_buffer<int>* ExMidCurrent12;
-    boost::circular_buffer<int>* ExCloseCurrent10;
-    boost::circular_buffer<int>* ExCloseCurrent12;
 
-    boost::circular_buffer<Real>* IntCoordCurrent2;
-    boost::circular_buffer<Real>* ExtCoordCurrent20;
-    boost::circular_buffer<Real>* ExtCoordCurrent21;
-    boost::circular_buffer<Real>* WheelDataCurrent2;
-    boost::circular_buffer<Real>* RABDataCurrent2;
-    boost::circular_buffer<Real>* IntYawCoord2;
-    boost::circular_buffer<Real>* ExtYawCoord20;
-    boost::circular_buffer<Real>* ExtYawCoord21;
-    boost::circular_buffer<int>* MidCurrent2;
-    boost::circular_buffer<int>* CloseCurrent2;
-    boost::circular_buffer<int>* ExMidCurrent20;
-    boost::circular_buffer<int>* ExMidCurrent21;
-    boost::circular_buffer<int>* ExCloseCurrent20;
-    boost::circular_buffer<int>* ExCloseCurrent21;
 
 
 
