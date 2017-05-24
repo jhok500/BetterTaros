@@ -53,33 +53,46 @@ std::vector<Real> FlockCoords;
 std::vector<int> DrRobo;
 std::vector<double> DrDistance;
 std::vector<double> Ambulance;
+int Stuck = 0;
+int StuckBounce = 0;
+int ClassifierSuccess;
 int FaultID = 0;
 int DrID = 0;
-int Stop = 0;
-int Stopping = 0;
+int MemoryBits = 18;
 int BeginDiagnostic = 0;
-int ping = 0;
-int returnping = 0;
-int RABCompare = 0;
-int RABReturn = 0;
-int TestLM = 0;
-int ConfirmLM = 0;
-int TestRM = 0;
-int ConfirmRM = 0;
-int TestStraight = 0;
-int ConfirmStraight = 0;
-int TestLap = 0;
-int ConfirmLap = 0;
-int Fault = 7;
+int BeginMOT = 0;
+int ClassBounce = 0;
+int Fault = 0;
+int PMFangle = 60;
+int DetectDelay = 100;
+int Behaviour = 0;
 int Diagnosis = 0;
-boost::circular_buffer<int>* PingWait;
-boost::circular_buffer<int>* StopWait;
-boost::circular_buffer<int>* RABWait;
-boost::circular_buffer<int>* MotorWait;
-boost::circular_buffer<int>* StraightWait;
-boost::circular_buffer<int>* LapWait;
+int FaultBounce = 0;
+int BounceCount = 0;
+int BehaviourCount = 0;
+std::vector<Real> Candidates;
+boost::circular_buffer<int>* FeatureVectors3;
+boost::circular_buffer<int>* MemoryLog;
+boost::circular_buffer<Real>* IntCoord;
+boost::circular_buffer<Real>* TrueIntCoord;
+boost::circular_buffer<Real>* YawHolder;
 std::vector<Real> AggX;
 std::vector<Real> AggY;
+std::vector<Real> Update;
+int PowerCycle [2] =  {1,2};
+int SensorReplacement [2] = {3,6};
+int MotorReplacement [2] = {4,5};
+int Detectmin;
+int Detect;
+int Detected;
+int InRange;
+std::ofstream SnapshotFile;
+std::ofstream DataFile;
+int F1hang;
+int F2hang;
+int F3hang;
+int F4hang;
+int F5hang;
 
 Real Drift = 0;
 int timeweight = 0;
@@ -162,8 +175,16 @@ public:
 
     Real hangRight;
     Real hangLeft;
-    int hang = 0;
-    int power = 0;
+
+    CVector2 NeighbourDistance;
+    std::vector<Real> Agent;
+    std::vector<Real> AgentCoord;
+
+    std::vector<Real> Indices;
+    std::vector<Real> Indices1;
+
+    std::vector<Real> Indices4;
+
 
 
 

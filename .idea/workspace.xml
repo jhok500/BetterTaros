@@ -54,42 +54,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="080d713d-287f-4161-81a2-aedee756d743" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Aggregation0(13).fig" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Aggregation0(13).jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Aggregation0(13)edit.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Aggregation0.fig" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Aggregation0.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Aggregation0n1(13).fig" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Aggregation0n1(13).jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Aggregation1(13).fig" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Aggregation1(13).jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Aggregation1.fig" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Aggregation1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Diffusion0(13).fig" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Diffusion0(13).jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Diffusion0(13)edit.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Diffusion0.fig" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Diffusion0.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Diffusion0n1(13).fig" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Diffusion0n1(13).jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Diffusion1(13).fig" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Diffusion1(13).jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Diffusion1.fig" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Diffusion1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Flocking0(13).fig" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Flocking0(13).jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Flocking0(13)edit.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Flocking0.fig" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Flocking0.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Flocking0n1(13).fig" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Flocking0n1(13).jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Flocking1(13).fig" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Flocking1(13).jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Flocking1.fig" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Flocking1.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/agent0.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/agent1.txt" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/agent2.txt" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion.cpp" afterPath="$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion.h" afterPath="$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion.h" />
@@ -115,11 +79,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="logging_loop_functions.cpp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="logging_loop_functions.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/loop_functions/logging_loop_functions/logging_loop_functions.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="749">
-              <caret line="152" column="46" selection-start-line="152" selection-start-column="46" selection-end-line="152" selection-end-column="46" />
+            <state relative-caret-position="378">
+              <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
@@ -130,8 +94,8 @@
       <file leaf-file-name="logging_loop_functions.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/loop_functions/logging_loop_functions/logging_loop_functions.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1134">
-              <caret line="63" column="20" selection-start-line="63" selection-start-column="20" selection-end-line="63" selection-end-column="20" />
+            <state relative-caret-position="594">
+              <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
               <folding>
                 <element signature="e#99#148#0" expanded="true" />
               </folding>
@@ -142,8 +106,8 @@
       <file leaf-file-name="footbot_diffusion.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="522">
-              <caret line="740" column="0" selection-start-line="740" selection-start-column="0" selection-end-line="740" selection-end-column="0" />
+            <state relative-caret-position="4194">
+              <caret line="233" column="5" selection-start-line="233" selection-start-column="5" selection-end-line="233" selection-end-column="5" />
               <folding>
                 <element signature="e#40#70#0" expanded="true" />
               </folding>
@@ -154,8 +118,8 @@
       <file leaf-file-name="footbot_diffusion.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1135">
-              <caret line="80" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
+            <state relative-caret-position="1620">
+              <caret line="90" column="11" selection-start-line="90" selection-start-column="11" selection-end-line="90" selection-end-column="11" />
               <folding>
                 <element signature="e#1040#1129#0" expanded="true" />
               </folding>
@@ -163,11 +127,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="diffusion_10.argos" pinned="false" current-in-tab="false">
+      <file leaf-file-name="diffusion_10.argos" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/experiments/diffusion_10.argos">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="10" column="32" selection-start-line="10" selection-start-column="32" selection-end-line="10" selection-end-column="32" />
+            <state relative-caret-position="414">
+              <caret line="32" column="35" selection-start-line="32" selection-start-column="35" selection-end-line="32" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -191,11 +155,11 @@
         <option value="$PROJECT_DIR$/controllers/footbot_diffusion/CMakeLists.txt" />
         <option value="$PROJECT_DIR$/logging_loop_functions_backup.cpp" />
         <option value="$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion_backup.cpp" />
-        <option value="$PROJECT_DIR$/experiments/diffusion_10.argos" />
-        <option value="$PROJECT_DIR$/loop_functions/logging_loop_functions/logging_loop_functions.cpp" />
         <option value="$PROJECT_DIR$/loop_functions/logging_loop_functions/logging_loop_functions.h" />
+        <option value="$PROJECT_DIR$/loop_functions/logging_loop_functions/logging_loop_functions.cpp" />
         <option value="$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion.h" />
         <option value="$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion.cpp" />
+        <option value="$PROJECT_DIR$/experiments/diffusion_10.argos" />
       </list>
     </option>
   </component>
@@ -466,30 +430,39 @@
     </task>
     <servers />
   </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25094852" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32916668" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960325" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="LuaJ" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TeamCity" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960325" sideWeight="0.5018868" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34587997" sideWeight="0.49811321" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39979655" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32916668" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32946378" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.40081385" sideWeight="0.49811321" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.49811321" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34583333" sideWeight="0.49811321" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32960325" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3375" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39895833" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -817,36 +790,37 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/FeatureVectors.csv" />
     <entry file="file://$PROJECT_DIR$/CoordFeatureVectors.csv" />
+    <entry file="file://$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion_backup.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="7" column="73" selection-start-line="7" selection-start-column="73" selection-end-line="7" selection-end-column="73" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/loop_functions/logging_loop_functions/logging_loop_functions.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1134">
-          <caret line="63" column="20" selection-start-line="63" selection-start-column="20" selection-end-line="63" selection-end-column="20" />
+        <state relative-caret-position="594">
+          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
           <folding>
             <element signature="e#99#148#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion_backup.cpp">
+    <entry file="file://$PROJECT_DIR$/loop_functions/logging_loop_functions/logging_loop_functions.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="7" column="73" selection-start-line="7" selection-start-column="73" selection-end-line="7" selection-end-column="73" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/experiments/diffusion_10.argos">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="10" column="32" selection-start-line="10" selection-start-column="32" selection-end-line="10" selection-end-column="32" />
-          <folding />
+        <state relative-caret-position="378">
+          <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1135">
-          <caret line="80" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
+        <state relative-caret-position="1620">
+          <caret line="90" column="11" selection-start-line="90" selection-start-column="11" selection-end-line="90" selection-end-column="11" />
           <folding>
             <element signature="e#1040#1129#0" expanded="true" />
           </folding>
@@ -855,21 +829,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="522">
-          <caret line="740" column="0" selection-start-line="740" selection-start-column="0" selection-end-line="740" selection-end-column="0" />
+        <state relative-caret-position="4194">
+          <caret line="233" column="5" selection-start-line="233" selection-start-column="5" selection-end-line="233" selection-end-column="5" />
           <folding>
             <element signature="e#40#70#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/loop_functions/logging_loop_functions/logging_loop_functions.cpp">
+    <entry file="file://$PROJECT_DIR$/experiments/diffusion_10.argos">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="749">
-          <caret line="152" column="46" selection-start-line="152" selection-start-column="46" selection-end-line="152" selection-end-column="46" />
-          <folding>
-            <element signature="e#0#35#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="414">
+          <caret line="32" column="35" selection-start-line="32" selection-start-column="35" selection-end-line="32" selection-end-column="35" />
+          <folding />
         </state>
       </provider>
     </entry>
