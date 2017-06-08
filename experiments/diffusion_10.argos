@@ -29,7 +29,7 @@
           <range_and_bearing implementation="medium" medium="rab" show_rays="true" noise_std_dev="0" packet_drop_prob="0"/>
 
       </sensors>
-      <params alpha="7.5" delta="0.1" velocity="5" />
+      <params alpha="7.5" delta="0.1" velocity="5" foldernum="1"/>
     </footbot_diffusion_controller>
 
   </controllers>

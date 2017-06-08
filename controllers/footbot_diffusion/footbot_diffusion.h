@@ -89,6 +89,7 @@ int InRange;
 std::ofstream SnapshotFile;
 std::ofstream DataFile;
 std::ofstream SpartanPercent;
+int foldernum;
 int F1hang;
 int F2hang;
 int F3hang;

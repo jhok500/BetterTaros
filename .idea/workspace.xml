@@ -54,7 +54,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="080d713d-287f-4161-81a2-aedee756d743" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SystemData/ClassBoxplots.jpg" afterPath="$PROJECT_DIR$/SystemData/ClassBoxplots.jpg" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/SystemData/.~lock.Data126.ods#" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion.cpp" afterPath="$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion.h" afterPath="$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion.h" />
@@ -106,8 +106,8 @@
       <file leaf-file-name="footbot_diffusion.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="207">
-              <caret line="1316" column="42" selection-start-line="1316" selection-start-column="42" selection-end-line="1316" selection-end-column="42" />
+            <state relative-caret-position="347">
+              <caret line="1332" column="47" selection-start-line="1332" selection-start-column="47" selection-end-line="1332" selection-end-column="47" />
               <folding>
                 <element signature="e#40#70#0" expanded="true" />
               </folding>
@@ -118,8 +118,8 @@
       <file leaf-file-name="footbot_diffusion.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="90" column="29" selection-start-line="90" selection-start-column="29" selection-end-line="90" selection-end-column="29" />
+            <state relative-caret-position="234">
+              <caret line="91" column="14" selection-start-line="91" selection-start-column="14" selection-end-line="91" selection-end-column="14" />
               <folding>
                 <element signature="e#1040#1129#0" expanded="true" />
               </folding>
@@ -130,8 +130,8 @@
       <file leaf-file-name="diffusion_10.argos" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/experiments/diffusion_10.argos">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="10" column="32" selection-start-line="10" selection-start-column="32" selection-end-line="10" selection-end-column="32" />
+            <state relative-caret-position="414">
+              <caret line="32" column="35" selection-start-line="32" selection-start-column="35" selection-end-line="32" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -807,24 +807,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/experiments/diffusion_10.argos">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="10" column="32" selection-start-line="10" selection-start-column="32" selection-end-line="10" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="90" column="29" selection-start-line="90" selection-start-column="29" selection-end-line="90" selection-end-column="29" />
-          <folding>
-            <element signature="e#1040#1129#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/loop_functions/logging_loop_functions/logging_loop_functions.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="252">
@@ -835,10 +817,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/experiments/diffusion_10.argos">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="414">
+          <caret line="32" column="35" selection-start-line="32" selection-start-column="35" selection-end-line="32" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="91" column="14" selection-start-line="91" selection-start-column="14" selection-end-line="91" selection-end-column="14" />
+          <folding>
+            <element signature="e#1040#1129#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/controllers/footbot_diffusion/footbot_diffusion.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="1316" column="42" selection-start-line="1316" selection-start-column="42" selection-end-line="1316" selection-end-column="42" />
+        <state relative-caret-position="347">
+          <caret line="1332" column="47" selection-start-line="1332" selection-start-column="47" selection-end-line="1332" selection-end-column="47" />
           <folding>
             <element signature="e#40#70#0" expanded="true" />
           </folding>

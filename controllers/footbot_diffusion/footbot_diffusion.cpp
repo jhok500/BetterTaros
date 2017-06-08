@@ -1,5 +1,6 @@
 /* Include the controller definition */
 #include "footbot_diffusion.h"
+#include <sys/stat.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -117,6 +118,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
    m_cGoStraightAngleRange.Set(-ToRadians(m_cAlpha), ToRadians(m_cAlpha));
    GetNodeAttributeOrDefault(t_node, "delta", m_fDelta, m_fDelta);
    GetNodeAttributeOrDefault(t_node, "velocity", m_fWheelVelocity, m_fWheelVelocity);
+   GetNodeAttributeOrDefault(t_node, "foldernum", foldernum, 1);
     /****************************************/
     FlockData = new boost::circular_buffer<double>(2*RobotNumber);
     FlockCoordData = new boost::circular_buffer<double>(3*RobotNumber);
@@ -1311,10 +1313,16 @@ void CFootBotDiffusion::ControlStep() {
         DiagReset = 0;
 
     }
-    if (Time >= 36000) {
+    if (Time == 36000 && ID == 80) {
         Real ClassPer = Class/Total;
         Real ClassFailPer = Fail/(Class+Fail);
-        SpartanPercent.open ("ClassPercent.csv", std::ios_base::app);
+        std::string folderName = std::to_string(foldernum);
+
+        mkdir(folderName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        SpartanPercent.open (folderName + "/ClassFailPercent.csv", std::ios_base::app);
+        SpartanPercent << ClassFailPer;
+        SpartanPercent.close();
+
         std::cout << "Total " << Total << ", Class " << Class << ", Fail " << Fail << std::endl;
         std::cout << "MEMORY % " << ClassPer << ", FAIL % " << ClassFailPer << std::endl;
     }
