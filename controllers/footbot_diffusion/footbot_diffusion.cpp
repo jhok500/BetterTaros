@@ -229,8 +229,18 @@ void CFootBotDiffusion::ControlStep() {
                 Fault = 0;
             }
         }
-        //Fault = 2;
         std::cout << "Fault is " << Fault << std::endl;
+        if (std::find(std::begin(Checklist), std::end(Checklist),Fault) != std::end(Checklist)) {
+            Eligibility = 1;
+            //std::cout << "Fault is known" << std::endl;
+        }
+        else {
+            Eligibility = 0;
+            Checklist.push_back(Fault);
+            //std::cout << "Fault is unknown" << std::endl;
+        }
+        //Fault = 2;
+
     }
     // BEHAVIOUR SWITCH
     if (Time > (BehaviourCount*5000)) {
@@ -1199,6 +1209,8 @@ void CFootBotDiffusion::ControlStep() {
             std::cout << "Fault = " << Fault << ", Diagnosis = " << Diagnosis << ", FAILURE" << std::endl;
             DataFile << "FAILURE " << Diagnosis << ", ";
             ClassifierSuccess = 0;
+            Fail++;
+            std::cout << "Total Fails: " << Fail << std::endl;
             if (BeginMOT == 0) {
                 Diagnosis = 0;
                 BeginMOT = 1;
@@ -1215,14 +1227,27 @@ void CFootBotDiffusion::ControlStep() {
             for (int i = 0; i < Snapshot.size(); i++) {
                 MemoryLog->push_back(Snapshot.at(i));
             }
+            if (Eligibility == 1) {
+                Total++;
+                std::cout << "Total: " << Total << std::endl;
+            }
             if (ClassifierSuccess == 1) {
                 std::cout << "DIAGNOSED (CLASSIFIER)" << std::endl;
                 DataFile << Diagnosis << " , " << "CLASSIFIED ,";
+                if (Eligibility == 1) {
+                    Class++;
+                    std::cout << "Total Class: " << Class << std::endl;
+                }
             }
             else {
+                if (Eligibility == 1) {
+                    MOT++;
+                    std::cout << "Total MOT: " << MOT << std::endl;
+                }
                 std::cout << "DIAGNOSED (MOT)" << std::endl;
                 DataFile << "n/a" << ", " << Diagnosis << " , " << "DIAGNOSED ,";
             }
+
             DataFile << std::endl;
             BounceCount = Time;
             FaultID = 0;
@@ -1286,7 +1311,13 @@ void CFootBotDiffusion::ControlStep() {
         DiagReset = 0;
 
     }
-
+    if (Time >= 36000) {
+        Real ClassPer = Class/Total;
+        Real ClassFailPer = Fail/(Class+Fail);
+        SpartanPercent.open ("ClassPercent.csv", std::ios_base::app);
+        std::cout << "Total " << Total << ", Class " << Class << ", Fail " << Fail << std::endl;
+        std::cout << "MEMORY % " << ClassPer << ", FAIL % " << ClassFailPer << std::endl;
+    }
 
 
     if (timeweight == RobotNumber) {

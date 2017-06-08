@@ -88,12 +88,18 @@ int Detected;
 int InRange;
 std::ofstream SnapshotFile;
 std::ofstream DataFile;
+std::ofstream SpartanPercent;
 int F1hang;
 int F2hang;
 int F3hang;
 int F4hang;
 int F5hang;
-
+Real Fail = 0;
+int Eligibility;
+int MOT = 0;
+Real Total = 0;
+Real Class = 0;
+std::vector<Real> Checklist;
 Real Drift = 0;
 int timeweight = 0;
 /*
