@@ -251,8 +251,12 @@ void CFootBotDiffusion::ControlStep() {
         Behaviour = rand() % 3+1;
         std::cout << "Behaviour is " << Behaviour << std::endl;
     }
+    if (Time <= 36000) {
+        std::string folderName = std::to_string(foldernum);
+        mkdir(folderName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        DataFile.open (folderName + "/Data.csv", std::ios_base::app);
 
-    //DataFile.open("Data.csv", std::ios_base::app);
+    }
 
 
     // BEHAVIOURS //
@@ -822,6 +826,7 @@ void CFootBotDiffusion::ControlStep() {
         std::cout << "DETECTED" << std::endl;
         Detected = 1;
         Detect = 0;
+        TimeStart = Time;
         DataFile << "Time: " << Time << ", " << "Behaviour: " << Behaviour << ", " << "Fault: " << Fault << ", ";
     }
 
@@ -1024,7 +1029,7 @@ void CFootBotDiffusion::ControlStep() {
                 }
 
             }
-            else if (Stop == 1 && Stopping == 0 && wall == 0) {
+            else if (Stop == 1 && Stopping == 0 && wall == 0 || Stop == 1 && Stopping == 0 && Fault == 1) {
                 StopWait->push_back(1);
                 if (std::accumulate(StopWait->begin(), StopWait->end(), 0.0) == StopWait->capacity()) {
                     //std::cout << "Software Hang" << std::endl;
@@ -1223,33 +1228,39 @@ void CFootBotDiffusion::ControlStep() {
     }
     if (DiagReset == 1) {
         if (Diagnosed == 1) {
+            TrueTotal++;
             Update.clear();
             MemoryLog->push_back(-Diagnosis);
             Update.push_back(DrID);
             for (int i = 0; i < Snapshot.size(); i++) {
                 MemoryLog->push_back(Snapshot.at(i));
             }
-            if (Eligibility == 1) {
+            if (Eligibility == 1 || ClassifierSuccess == 1) {
                 Total++;
                 std::cout << "Total: " << Total << std::endl;
             }
             if (ClassifierSuccess == 1) {
                 std::cout << "DIAGNOSED (CLASSIFIER)" << std::endl;
                 DataFile << Diagnosis << " , " << "CLASSIFIED ,";
-                if (Eligibility == 1) {
-                    Class++;
-                    std::cout << "Total Class: " << Class << std::endl;
-                }
+
+                Class++;
+                std::cout << "Total Class: " << Class << std::endl;
+
             }
             else {
+                std::cout << "DIAGNOSED (MOT)" << std::endl;
+                DataFile << "n/a" << ", " << Diagnosis << " , " << "DIAGNOSED ,";
+                int TimeTaken = Time - TimeStart;
+                DataFile << "Time Taken" << ", " << TimeTaken << ", ";
                 if (Eligibility == 1) {
                     MOT++;
                     std::cout << "Total MOT: " << MOT << std::endl;
+                    DataFile << "ELLIGIBLE";
                 }
-                std::cout << "DIAGNOSED (MOT)" << std::endl;
-                DataFile << "n/a" << ", " << Diagnosis << " , " << "DIAGNOSED ,";
-            }
 
+                //std::cout << "TimeTaken: " << TimeTaken << std::endl;
+            }
+            TimeStart = 0;
             DataFile << std::endl;
             BounceCount = Time;
             FaultID = 0;
@@ -1313,16 +1324,18 @@ void CFootBotDiffusion::ControlStep() {
         DiagReset = 0;
 
     }
-    if (Time == 36000 && ID == 80) {
+    if (Time == 36000 && StuckBounce == 0) {
+        StuckBounce =1;
         Real ClassPer = Class/Total;
         Real ClassFailPer = Fail/(Class+Fail);
-        std::string folderName = std::to_string(foldernum);
+        /*std::string folderName = std::to_string(foldernum);
 
         mkdir(folderName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         SpartanPercent.open (folderName + "/ClassFailPercent.csv", std::ios_base::app);
-        SpartanPercent << ClassFailPer;
-        SpartanPercent.close();
-
+        SpartanPercent << CSimulator::GetInstance().GetRandomSeed() << "," << ClassFailPer;
+        SpartanPercent.close();*/
+        DataFile << "Total Faults, " << TrueTotal << ", Elligible Total, " << Total << ", DiagTot, " << TrueTotal -(Class+Fail) <<
+                ", Elligible DiagTot, " << Total - (Class+Fail) << ", FailTot, " << Fail << ", MemoryTot, " << Class << ", %Memory," << ClassPer << ", %Failure," << ClassFailPer << std::endl;
         std::cout << "Total " << Total << ", Class " << Class << ", Fail " << Fail << std::endl;
         std::cout << "MEMORY % " << ClassPer << ", FAIL % " << ClassFailPer << std::endl;
     }
@@ -1352,6 +1365,9 @@ void CFootBotDiffusion::ControlStep() {
     }
 
     DataFile.close();
+
+
+
 
 
     if (ID == DrID) {
