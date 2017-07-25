@@ -1,0 +1,17 @@
+trials=90
+set=20
+
+cd /home/jhok500/argos3-examples/Spartan/Spartan_Fail_Data_Struct
+mkdir $trials
+# Now to run each set:
+for ((i=1; i<=trials; i++));
+do
+   #cd /home/jhok500/argos3-examples/Spartan/Spartan_Fail_Data/$i
+   for ((j=1; j<=set; j++));
+   do	
+       mkdir $trials
+       mkdir $trials/$j
+       mkdir $trials/$j/$i
+       cp ../Spartan_Fail_Data/$i/ClassFailPercent.csv $trials/$j/$i/ClassFailPercent.csv
+   done
+done

@@ -106,6 +106,10 @@ Real Class = 0;
 std::vector<Real> Checklist;
 Real Drift = 0;
 int timeweight = 0;
+int UpdateNum;
+int noaccess = 0;
+int holdoff = 0;
+int scratch = 0;
 /*
  * A controller is simply an implementation of the CCI_Controller class.
  */

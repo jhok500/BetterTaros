@@ -60,65 +60,65 @@ std::vector<Real> TestCase;
 
 
 CFootBotDiffusion::CFootBotDiffusion() :
-   m_pcWheels(NULL),
-   m_pcProximity(NULL),
-   m_cAlpha(10.0f),
-   m_fDelta(0.5f),
-   m_fWheelVelocity(2.5f),
-   m_cGoStraightAngleRange(-ToRadians(m_cAlpha),
-                           ToRadians(m_cAlpha)) {}
+        m_pcWheels(NULL),
+        m_pcProximity(NULL),
+        m_cAlpha(10.0f),
+        m_fDelta(0.5f),
+        m_fWheelVelocity(2.5f),
+        m_cGoStraightAngleRange(-ToRadians(m_cAlpha),
+                                ToRadians(m_cAlpha)) {}
 
 
 /****************************************/
 /****************************************/
 
 void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
-   /*
-    * Get sensor/actuator handles
-    *
-    * The passed string (ex. "differential_steering") corresponds to the
-    * XML tag of the device whose handle we want to have. For a list of
-    * allowed values, type at the command prompt:
-    *
-    * $ argos3 -q actuators
-    *
-    * to have a list of all the possible actuators, or
-    *
-    * $ argos3 -q sensors
-    *
-    * to have a list of all the possible sensors.
-    *
-    * NOTE: ARGoS creates and initializes actuators and sensors
-    * internally, on the basis of the lists provided the configuration
-    * file at the <controllers><footbot_diffusion><actuators> and
-    * <controllers><footbot_diffusion><sensors> sections. If you forgot to
-    * list a device in the XML and then you request it here, an error
-    * occurs.
-    */
+    /*
+     * Get sensor/actuator handles
+     *
+     * The passed string (ex. "differential_steering") corresponds to the
+     * XML tag of the device whose handle we want to have. For a list of
+     * allowed values, type at the command prompt:
+     *
+     * $ argos3 -q actuators
+     *
+     * to have a list of all the possible actuators, or
+     *
+     * $ argos3 -q sensors
+     *
+     * to have a list of all the possible sensors.
+     *
+     * NOTE: ARGoS creates and initializes actuators and sensors
+     * internally, on the basis of the lists provided the configuration
+     * file at the <controllers><footbot_diffusion><actuators> and
+     * <controllers><footbot_diffusion><sensors> sections. If you forgot to
+     * list a device in the XML and then you request it here, an error
+     * occurs.
+     */
 
-   m_pcWheels    = GetActuator<CCI_DifferentialSteeringActuator>("differential_steering");
-   m_pcProximity = GetSensor  <CCI_FootBotProximitySensor      >("footbot_proximity"    );
-   wheel_encoders = GetSensor  <CCI_DifferentialSteeringSensor      >("differential_steering"    );
-   range_and_bearing_actuator = GetActuator<CCI_RangeAndBearingActuator>("range_and_bearing");
-   range_and_bearing_sensor = GetSensor<CCI_RangeAndBearingSensor>("range_and_bearing");
-   std::string robot_name = GetId();
-   robot_name = robot_name.substr(2, robot_name.size());
-   int id = atoi(robot_name.c_str());
-   range_and_bearing_actuator->SetData(0, id);
+    m_pcWheels    = GetActuator<CCI_DifferentialSteeringActuator>("differential_steering");
+    m_pcProximity = GetSensor  <CCI_FootBotProximitySensor      >("footbot_proximity"    );
+    wheel_encoders = GetSensor  <CCI_DifferentialSteeringSensor      >("differential_steering"    );
+    range_and_bearing_actuator = GetActuator<CCI_RangeAndBearingActuator>("range_and_bearing");
+    range_and_bearing_sensor = GetSensor<CCI_RangeAndBearingSensor>("range_and_bearing");
+    std::string robot_name = GetId();
+    robot_name = robot_name.substr(2, robot_name.size());
+    int id = atoi(robot_name.c_str());
+    range_and_bearing_actuator->SetData(0, id);
 
 
-   /*
-    * Parse the configuration file
-    *
-    * The user defines this part. Here, the algorithm accepts three
-    * parameters and it's nice to put them in the config file so we don't
-    * have to recompile if we want to try other settings.
-    */
-   GetNodeAttributeOrDefault(t_node, "alpha", m_cAlpha, m_cAlpha);
-   m_cGoStraightAngleRange.Set(-ToRadians(m_cAlpha), ToRadians(m_cAlpha));
-   GetNodeAttributeOrDefault(t_node, "delta", m_fDelta, m_fDelta);
-   GetNodeAttributeOrDefault(t_node, "velocity", m_fWheelVelocity, m_fWheelVelocity);
-   GetNodeAttributeOrDefault(t_node, "foldernum", foldernum, 1);
+    /*
+     * Parse the configuration file
+     *
+     * The user defines this part. Here, the algorithm accepts three
+     * parameters and it's nice to put them in the config file so we don't
+     * have to recompile if we want to try other settings.
+     */
+    GetNodeAttributeOrDefault(t_node, "alpha", m_cAlpha, m_cAlpha);
+    m_cGoStraightAngleRange.Set(-ToRadians(m_cAlpha), ToRadians(m_cAlpha));
+    GetNodeAttributeOrDefault(t_node, "delta", m_fDelta, m_fDelta);
+    GetNodeAttributeOrDefault(t_node, "velocity", m_fWheelVelocity, m_fWheelVelocity);
+    GetNodeAttributeOrDefault(t_node, "foldernum", foldernum, 1);
     /****************************************/
     FlockData = new boost::circular_buffer<double>(2*RobotNumber);
     FlockCoordData = new boost::circular_buffer<double>(3*RobotNumber);
@@ -132,7 +132,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
     TrueIntCoord = new boost::circular_buffer<double>(3*RobotNumber*2);
     YawHolder = new boost::circular_buffer<double>(2*RobotNumber*2);
     FeatureVectors3 = new boost::circular_buffer<int>((1+(6*2))*DetectDelay);
-    MemoryLog = new boost::circular_buffer<int>(((DetectDelay*6*2)+1)*MemoryBits);
+    MemoryLog = new boost::circular_buffer<int>(((DetectDelay*6*2)+2)*MemoryBits);
 
 }
 
@@ -142,7 +142,6 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
     y = a.AgentBearing_Sensor;
     std::cout << "TESTING CONF : " << y << std::endl;
     return;
-
 }*/
 
 void CFootBotDiffusion::ControlStep() {
@@ -252,9 +251,9 @@ void CFootBotDiffusion::ControlStep() {
         std::cout << "Behaviour is " << Behaviour << std::endl;
     }
     if (Time <= 36000) {
-        std::string folderName = std::to_string(foldernum);
-        mkdir(folderName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-        DataFile.open (folderName + "/Data.csv", std::ios_base::app);
+        //std::string folderName = std::to_string(foldernum);
+        //mkdir(folderName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        //DataFile.open (folderName + "/Data.csv", std::ios_base::app);
 
     }
 
@@ -271,10 +270,29 @@ void CFootBotDiffusion::ControlStep() {
                 double bearing = ToDegrees(packet.HorizontalBearing).GetValue();
                 double range = packet.Range + RABNoise(generator);
                 if (Update.size() > 0 && Detected == 0) {
-                    if (std::find(std::begin(Update), std::end(Update),ID) != std::end(Update) && std::find(std::begin(Update), std::end(Update),packet.Data[0] + 80) == std::end(Update)) {
-                        Update.push_back(packet.Data[0] + 80);
-                        //std::cout << packet.Data[0] + 80 << " Updated" << std::endl;
+                    for (int x = 0; x < Update.size(); x++) {
+                        if (Update.at(x) == ID) {
+                            int comp = Update.at(x+1);
+                            if (std::find(std::begin(Update), std::end(Update),ID) != std::end(Update) && std::find(std::begin(Update), std::end(Update),packet.Data[0] + 80) == std::end(Update)) {
+                                Update.push_back(packet.Data[0] + 80);
+                                Update.push_back(comp);
+                                std::cout << packet.Data[0]+80 << " UPDATED TO " << comp << std::endl;
+                            }
+                            else {
+                                for (int i = 0; i < Update.size(); i++) {
+                                    if (Update.at(i) == packet.Data[0] + 80 && Update.at(i + 1) < comp) {
+                                        Update.at(i + 1) = UpdateNum;
+                                        std::cout << packet.Data[0]+80 << " UPDATED TO " << comp << std::endl;
+                                    }
+                                }
+                            }
+                        }
                     }
+
+
+
+
+
                 }
                 // Partial Sensor Failure //
                 if (ID == 83 && Fault == 6) {
@@ -889,15 +907,30 @@ void CFootBotDiffusion::ControlStep() {
             int j = 0;
             for (int i = 0; i < MemoryLog->size(); i++) {
                 Real MemSum = 0;
+
                 if (MemoryLog->at(i) < 0) {
+                    for (int y = 0; y < Update.size(); y++) {
+                        if (Update.at(y) == ID) {
+                            scratch = Update.at(y+1);
+                        }
+                    }
+                    if (scratch < MemoryLog->at(i+1)) {
+                        noaccess = 1;
+                        std::cout << "FAULT " << MemoryLog->at(i) << " AT " << MemoryLog->at(i+1) << " CAN'T BE ACCESSED BY DR FROM " << scratch << std::endl;
+                    }
+                    else {
+                        noaccess = 0;
+                        std::cout << "FAULT " << MemoryLog->at(i) << " AT " << MemoryLog->at(i+1) << " IS FINE WITH DR FROM " << scratch << std::endl;
+                    }
                     //TestCase.push_back(MemoryLog->at(i));
                     DiagCandidate = MemoryLog->at(i);
                     //std::cout << "DiagCandidate: " << DiagCandidate << std::endl;
-                    for (int k = i+1; k < i + Snapshot.size()+1; k++) {
+                    for (int k = i+2; k < i + Snapshot.size()+2; k++) {
                         MemSum = MemSum + MemoryLog->at(k);
-                        //std::cout << k << ", " << MemSum << std::endl;
+
+                        //std::cout << "K " << MemoryLog->at(k) << std::endl;
                     }
-                    //std::cout << "MemSum = " << MemSum << " Snapshot Size = " << Snapshot.size() << std::endl;
+                    std::cout << "MemSum = " << MemSum << " Snapshot Size = " << Snapshot.size() << std::endl;
                     MeanMem = MemSum / Snapshot.size();
                     MeanSnap = std::accumulate(Snapshot.begin(), Snapshot.end(), 0.0) / Snapshot.size();
                     sumtop = 0;
@@ -908,7 +941,7 @@ void CFootBotDiffusion::ControlStep() {
                     sumbottom1 = 0;
                     sumbottom2 = 0;
                 }
-                else {
+                else if (MemoryLog->at(i) < 2 && noaccess == 0) {
                     //TestCase.push_back(MemoryLog->at(i));
                     topadd = (Snapshot.at(j) - MeanSnap) * (MemoryLog->at(i) - MeanMem);
                     sumtop = sumtop + topadd;
@@ -923,7 +956,7 @@ void CFootBotDiffusion::ControlStep() {
                         j = 0;
                         sumbottom = sumbottom1 * sumbottom2;
                         Real R = sumtop / sqrt(sumbottom);
-                        //std::cout << "matches prev. fault " << -DiagCandidate << " by " << R << std::endl;
+                        std::cout << "matches prev. fault " << -DiagCandidate << " by " << R << std::endl;
                         //DataFile << "Previous: " << DiagCandidate << ", " << "Similarity: " << R << ", ";
                         if (R > 0.66) {
                             //std::cout << "MATCH" << std::endl;
@@ -1201,13 +1234,13 @@ void CFootBotDiffusion::ControlStep() {
             Diagnosed = 1;
         }
         else if (std::find(std::begin(MotorReplacement), std::end(MotorReplacement),Diagnosis) != std::end(MotorReplacement)
-            && std::find(std::begin(MotorReplacement), std::end(MotorReplacement),Fault) != std::end(MotorReplacement)) {
+                 && std::find(std::begin(MotorReplacement), std::end(MotorReplacement),Fault) != std::end(MotorReplacement)) {
             std::cout << "Fault = " << Fault << ", Diagnosis = " << Diagnosis << ", Recovery: Replace Motor" << std::endl;
             DiagReset = 1;
             Diagnosed = 1;
         }
         else if (std::find(std::begin(SensorReplacement), std::end(SensorReplacement),Diagnosis) != std::end(SensorReplacement)
-            && std::find(std::begin(SensorReplacement), std::end(SensorReplacement),Fault) != std::end(SensorReplacement)) {
+                 && std::find(std::begin(SensorReplacement), std::end(SensorReplacement),Fault) != std::end(SensorReplacement)) {
             std::cout << "Fault = " << Fault << ", Diagnosis = " << Diagnosis << ", Recovery: Replace Sensor" << std::endl;
             DiagReset = 1;
             Diagnosed = 1;
@@ -1229,9 +1262,24 @@ void CFootBotDiffusion::ControlStep() {
     if (DiagReset == 1) {
         if (Diagnosed == 1) {
             TrueTotal++;
-            Update.clear();
             MemoryLog->push_back(-Diagnosis);
+            MemoryLog->push_back(Time);
+            UpdateNum = Time;
+            if (std::find(std::begin(Update), std::end(Update),ID) != std::end(Update) && std::find(std::begin(Update), std::end(Update),DrID) == std::end(Update)) {
+                Update.push_back(DrID);
+                Update.push_back(UpdateNum);
+                std::cout << DrID << " UPDATED TO " << UpdateNum << std::endl;
+            }
+            else {
+                for (int i = 0; i < Update.size(); i++) {
+                    if (Update.at(i) == DrID && Update.at(i + 1) < UpdateNum) {
+                        Update.at(i + 1) = UpdateNum;
+                        std::cout << DrID << " UPDATED TO " << UpdateNum << std::endl;
+                    }
+                }
+            }
             Update.push_back(DrID);
+            Update.push_back(UpdateNum);
             for (int i = 0; i < Snapshot.size(); i++) {
                 MemoryLog->push_back(Snapshot.at(i));
             }
@@ -1329,13 +1377,12 @@ void CFootBotDiffusion::ControlStep() {
         Real ClassPer = Class/Total;
         Real ClassFailPer = Fail/(Class+Fail);
         /*std::string folderName = std::to_string(foldernum);
-
         mkdir(folderName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         SpartanPercent.open (folderName + "/ClassFailPercent.csv", std::ios_base::app);
         SpartanPercent << CSimulator::GetInstance().GetRandomSeed() << "," << ClassFailPer;
         SpartanPercent.close();*/
         DataFile << "Total Faults, " << TrueTotal << ", Elligible Total, " << Total << ", DiagTot, " << TrueTotal -(Class+Fail) <<
-                ", Elligible DiagTot, " << Total - (Class+Fail) << ", FailTot, " << Fail << ", MemoryTot, " << Class << ", %Memory," << ClassPer << ", %Failure," << ClassFailPer << std::endl;
+        ", Elligible DiagTot, " << Total - (Class+Fail) << ", FailTot, " << Fail << ", MemoryTot, " << Class << ", %Memory," << ClassPer << ", %Failure," << ClassFailPer << std::endl;
         std::cout << "Total " << Total << ", Class " << Class << ", Fail " << Fail << std::endl;
         std::cout << "MEMORY % " << ClassPer << ", FAIL % " << ClassFailPer << std::endl;
     }
@@ -1349,13 +1396,7 @@ void CFootBotDiffusion::ControlStep() {
                 if (DrDistance.at(i) == *min_element(DrDistance.begin(), DrDistance.end())) {
                     DrID = DrRobo.at(i);
                     std::cout << "DR: " << DrID << std::endl;
-                    if (Update.size() == 0 || std::find(std::begin(Update), std::end(Update),DrID) != std::end(Update)) {
-                        std::cout << "Up to date version " << std::endl;
-                    }
-                    else {
-                        std::cout << "Decentralised!" << std::endl;
-                        DataFile << "DECENTRALISED" << ", ";
-                    }
+
                 }
             }
         }
@@ -1364,7 +1405,7 @@ void CFootBotDiffusion::ControlStep() {
 
     }
 
-    DataFile.close();
+    //DataFile.close();
 
 
 
@@ -1378,19 +1419,16 @@ void CFootBotDiffusion::ControlStep() {
         }
         EyesOn = 0;
     }
-    if (Update.size() > 9) {
-        //std::cout << "All robots up to date" << std::endl;
-        Update.clear();
-    }
+
 }
 
 
 CCI_RangeAndBearingSensor::TReadings CFootBotDiffusion::GetRABSensorReadings()
 {
-   // Get RAB packets from other robots within range
-   const CCI_RangeAndBearingSensor::TReadings& packets = range_and_bearing_sensor->GetReadings();
+    // Get RAB packets from other robots within range
+    const CCI_RangeAndBearingSensor::TReadings& packets = range_and_bearing_sensor->GetReadings();
 
-   return packets;
+    return packets;
 }
 
 /****************************************/
