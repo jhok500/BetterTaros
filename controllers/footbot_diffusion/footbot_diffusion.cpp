@@ -12,51 +12,8 @@
 
 
 /****************************************/
-int Roulette = 0;
+
 int Time = 0;
-int RobotNumber = 10;
-int EyesOn = 0;
-int hang = 0;
-int power = 0;
-int Stop = 0;
-int Stopping = 0;
-int ping = 0;
-int returnping = 0;
-int RABCompare = 0;
-int RABReturn = 0;
-int TestLM = 0;
-int ConfirmLM = 0;
-int TestRM = 0;
-int ConfirmRM = 0;
-int TestStraight = 0;
-int ConfirmStraight = 0;
-int TestLap = 0;
-int ConfirmLap = 0;
-int Diagnosed = 0;
-int DiagReset = 0;
-int SnapshotTaken = 0;
-int wall = 0;
-int DiagCandidate = 0;
-
-boost::circular_buffer<int>* PingWait;
-boost::circular_buffer<int>* StopWait;
-boost::circular_buffer<int>* RABWait;
-int RABConfirm;
-boost::circular_buffer<int>* MotorWait;
-int RCMFConfirm;
-int LCMFConfirm;
-boost::circular_buffer<int>* StraightWait;
-int PMFConfirm;
-boost::circular_buffer<int>* LapWait;
-int LapCount = 0;
-int LapDelay = 0;
-Real LapStart;
-std::vector<Real> Snapshot;
-std::vector<Real> TestCase;
-
-
-
-
 
 
 CFootBotDiffusion::CFootBotDiffusion() :
@@ -65,6 +22,13 @@ CFootBotDiffusion::CFootBotDiffusion() :
         m_cAlpha(10.0f),
         m_fDelta(0.5f),
         m_fWheelVelocity(2.5f),
+        MemoryLogNew(NULL),
+        DetectBodge(NULL),
+        YawHolder(NULL),
+        IntCoord(NULL),
+        MemoryBounce(NULL),
+        TrueIntCoord(NULL),
+        m_pcLight(NULL),
         m_cGoStraightAngleRange(-ToRadians(m_cAlpha),
                                 ToRadians(m_cAlpha)) {}
 
@@ -97,6 +61,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
      */
 
     m_pcWheels    = GetActuator<CCI_DifferentialSteeringActuator>("differential_steering");
+    m_pcLight  = GetSensor  <CCI_FootBotLightSensor                    >("footbot_light");
     m_pcProximity = GetSensor  <CCI_FootBotProximitySensor      >("footbot_proximity"    );
     wheel_encoders = GetSensor  <CCI_DifferentialSteeringSensor      >("differential_steering"    );
     range_and_bearing_actuator = GetActuator<CCI_RangeAndBearingActuator>("range_and_bearing");
@@ -105,6 +70,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
     robot_name = robot_name.substr(2, robot_name.size());
     int id = atoi(robot_name.c_str());
     range_and_bearing_actuator->SetData(0, id);
+
 
 
     /*
@@ -120,37 +86,735 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
     GetNodeAttributeOrDefault(t_node, "velocity", m_fWheelVelocity, m_fWheelVelocity);
     GetNodeAttributeOrDefault(t_node, "foldernum", foldernum, 1);
     /****************************************/
-    FlockData = new boost::circular_buffer<double>(2*RobotNumber);
-    FlockCoordData = new boost::circular_buffer<double>(3*RobotNumber);
-    PingWait = new boost::circular_buffer<int>(10);
-    StopWait = new boost::circular_buffer<int>(10);
-    RABWait = new boost::circular_buffer<int>(10);
-    MotorWait = new boost::circular_buffer<int>(10);
-    StraightWait = new boost::circular_buffer<int>(10);
-    LapWait = new boost::circular_buffer<int>(10);
-    IntCoord = new boost::circular_buffer<double>(3*RobotNumber*2);
-    TrueIntCoord = new boost::circular_buffer<double>(3*RobotNumber*2);
-    YawHolder = new boost::circular_buffer<double>(2*RobotNumber*2);
-    FeatureVectors3 = new boost::circular_buffer<int>((1+(6*2))*DetectDelay);
-    MemoryLog = new boost::circular_buffer<int>(((DetectDelay*6*2)+2)*MemoryBits);
+
+
+    //HYPERCUBE STUFF
+    int ParamRow;
+
+    GetNodeAttributeOrDefault(t_node, "foldernum", ParamRow, ParamRow);
+
+    std::string row, cell;
+    std::ifstream myfile("LHC_Parameters_for_Runs.csv");
+    int lineNumber = 0;
+    int lineNumberSought = ParamRow;
+
+//do you have any idea how much code a PhD candidate copy pastes in a year?
+
+    if (myfile.is_open()) {
+        while (getline(myfile, row)) {
+            lineNumber++;
+            if (lineNumber == lineNumberSought) {
+                std::istringstream myRow(row);
+                int i = 0;
+                while (getline(myRow, cell, ',')) {
+                    switch (i) {
+                        case 0:
+                            SimilarityThreshold = stof(cell);
+                            break;
+                        case 1:
+                            DetectDelay = abs(stof(cell));
+                            //DetectDelay = 100;
+                            break;
+                        case 2:
+                            DetectRatio = stof(cell);
+                            //DetectRatio = 1;
+                            break;
+
+                    }
+                    i++;
+                }
+            }
+        }
+
+        myfile.close();
+    }
+
+//shit loads
+    //std::cout << ParamRow << ", " << SimilarityThreshold << ", " << DetectDelay << ", " << DetectRatio << std::endl;
+    IntCoord = new boost::circular_buffer<double>(2*2);
+    TrueIntCoord = new boost::circular_buffer<double>(2*2);
+    YawHolder = new boost::circular_buffer<double>(2);
+    FaultyFeatureVectors = new boost::circular_buffer<int>(((6*2))*DetectDelay);
+    MemoryLogNew = new boost::circular_buffer<int>(((DetectDelay*6*2)+2)*MemoryBits);
+    DetectBodge = new boost::circular_buffer<int>(DetectDelay);
+    MemoryBounce = new boost::circular_buffer<int>(1000);
+
+
+}
+/****************************************/
+Real CFootBotDiffusion::HeadingCorrect() {
+    if (Heading > 180) {
+        Heading = -180 + (Heading-180);
+    }
+    if (Heading < -180) {
+        Heading = 180 - (abs(Heading)-180);
+    }
+    return Heading;
+}
+/****************************************/
+void CFootBotDiffusion::BehaviourUpdate() {
+    srand(Time);
+    BehaviourCount++;
+    Behaviour = rand() % 3+1;
+    //std::cout << "Behaviour is " << Behaviour << std::endl;
+}
+/****************************************/
+
+void CFootBotDiffusion::FaultInject() {
+    srand(Time);
+    Faulty = rand() % 6 + 1;
+    if (Faulty == 4 || Faulty == 5) {
+        if (Time % 2 == 0) {
+            MotorRand = 1;
+        }
+        else {
+            MotorRand = 2;
+        }
+    }
+    FaultyIDs.push_back(ID);
+    //std::cout << "Faulty Robot is " << ID << ": " << Faulty << std::endl;
+
+    if (std::find(MemoryLogNew->begin(), MemoryLogNew->end(),-Faulty) != MemoryLogNew->end()) {
+        Eligibility = true;
+    }
+    else {
+        Eligibility = false;
+    }
+}
+/****************************************/
+void CFootBotDiffusion::ObstacleAv() {
+    const CCI_FootBotProximitySensor::TReadings &tProxReads = m_pcProximity->GetReadings();
+    CVector2 cAccumulator;
+    for (size_t i = 0; i < tProxReads.size(); ++i) {
+        cAccumulator += CVector2(tProxReads[i].Value, tProxReads[i].Angle);
+    }
+    cAccumulator /= tProxReads.size();
+    const CCI_RangeAndBearingSensor::TReadings &packets = range_and_bearing_sensor->GetReadings();
+    cAngle = cAccumulator.Angle();
+    if (m_cGoStraightAngleRange.WithinMinBoundIncludedMaxBoundIncluded(cAngle) &&
+        cAccumulator.Length() < m_fDelta) {
+        wall = false;
+        Left = 1;
+        Right = 1;
+    }
+    else {
+        wall = true;
+        if (cAngle.GetValue() > 0.0f) {
+            Left = 1;
+            Right = 0;
+        }
+        else {
+            Left = 0;
+            Right = 1;
+        }
+    }
+}
+/****************************************/
+void CFootBotDiffusion::Aggregation() {
+    const CCI_FootBotProximitySensor::TReadings &tProxReads = m_pcProximity->GetReadings();
+    CVector2 cAccumulator;
+    for (size_t i = 0; i < tProxReads.size(); ++i) {
+        cAccumulator += CVector2(tProxReads[i].Value, tProxReads[i].Angle);
+    }
+    cAccumulator /= tProxReads.size();
+    const CCI_RangeAndBearingSensor::TReadings &packets = range_and_bearing_sensor->GetReadings();
+    cAngle = cAccumulator.Angle();
+    CVector2 GoalCoord;
+    Real GoalBearing;
+    GoalCoord.Set((std::accumulate(OmegaCoordX.begin(), OmegaCoordX.end(), 0.0) / OmegaCoordX.size()),
+                  (std::accumulate(OmegaCoordY.begin(), OmegaCoordY.end(), 0.0) / OmegaCoordY.size()));
+    GoalBearing = atan2(GoalCoord.GetY(), GoalCoord.GetX()) * 180 / ARGOS_PI;
+    if (m_cGoStraightAngleRange.WithinMinBoundIncludedMaxBoundIncluded(cAngle) &&
+        cAccumulator.Length() < m_fDelta) {
+        wall = false;
+        if (Alone == 0) {
+            Left = 1;
+            Right = 1;
+        }
+        else if (Heading/fabs(Heading) == GoalBearing/fabs(GoalBearing)) {
+            if (Heading < GoalBearing) {
+                Left = 0;
+                Right = 1;
+            }
+            else {
+                Left = 1;
+                Right = 0;
+            }
+        }
+        else {
+            if (Heading < 0) {
+                if (fabs(Heading) + fabs(GoalBearing) < 180) {
+                    Left = 0;
+                    Right = 1;
+                } else {
+                    Left = 1;
+                    Right = 0;
+                }
+            }
+            else {
+                if (fabs(Heading) + fabs(GoalBearing) > 180) {
+                    Left = 0;
+                    Right = 1;
+                }
+                else {
+                    Left = 1;
+                    Right = 0;
+                }
+            }
+        }
+    }
+    else {
+        wall = true;
+        if (cAngle.GetValue() > 0.0f) {
+            Left = 1;
+            Right = 0;
+        }
+        else {
+            Left = 0;
+            Right = 1;
+        }
+    }
+}
+/****************************************/
+void CFootBotDiffusion::Flocking() {
+    const CCI_FootBotProximitySensor::TReadings &tProxReads = m_pcProximity->GetReadings();
+    CVector2 cAccumulator;
+    for (size_t i = 0; i < tProxReads.size(); ++i) {
+        cAccumulator += CVector2(tProxReads[i].Value, tProxReads[i].Angle);
+    }
+    cAccumulator /= tProxReads.size();
+    const CCI_RangeAndBearingSensor::TReadings &packets = range_and_bearing_sensor->GetReadings();
+    cAngle = cAccumulator.Angle();
+    Real Goal;
+    Real GoalHeading = std::accumulate(FlockHeadings.begin(), FlockHeadings.end(), 0.0) / FlockHeadings.size();
+    Real BearingX = std::accumulate(OmegaCoordX.begin(), OmegaCoordX.end(), 0.0) / OmegaCoordX.size();
+    Real BearingY = std::accumulate(OmegaCoordY.begin(), OmegaCoordY.end(), 0.0) / OmegaCoordY.size();
+    Real GoalBearing = atan2(BearingY,BearingX)*180/ARGOS_PI;
+    if (m_cGoStraightAngleRange.WithinMinBoundIncludedMaxBoundIncluded(cAngle) &&
+        cAccumulator.Length() < m_fDelta) {
+        wall = false;
+        if (std::accumulate(FlockRange.begin(), FlockRange.end(), 0.0) / FlockRange.size() >
+            (30 + (15 * FlockRange.size()))) {
+            Goal = GoalBearing;
+        }
+        else {
+            Goal = GoalHeading;
+        }
+        if (Heading/fabs(Heading) == Goal/fabs(Goal)) {
+            if (Heading < Goal) {
+                Left = 0;
+                Right = 1;
+            }
+            else {
+                Left = 1;
+                Right = 0;
+            }
+        }
+        else {
+            if (Heading < 0) {
+                if (fabs(Heading) + fabs(Goal) < 180) {
+                    Left = 0;
+                    Right = 1;
+                } else {
+                    Left = 1;
+                    Right = 0;
+                }
+            }
+            else {
+                if (fabs(Heading) + fabs(Goal) > 180) {
+                    Left = 0;
+                    Right = 1;
+                }
+                else {
+                    Left = 1;
+                    Right = 0;
+                }
+            }
+        }
+
+        if (Alone == 0) {
+            Left = 1;
+            Right = 1;
+        }
+    }
+    else {
+        wall = true;
+        if (cAngle.GetValue() > 0.0f) {
+            Left = 1;
+            Right = 0;
+        } else {
+            Left = 0;
+            Right = 1;
+        }
+    }
+}
+/****************************************/
+void CFootBotDiffusion::OmegaAlg() {
+    const CCI_FootBotProximitySensor::TReadings &tProxReads = m_pcProximity->GetReadings();
+    CVector2 cAccumulator;
+    for (size_t i = 0; i < tProxReads.size(); ++i) {
+        cAccumulator += CVector2(tProxReads[i].Value, tProxReads[i].Angle);
+    }
+    cAccumulator /= tProxReads.size();
+    const CCI_RangeAndBearingSensor::TReadings &packets = range_and_bearing_sensor->GetReadings();
+    cAngle = cAccumulator.Angle();
+    OmegaTurnX.clear();
+    OmegaTurnY.clear();
+    bool OmegaTurning = false;
+    Real OmegaX = std::accumulate(OmegaCoordX.begin(), OmegaCoordX.end(), 0.0) / OmegaCoordX.size();
+    Real OmegaY = std::accumulate(OmegaCoordY.begin(), OmegaCoordY.end(), 0.0) / OmegaCoordY.size();
+    Real OmegaBearing = atan2(OmegaY,OmegaX)*180/ARGOS_PI;
+    OmegaTimer++;
+    for (int i = 0; i < FlockRange.size(); i++) {
+        if (VectorToLight().GetX() != 0 && FlockRange.at(i) <= OmegaGap) {
+            OmegaTurnX.push_back(OmegaCoordX.at(i));
+            OmegaTurnY.push_back(OmegaCoordY.at(i));
+        }
+    }
+    if (!OmegaTurnX.empty() && !OmegaTurnY.empty()) {
+        OmegaTurning = true;
+    }
+    if (m_cGoStraightAngleRange.WithinMinBoundIncludedMaxBoundIncluded(cAngle) &&
+        cAccumulator.Length() < m_fDelta && !OmegaTurning) {
+        wall = false;
+        if (OmegaTimer > Omega) {
+            if (Heading < OmegaBearing + 5 && Heading > OmegaBearing - 5) {
+                OmegaTimer = 0;
+            }
+            else {
+                if (Heading/fabs(Heading) == OmegaBearing/fabs(OmegaBearing)) {
+                    if (Heading < OmegaBearing) {
+                        Left = 0;
+                        Right = 1;
+                    }
+                    else {
+                        Left = 1;
+                        Right = 0;
+                    }
+                }
+                else {
+                    if (Heading < 0) {
+                        if (fabs(Heading) + fabs(OmegaBearing) < 180) {
+                            Left = 0;
+                            Right = 1;
+                        } else {
+                            Left = 1;
+                            Right = 0;
+                        }
+                    }
+                    else {
+                        if (fabs(Heading) + fabs(OmegaBearing) > 180) {
+                            Left = 0;
+                            Right = 1;
+                        }
+                        else {
+                            Left = 1;
+                            Right = 0;
+                        }
+                    }
+                }
+            }
+            if (Alone == 0) {
+                Left = 1;
+                Right = 1;
+
+            }
+        }
+        else {
+            Left = 1;
+            Right = 1;
+        }
+    }
+    else if (OmegaTurning && m_cGoStraightAngleRange.WithinMinBoundIncludedMaxBoundIncluded(cAngle) &&
+             cAccumulator.Length() < m_fDelta) {
+        Real TurnX = std::accumulate(OmegaTurnX.begin(), OmegaTurnX.end(), 0.0) / OmegaTurnX.size();
+        Real TurnY = std::accumulate(OmegaTurnY.begin(), OmegaTurnY.end(), 0.0) / OmegaTurnY.size();
+        Real TurnAngle = atan2(TurnY, TurnX) * 180/ARGOS_PI;
+        if (Heading / fabs(Heading) == TurnAngle / fabs(TurnAngle)) {
+            if (Heading > TurnAngle) {
+                Left = 0;
+                Right = 1;
+            }
+            else {
+                Left = 1;
+                Right = 0;
+            }
+        }
+        else {
+            if (Heading < 0) {
+                if (fabs(Heading) + fabs(TurnAngle) < 180) {
+                    Left = 1;
+                    Right = 0;
+                }
+                else {
+                    Left = 0;
+                    Right = 1;
+                }
+            }
+            else {
+                if (fabs(Heading) + fabs(TurnAngle) > 180) {
+                    Left = 1;
+                    Right = 0;
+                }
+                else {
+                    Left = 0;
+                    Right = 1;
+                }
+            }
+        }
+    }
+    else {
+        wall = true;
+        OmegaTimer = 0;
+        if (cAngle.GetValue() > 0.0f) {
+            Left = 1;
+            Right = 0;
+        }
+        else {
+            Left = 0;
+            Right = 1;
+        }
+    }
+}
+/****************************************/
+void CFootBotDiffusion::DrPursue() {
+    const CCI_FootBotProximitySensor::TReadings &tProxReads = m_pcProximity->GetReadings();
+    CVector2 cAccumulator;
+    for (size_t i = 0; i < tProxReads.size(); ++i) {
+        cAccumulator += CVector2(tProxReads[i].Value, tProxReads[i].Angle);
+    }
+    cAccumulator /= tProxReads.size();
+    const CCI_RangeAndBearingSensor::TReadings &packets = range_and_bearing_sensor->GetReadings();
+    cAngle = cAccumulator.Angle();
+    if (m_cGoStraightAngleRange.WithinMinBoundIncludedMaxBoundIncluded(cAngle) &&
+        cAccumulator.Length() < m_fDelta) {
+        wall = false;
+        if (Ambulance.at(1) < 50) {
+            Left = 0;
+            Right = 0;
+            if (!ClassifierSuccess) {
+                BeginMOT = true;
+                //std::cout << " Begin MOT " << std::endl;
+            }
+            //std::cout << ID << " has arrived" << std::endl;
+        } else {
+            if (abs(Ambulance.at(0)) < 20) {
+                Left = 1;
+                Right = 1;
+            } else {
+                if (Ambulance.at(0) < 0) {
+                    Left = 1;
+                    Right = 0;
+                } else {
+                    Left = 0;
+                    Right = 1;
+                }
+            }
+        }
+    }
+    else {
+        wall = true;
+        if (cAngle.GetValue() > 0.0f) {
+            Left = 1;
+            Right = 0;
+        } else {
+            Left = 0;
+            Right = 1;
+        }
+    }
+}
+/****************************************/
+void CFootBotDiffusion::TakeSnapshot() {
+    //SnapshotFile.open ("SnapShot.csv", std::ios_base::app);
+    for (int i = 0; i < FaultyFeatureVectors->size(); i++) {
+        Snapshot.push_back(FaultyFeatureVectors->at(i));
+        //SnapshotFile << FaultyFeatureVectors->at(i) << ", ";
+        //std::cout << FaultyFeatureVectors->at(i) << std::endl;
+        //SnapshotFile.close();
+    }
+    SnapTaken = true;
+}
+/****************************************/
+void CFootBotDiffusion::Classify() {
+
+    if (MemoryLogNew->size() >= (MemoryLogNew->capacity() / MemoryBits)) {
+        //std::cout << ID << " Run Classifier On " << DoctorsOrder << std::endl;
+        MeanMem = 0;
+        MeanSnap = 0;
+        Jcount = 0;
+        for (int i = 0; i < MemoryLogNew->size(); i++) {
+            MemSum = 0;
+            if (MemoryLogNew->at(i) < 0) {
+                //TestCase.push_back(MemoryLog->at(i));
+                DiagCandidate = MemoryLogNew->at(i);
+                //std::cout << "DiagCandidate: " << DiagCandidate << std::endl;
+                FaultTime = -MemoryLogNew->at(i+1);
+                for (int k = i+2; k < i + Snapshot.size()+2; k++) {
+                    MemSum = MemSum + MemoryLogNew->at(k);
+                    //std::cout << "K " << MemoryLog->at(k) << std::endl;
+                }
+                //std::cout << "MemSum = " << MemSum << " Snapshot Size = " << Snapshot.size() << std::endl;
+                MeanMem = MemSum / Snapshot.size();
+                MeanSnap = std::accumulate(Snapshot.begin(), Snapshot.end(), 0.0) / Snapshot.size();
+                sumtop = 0;
+                topadd = 0;
+                bottomadd1 = 0;
+                bottomadd2 = 0;
+                sumbottom = 0;
+                sumbottom1 = 0;
+                sumbottom2 = 0;
+            }
+            else if (MemoryLogNew->at(i) < 2) {
+                //TestCase.push_back(MemoryLog->at(i));
+                topadd = (Snapshot.at(Jcount) - MeanSnap) * (MemoryLogNew->at(i) - MeanMem);
+                sumtop = sumtop + topadd;
+                bottomadd1 = pow((Snapshot.at(Jcount) - MeanSnap), 2);
+                bottomadd2 = pow((MemoryLogNew->at(i) - MeanMem), 2);
+                sumbottom1 = sumbottom1 + bottomadd1;
+                sumbottom2 = sumbottom2 + bottomadd2;
+                //std::cout << "SumTop: " << sumtop << std::endl;
+                //std::cout << "SumBottom: " << sumbottom1 << ", " << sumbottom2 << std::endl;
+                Jcount++;
+                if (Jcount == Snapshot.size()) {
+                    Jcount = 0;
+                    sumbottom = sumbottom1 * sumbottom2;
+                    Rcorr = sumtop / sqrt(sumbottom);
+                    if (Rcorr > SimilarityThreshold) {
+                        Candidates.push_back(Rcorr);
+                        Candidates.push_back(DiagCandidate);
+                        Candidates.push_back(FaultTime);
+                    }
+                    else {
+                        //std::cout << "Not This One" << std::endl;
+                    }
+                }
+            }
+        }
+        if (Candidates.size() == 0) {
+            //std::cout << "Run Diagnostics" << std::endl;
+            ClassifierSuccess = false;
+        }
+        else {
+            for (int i = 0; i < Candidates.size(); i++) {
+                if (Candidates.at(i)== *max_element(Candidates.begin(), Candidates.end())) {
+                    //std::cout << "CLASS INFO " <<  Candidates.at(i) << ", " << Candidates.at(i+1) << ", " << Candidates.at(i+2) << std::endl;
+                    RValue = Candidates.at(i);
+                    Diagnosis = -Candidates.at(i+1);
+                    TimeID = -Candidates.at(i+2);
+                    //std::cout << "Classified as " << Diagnosis << " with " << Candidates.at(i)*100 << "% similarity" << std::endl;
+                    break;
+                }
+            }
+        }
+    }
+    else {
+        //std::cout << "Run Diagnostics, snapshot size " << Snapshot.size() << std::endl;
+        ClassifierSuccess = false;
+    }
+}
+/****************************************/
+void CFootBotDiffusion::ActiveMemory() {
+    for (int i = 0; i < MemoryLogNew->size(); i++) {
+        if (MemoryLogNew->at(i) == TimeID) {
+            MemoryLogNew->push_back(TimeID);
+            MemoryLogNew->erase(MemoryLogNew->begin() + i);
+            for (int j = i; j < i + (DetectDelay * 6 * 2); j++) {
+                int carrier = MemoryLogNew->at(i);
+                MemoryLogNew->erase(MemoryLogNew->begin() + i - 1);
+                MemoryLogNew->push_back(carrier);
+            }
+            MemoryLogNew->erase(MemoryLogNew->begin() + (i - 1));
+        }
+    }
+    //std::cout << "ACTIVE MEMORY EXECUTED" << std::endl;
+}
+/****************************************/
+void CFootBotDiffusion::DoctorReset() {
+    DetectBodge->clear();
+    TrueTotal++;
+    MemoryLogNew->push_back(-Diagnosis);
+    //ACTIVE MEMORY
+    if (RValue >= ActiveThreshold) {
+        ActiveMemory();
+    }
+        // UNIQUE FAULT TYPE AND TIME IDENTIFY
+    else {
+        MemoryLogNew->push_back(Time);
+        for (int i = 0; i < Snapshot.size(); i++) {
+            MemoryLogNew->push_back(Snapshot.at(i));
+        }
+    }
+    if (Eligibility || ClassifierSuccess) {
+        Total++;
+        //std::cout << "Total: " << Total << std::endl;
+    }
+    if (ClassifierSuccess) {
+        //std::cout << "DIAGNOSED (CLASSIFIER)" << std::endl;
+        Class++;
+        //std::cout << "Total Class: " << Class << std::endl;
+        MemoryTimes.push_back(Time);
+        CorrCoeff.push_back(RValue);
+    } else {
+        //std::cout << "DIAGNOSED (MOT)" << std::endl;
+        int TimeTaken = Time - TimeStart;
+        MOTTimes.push_back(Time);
+        if (Eligibility) {
+            MOT++;
+            //std::cout << "Total MOT: " << MOT << std::endl;
+        }
+    }
+    Candidates.clear();
+    TimeID = 0;
+    TimeStart = 0;
+    RValue = 0;
+    Diagnosis = 0;
+    Diagnosed = false;
+    Ambulance.clear();
+    Snapshot.clear();
+    DiagCandidate = 0;
+    Doctor = false;
+    DoctorsOrder = 0;
+    ClassifierSuccess = true;
+    BeginMOT = false;
+    ping = false;
+    Stop = false;
+    RABCompare = false;
+    RABConfirm = false;
+    ConfirmRM = false;
+    TestRM = false;
+    ConfirmLM = false;
+    TestLM = false;
+    TestStraight = false;
+    ConfirmStraight = false;
+    TestLap = false;
+    ConfirmLap = 0;
+    LapDelay = 0;
+    LapStart = 0;
+    LapCount = false;
+    FailReset = false;
+    PingWait.clear();
+    StopWait.clear();
+    RABWait.clear();
+    MotorWait.clear();
+    StraightWait.clear();
+    LapWait.clear();
+}
+/****************************************/
+void CFootBotDiffusion::FaultyReset() {
+    if ((std::find(std::begin(PowerCycle), std::end(PowerCycle), Diagnosis) != std::end(PowerCycle)
+         && std::find(std::begin(PowerCycle), std::end(PowerCycle), Faulty) != std::end(PowerCycle)) ||
+        (std::find(std::begin(MotorReplacement), std::end(MotorReplacement), Diagnosis) != std::end(MotorReplacement)
+         && std::find(std::begin(MotorReplacement), std::end(MotorReplacement), Faulty) != std::end(MotorReplacement)) ||
+        (std::find(std::begin(SensorReplacement), std::end(SensorReplacement), Diagnosis) != std::end(SensorReplacement)
+         && std::find(std::begin(SensorReplacement), std::end(SensorReplacement), Faulty) != std::end(SensorReplacement))) {
+        HangVector.clear();
+        PingWait.clear();
+        StopWait.clear();
+        RABWait.clear();
+        MotorWait.clear();
+        StraightWait.clear();
+        LapWait.clear();
+        BeginMOT = false;
+        ping = false;
+        Stop = false;
+        RABCompare = false;
+        RABConfirm = false;
+        ConfirmRM = false;
+        TestRM = false;
+        ConfirmLM = false;
+        TestLM = false;
+        TestStraight = false;
+        ConfirmStraight = false;
+        TestLap = false;
+        ConfirmLap = 0;
+        LapDelay = 0;
+        LapStart = 0;
+        LapCount = false;
+        hangLeft = 0;
+        hangRight = 0;
+        hang = false;
+        power = false;
+        MotorRand = 0;
+        for (int i = 0; i < FaultyIDs.size(); i++) {
+            if (FaultyIDs.at(i) == ID) {
+                //std::cout << "ERASING: " << FaultyIDs.at(i) << " FROM FAULTY IDS" << std::endl;
+                FaultyIDs.erase(FaultyIDs.begin() + i);
+
+            }
+        }
+        for (int i = 0; i < Doctors.size(); i++) {
+            if (Doctors.at(i) == ID) {
+                //std::cout << "ERASING: " << Doctors.at(i) << " AND " << Doctors.at(i-1) << " FROM DETECTED IDS" << std::endl;
+                Doctors.erase(Doctors.begin() + i);
+                Doctors.erase(Doctors.begin() + i - 1);
+            }
+        }
+        if (std::find(std::begin(PowerCycle), std::end(PowerCycle), Diagnosis) != std::end(PowerCycle)
+            && std::find(std::begin(PowerCycle), std::end(PowerCycle), Faulty) != std::end(PowerCycle)) {
+            //std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Cycle Power" << std::endl;
+        } else if (std::find(std::begin(MotorReplacement), std::end(MotorReplacement), Diagnosis) !=
+                   std::end(MotorReplacement)
+                   && std::find(std::begin(MotorReplacement), std::end(MotorReplacement), Faulty) !=
+                      std::end(MotorReplacement)) {
+            //std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Replace Motor" << std::endl;
+
+        } else if (std::find(std::begin(SensorReplacement), std::end(SensorReplacement), Diagnosis) != std::end(SensorReplacement)
+                   && std::find(std::begin(SensorReplacement), std::end(SensorReplacement), Faulty) != std::end(SensorReplacement)) {
+            //std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Replace Sensor" << std::endl;
+        }
+        Faulty = 0;
+        Diagnosed = true;
+        FaultsInPlay--;
+        FailReset = false;
+        FaultStart = 0;
+        RValue = 0;
+    }
+    else {
+        //std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", FAILURE" << std::endl;
+        Fail++;
+        //std::cout << "Total Fails: " << Fail << std::endl;
+        if (RValue != 0) {
+            FailCoeff.push_back(RValue);
+        }
+        if (!BeginMOT) {
+            Diagnosis = 0;
+            FailReset = true;
+            //std::cout << "Try Diagnosis From Scratch" << std::endl;
+        }
+    }
+}
+/****************************************/
+/****************************************/
+
+CVector2 CFootBotDiffusion::VectorToLight() {
+    /* Get light readings */
+    const CCI_FootBotLightSensor::TReadings& tReadings = m_pcLight->GetReadings();
+    /* Calculate a normalized vector that points to the closest light */
+    CVector2 cAccum;
+    for(size_t i = 0; i < tReadings.size(); ++i) {
+        cAccum += CVector2(tReadings[i].Value, tReadings[i].Angle);
+    }
+    if(cAccum.Length() > 0.0f) {
+        /* Make the vector long as 1/4 of the max speed */
+        cAccum.Normalize();
+        cAccum *= 0.25f * m_fWheelVelocity;
+    }
+    return cAccum;
 
 }
 
 /****************************************/
-/****************************************/
-/*void CFootBotDiffusion::FindYaw(const LoggingLoopFunctions &a) {
-    y = a.AgentBearing_Sensor;
-    std::cout << "TESTING CONF : " << y << std::endl;
-    return;
-}*/
+
 
 void CFootBotDiffusion::ControlStep() {
     if (timeweight == 0) {
         Time = Time + 1;
     }
+    int RobotNumber = CSimulator::GetInstance().GetSpace().GetEntitiesByType("foot-bot").size();
 
-
-    //std::cout << "time is " << Time << std::endl;
+    /*if (CSimulator::GetInstance().GetSpace().GetEntitiesByType("box").size() == 4 && !SaveMemory) {
+        //std::cout << "SAVEMEMORY" << std::endl;
+        SaveMemory = true;}*/
     /* Get readings from proximity sensor */
     const CCI_FootBotProximitySensor::TReadings &tProxReads = m_pcProximity->GetReadings();
     /* Sum them together */
@@ -167,1258 +831,787 @@ void CFootBotDiffusion::ControlStep() {
 
     cAngle = cAccumulator.Angle();
 
-    CFootBotEntity &entity = dynamic_cast<CFootBotEntity &>(CSimulator::GetInstance().GetSpace().GetEntity(GetId()));
+    // CODE STARTS HERE
 
+    CFootBotEntity &entity = dynamic_cast<CFootBotEntity &>(CSimulator::GetInstance().GetSpace().GetEntity(GetId()));
     CRadians yaw, pitch, roll;
-    std::string IDraw = GetId();
-    int ID = IDraw.at(2) + 32;
+    /****************************************/
+    std::string robot_name = GetId();
+    robot_name = robot_name.substr(2, robot_name.size());
+    int id = atoi(robot_name.c_str());
+    ID = id+100;
+
     entity.GetEmbodiedEntity().GetOriginAnchor().Orientation.ToEulerAngles(yaw, pitch, roll);
+    // Add noise
     unsigned seed = Time;
     std::default_random_engine generator(seed);
-    std::normal_distribution<double> YawNoise(0,3);
-    std::normal_distribution<double> YawCoordNoise(0,0.1);
-    std::normal_distribution<double> XNoise(0,0.000025);
-    std::normal_distribution<double> YNoise(0,0.000025);
-    std::normal_distribution<double> RABNoise(0,3);
+    std::normal_distribution<double> YawNoise(0,BearingNoise);
+    std::normal_distribution<double> YawCoordNoise(0,YawCoordinateNoise);
+    std::normal_distribution<double> XNoise(0,CoordinateNoise);
+    std::normal_distribution<double> YNoise(0,CoordinateNoise);
 
-    Real Heading = (yaw.GetValue() * 180 / ARGOS_PI) + YawNoise(generator);
-    if (Heading > 180) {
-        Heading = -180 + (Heading-180);
-    }
-    if (Heading < -180) {
-        Heading = 180 - (abs(Heading)-180);
-    }
+    Heading = (yaw.GetValue() * 180 / ARGOS_PI) + YawNoise(generator);
+    Heading = HeadingCorrect();
 
-    Real X = entity.GetEmbodiedEntity().GetOriginAnchor().Position.GetX() + XNoise(generator);
-    Real Y = entity.GetEmbodiedEntity().GetOriginAnchor().Position.GetY() + YNoise(generator);
-    Real TrueX = entity.GetEmbodiedEntity().GetOriginAnchor().Position.GetX();
-    Real TrueY = entity.GetEmbodiedEntity().GetOriginAnchor().Position.GetY();
+    X = entity.GetEmbodiedEntity().GetOriginAnchor().Position.GetX() + XNoise(generator);
+    Y = entity.GetEmbodiedEntity().GetOriginAnchor().Position.GetY() + YNoise(generator);
+    TrueX = entity.GetEmbodiedEntity().GetOriginAnchor().Position.GetX();
+    TrueY = entity.GetEmbodiedEntity().GetOriginAnchor().Position.GetY();
 
-
-
-
-    int Move = 0;
     NoiseLeft = 0.0f;
     NoiseRight = 0.0f;
+    Left = 0;
+    Right = 0;
 
-
-    FlockData->push_back(ID);
-    FlockData->push_back(Heading);
-    FlockCoordData->push_back(ID);
-    FlockCoordData->push_back(X);
-    FlockCoordData->push_back(Y);
     FlockRange.clear();
+    AbsoluteFlockBearing.clear();
     FlockBearing.clear();
-    FlockID.clear();
     FlockHeadings.clear();
-    FlockCoords.clear();
-    AggX.clear();
-    AggY.clear();
-    int Danger = 0;
-    int Alone;
-    int AloneCount = 0;
-    int Left = 0;
-    int Right = 0;
-
+    FlockCoordX.clear();
+    FlockCoordY.clear();
+    OmegaCoordX.clear();
+    OmegaCoordY.clear();
+    if (Faulty == 0 && Diagnosed && !Doctor) {
+        Diagnosed = false;
+        Diagnosis = 0;
+    }
     // FAULT INJECTION
-    if (Time > (BounceCount + 500) && FaultBounce == 0) {
-        srand(Time);
-        FaultBounce = 1;
-        while (Fault == 0) {
-            Fault = rand() % 6 + 1;
-            if (Fault == 5 && Behaviour > 1) {
-                Fault = 0;
-            }
-        }
-        std::cout << "Fault is " << Fault << std::endl;
-        if (std::find(std::begin(Checklist), std::end(Checklist),Fault) != std::end(Checklist)) {
-            Eligibility = 1;
-            //std::cout << "Fault is known" << std::endl;
-        }
-        else {
-            Eligibility = 0;
-            Checklist.push_back(Fault);
-            //std::cout << "Fault is unknown" << std::endl;
-        }
-        //Fault = 2;
-
+    int prob = rand() % FaultProb;
+    if (prob > FaultProb - 2 && Faulty == 0 && !Doctor && FaultsInPlay < 0.5*RobotNumber) {
+        FaultsInPlay++;
+        FaultStart = Time;
+        FaultInject();
     }
     // BEHAVIOUR SWITCH
     if (Time > (BehaviourCount*5000)) {
-        srand(Time);
-        BehaviourCount++;
-        Behaviour = rand() % 3+1;
-        std::cout << "Behaviour is " << Behaviour << std::endl;
-    }
-    if (Time <= 36000) {
-        //std::string folderName = std::to_string(foldernum);
-        //mkdir(folderName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-        //DataFile.open (folderName + "/Data.csv", std::ios_base::app);
-
+        BehaviourUpdate();
+        //Behaviour = 2;
     }
 
+    //if (Time > 10000) {std::cout << "AVERAGE FAIL COEFF = " << std::accumulate(FailCoeff.begin(), FailCoeff.end(), 0.0)/FailCoeff.size() << std::endl;}
 
-    // BEHAVIOURS //
-    int Quarantine = 0;
-    if (FlockData->size() == FlockData->capacity() && FlockCoordData->size() == FlockCoordData->capacity()) {
-        if (m_cGoStraightAngleRange.WithinMinBoundIncludedMaxBoundIncluded(cAngle) &&
-            cAccumulator.Length() < m_fDelta) {
-            Ambulance.clear();
-            AloneCount = 0;
-            Alone = 1;
-            for (CCI_RangeAndBearingSensor::SPacket packet : packets) {
-                double bearing = ToDegrees(packet.HorizontalBearing).GetValue();
-                double range = packet.Range + RABNoise(generator);
-                if (Update.size() > 0 && Detected == 0) {
-                    for (int x = 0; x < Update.size(); x++) {
-                        if (Update.at(x) == ID) {
-                            int comp = Update.at(x+1);
-                            if (std::find(std::begin(Update), std::end(Update),ID) != std::end(Update) && std::find(std::begin(Update), std::end(Update),packet.Data[0] + 80) == std::end(Update)) {
-                                Update.push_back(packet.Data[0] + 80);
-                                Update.push_back(comp);
-                                std::cout << packet.Data[0]+80 << " UPDATED TO " << comp << std::endl;
+    std::ostringstream oss;
+    CLoopFunctions CS;
+    CSpace::TMapPerType& foot_bots = CS.GetSpace().GetEntitiesByType("foot-bot");
+
+    Quarantine = false;
+    // DETECT RESET
+    if (std::find(std::begin(Doctors), std::end(Doctors),UnderInvestigation) != Doctors.end() && UnderInvestigation != DoctorsOrder) {
+        UnderInvestigation = 0;
+        DetectBodge->clear();
+        //std::cout << ID << " forgets about " << UnderInvestigation << " ALT" << std::endl;
+    }
+
+    Ambulance.clear();
+    Alone = 0;
+    int MidProxCoord = 0;
+    int CloseProxCoord = 0;
+    int MidProx = 0;
+    int CloseProx = 0;
+    for (CCI_RangeAndBearingSensor::SPacket packet : packets) {
+        double bearing = ToDegrees(packet.HorizontalBearing).GetValue();
+        std::normal_distribution<double> RABNoise(0,packet.Range*0.05);
+        double range = packet.Range + RABNoise(generator);
+        for (auto &map_element : foot_bots){
+            CFootBotEntity &foot_bot = *any_cast<CFootBotEntity *>(map_element.second);
+            CFootBotDiffusion &controller = dynamic_cast<CFootBotDiffusion &>(foot_bot.GetControllableEntity().GetController());
+            // Alignment
+            if (controller.ID == packet.Data[0]+100) {
+                // Neighbours are in range
+                MidProxCoord = MidProxCoord + 1;
+                // Neighbours are in close range
+                if (sqrt(pow(X - controller.X, 2) + pow(Y-controller.Y, 2)) < 0.3) {
+                    CloseProxCoord = CloseProxCoord + 1;
+                }
+                // Normal Sensor Function
+                if (abs(bearing) > PMFangle && Faulty == 6 || Faulty == 3 || power || hang) {
+                }
+                else {
+                    Alone++;
+                    FlockBearing.push_back(bearing);
+                    //std::cout << atan2((controller.TrueY - TrueY), (controller.TrueX - TrueX)) * 180 / ARGOS_PI << std::endl;
+                    AbsoluteFlockBearing.push_back(atan2((controller.TrueY - TrueY), (controller.TrueX - TrueX)) * 180 / ARGOS_PI);
+                    OmegaCoordX.push_back(cos(atan2((controller.TrueY - TrueY), (controller.TrueX - TrueX))));
+                    OmegaCoordY.push_back(sin(atan2((controller.TrueY - TrueY), (controller.TrueX - TrueX))));
+                    FlockRange.push_back(range);
+                    MidProx = MidProx + 1;
+                    if (packet.Range < 30) {
+                        CloseProx = CloseProx + 1;
+                    }
+                }
+                // Gather Behaviour Data
+                FlockCoordX.push_back(controller.X);
+                FlockCoordY.push_back(controller.Y);
+                FlockHeadings.push_back(controller.Heading);
+                // DETECTION
+                if (!Doctor && Faulty == 0 && std::find(std::begin(Doctors), std::end(Doctors), controller.ID) == std::end(Doctors)) {
+                    // Begin monitoring robot when found to be faulty
+                    if (UnderInvestigation == 0 && controller.Faulty != 0) {
+                        UnderInvestigation = controller.ID;
+                    }
+                    // Stop monitoring if no longer faulty
+                    if (UnderInvestigation == controller.ID && controller.Faulty == 0) {
+                        UnderInvestigation = 0;
+                    }
+                    // Record monitored robots BFV if unusual
+                    if (controller.ID == UnderInvestigation && controller.Faulty != 0) {
+                        for (int i = 1; i < controller.AgentNew.size(); i++) {
+                            if (i % 2 != 0) {
+                                FaultyFeatureVectors->push_back(controller.AgentNew[i]);
+                                FaultyFeatureVectors->push_back(controller.AgentNew[i + 1]);
+                                if (controller.AgentNew[i] != controller.AgentNew[i + 1]) {
+                                    Discrep++;
+                                }
                             }
-                            else {
-                                for (int i = 0; i < Update.size(); i++) {
-                                    if (Update.at(i) == packet.Data[0] + 80 && Update.at(i + 1) < comp) {
-                                        Update.at(i + 1) = UpdateNum;
-                                        std::cout << packet.Data[0]+80 << " UPDATED TO " << comp << std::endl;
-                                    }
+                        }
+                        if (Discrep > 0) {
+                            Discrep = 0;
+                            DetectBodge->push_back(1);
+                        } else {
+                            DetectBodge->push_back(0);
+                        }
+                    }
+                    // Declare detected fault & assign doctor
+                    if (std::accumulate(DetectBodge->begin(), DetectBodge->end(), 0.0) >= DetectDelay*DetectRatio && DetectBodge->size() == DetectBodge->capacity()
+                            && FaultyFeatureVectors->size() == FaultyFeatureVectors->capacity()) {
+                        //std::cout << "DETECTED" << std::endl;
+                        TimeStart = Time;
+                        Doctor = true;
+                        DoctorsOrder = UnderInvestigation;
+                        //std::cout << "DR FOR " << DoctorsOrder << " IS " << ID << std::endl;
+                        Doctors.push_back(ID);
+                        Doctors.push_back(DoctorsOrder);
+                        DetectTime.push_back(Time - controller.FaultStart);
+                        TakeSnapshot();
+                        Classify();
+                    }
+                    //SHARE MEMORY
+                    if (std::find(MemoryBounce->begin(), MemoryBounce->end(), controller.ID) == MemoryBounce->end()) {
+                        //std::cout << ID << " Tries " << controller.ID << std::endl;
+                        MemoryBounce->push_back(controller.ID);
+                        for (int i = 0; i < controller.MemoryLogNew->size(); i++) {
+                            if (controller.MemoryLogNew->at(i) < 0 &&
+                                (std::find(MemoryLogNew->begin(), MemoryLogNew->end(),
+                                           controller.MemoryLogNew->at(i + 1)) == MemoryLogNew->end())) {
+                                //std::cout << ID << " Shares With " << controller.ID << std::endl;
+
+                                for (int j = i; j < i + ((12 * DetectDelay) + 2); j++) {
+                                    MemoryLogNew->push_back(controller.MemoryLogNew->at(j));
                                 }
                             }
                         }
                     }
-
-
-
-
-
-                }
-                // Partial Sensor Failure //
-                if (ID == 83 && Fault == 6) {
-                    if (Detected == 1) {
-                        FaultID = ID;
-                    }
-                    if (abs(bearing) > PMFangle && AloneCount == 0) {
-                        //std::cout << "I can't see " << packet.Data[0] + 80 << std::endl;
-                    }
                     else {
-                        //std::cout << "I can see " << packet.Data[0] + 80 << std::endl;
-                        Alone = 0;
-                        FlockBearing.push_back(bearing);
-                        FlockRange.push_back(range);
-                        FlockID.push_back(packet.Data[0] + 80);
-                    }
+                        //std::cout << ID << " doesn't share with " << controller.ID << std::endl;
+                        MemoryBounce->push_back(0);}
                 }
-                else {
-                    Alone = 0;
-                    FlockBearing.push_back(bearing);
-                    FlockRange.push_back(range);
-                    FlockID.push_back(packet.Data[0] + 80);
-                }
-                if (packet.Data[0] + 80 == FaultID) {
-                    DrRobo.push_back(ID);
-                    DrDistance.push_back(range);
-                }
-                if (packet.Data[0] + 80 == DrID && ID != FaultID) {
-                    if (bearing > 0 && bearing < 90) {
-                        Left = 1;
-                        Right = 0;
-                        Quarantine = 1;
-                    }
-                    else if (bearing < 0 && bearing > -90) {
-                        Left = 0;
-                        Right = 1;
-                        Quarantine = 1;
-                    }
-                }
-                if (ID == DrID && packet.Data[0] + 80 == FaultID) {
-                    Stop = 1;
-                    EyesOn = 1;
-                    Ambulance.push_back(bearing);
-                    Ambulance.push_back(range);
-                }
-            }
-            // OBSTACLE AVOIDANCE
-            if (Quarantine == 0 && ID != DrID && Behaviour == 1) {
-                for (int i = 0; i < FlockRange.size(); i++) {
-                    if (FlockRange[i] < 30) {
-                        if (FlockBearing[i] > 0.0f) {
-                            Left = 1;
-                            Right = 0;
-                        }
-                        else {
-                            Left = 0;
-                            Right = 1;
-                        }
-                    }
-                    else {
-                        Left = 1;
-                        Right = 1;
-                    }
-                }
-                if (Alone == 1) {
-                    Left = 1;
-                    Right = 1;
-                }
-            }
-            // AGGREGATION
-            if (Quarantine == 0 && ID != DrID && Behaviour == 2) {
-                for (int i = 0; i < FlockRange.size(); i++) {
-                    if (FlockRange[i] < 30) {
-                        Danger = 1;
-                        if (FlockBearing[i] > 0.0f) {
-                            Left = 1;
-                            Right = 0;
-                        }
-                        else {
-                            Left = 0;
-                            Right = 1;
-                        }
-                    }
-                }
-                if (Danger == 0) {
 
-                    for (int j = 0; j < FlockCoordData->size(); j++) {
-                        for (int k = 0; k < FlockID.size(); k++) {
-                            if (FlockCoordData->at(j) == FlockID.at(k)) {
-                                AggX.push_back(FlockCoordData->at(j + 1));
-                                AggY.push_back(FlockCoordData->at(j + 2));
-                            }
+                // DIAGNOSTIC ROUTINE
+                // Faulty
+                if (Faulty != 0 && ID == controller.DoctorsOrder) {
+                    if (controller.Diagnosis != 0 && !FailReset) {
+                        Diagnosis = controller.Diagnosis;
+                        //std::cout << ID << " GOT MY DIAGNOSIS " << Diagnosis << " from " << controller.ID << std::endl;
+                        if (controller.RValue != 0) {
+                            RValue = controller.RValue;
                         }
                     }
-                    CVector2 GoalCoord;
-                    Real GoalBearing;
-                    GoalCoord.Set((std::accumulate(AggX.begin(), AggX.end(), 0.0) / AggX.size()),
-                                  (std::accumulate(AggY.begin(), AggY.end(), 0.0) / AggY.size()));
-                    GoalBearing = atan2(GoalCoord.GetY() - Y, GoalCoord.GetX() - X) * 180 / ARGOS_PI;
-                    if (abs(Heading) < abs(GoalBearing) + 5 && abs(Heading) > abs(GoalBearing) - 5) {
-                        Left = 1;
-                        Right = 1;
+                    if (controller.BeginMOT && FailReset) {
+                        FailReset = false;
+                        //std::cout << "RESET BY " << controller.ID << " W/ DIAGNOSIS " << controller.Diagnosis << std::endl;
                     }
-                    else {
-                        if (Heading < GoalBearing) {
-                            Left = 0;
-                            Right = 1;
+                    if (controller.BeginMOT && !Diagnosed) {
+                        //std::cout << "Faulty Beginning Diagnosis" << std::endl;
+                        BeginMOT = true;
+                        if (controller.ping && Faulty != 2) {
+                            ping = true;
+                            //std::cout << "Faulty Pinging" << std::endl;
                         }
-                        else {
-                            Left = 1;
-                            Right = 0;
+                        if (controller.Stop && Faulty != 1) {
+                            Stop = true;
+                            //std::cout << "Faulty Stopping" << std::endl;
+                        }
+                        if (controller.RABCompare) {
+                            RABCompare = true;
+                            //std::cout << "Testing Sensor" << std::endl;
+                        }
+                        if (controller.TestLM && !ConfirmLM) {
+                            TestLM = true;
+                            //std::cout << "Testing LM" << std::endl;
+                        }
+                        if (controller.TestRM && !ConfirmRM) {
+                            TestRM = true;
+                            //std::cout << "Testing RM" << std::endl;
+                        }
+                        if (controller.TestStraight && !ConfirmStraight) {
+                            TestStraight = true;
+                            //std::cout << "Testing Straight" << std::endl;
+                        }
+                        if (controller.TestLap  && ConfirmLap == 0){
+                            TestLap = true;
+                            //std::cout << "Testing Lap" << std::endl;
                         }
                     }
                 }
-                if (Alone == 1) {
-                    Left = 1;
-                    Right = 1;
+                // Doctor
+                /*if (controller.FailReset) {
+                    std::cout << controller.ID << " HAS TRUE FAIL RESET AS DETERMINED BY " << ID << std::endl;
+                }*/
+                if (Doctor && controller.ID == DoctorsOrder && controller.FailReset && !BeginMOT) {
+                    BeginMOT = true;
+                    Diagnosis = 0;
+                    ClassifierSuccess = false;
+                    //std::cout << "Class failed now try MOT" << std::endl;
                 }
-            }
-            // FLOCKING
-            if (Quarantine == 0 && ID != DrID && Behaviour == 3) {
-                for (int i = 0; i < FlockRange.size(); i++) {
-                    if (FlockRange[i] < 30) {
-                        Danger = 1;
-                        if (FlockBearing[i] > 0.0f) {
-                            Left = 1;
-                            Right = 0;
-                        }
-                        else {
-                            Left = 0;
-                            Right = 1;
+                if (Doctor && controller.ID == DoctorsOrder && controller.BeginMOT && !controller.Diagnosed) {
+                    //std::cout << "Doctor Beginning Diagnosis" << std::endl;
+                    if (!controller.ping) {
+                        ping = true;
+                    }
+                    if (ping && !controller.ping) {
+                        PingWait.push_back(1);
+                        if (std::accumulate(PingWait.begin(), PingWait.end(), 0.0) > FaultDelay) {
+                            Diagnosis = 2;
                         }
                     }
-                }
-                if (Danger == 0) {
+                    else if (ping && controller.ping) {
+                        Stop = true;
+                        ping = false;
 
-                    for (int j = 0; j < FlockData->size(); j++) {
-                        for (int k = 0; k < FlockID.size(); k++) {
-                            if (FlockData->at(j) == FlockID.at(k)) {
-                                FlockHeadings.push_back(FlockData->at(j + 1));
-                            }
+                    }
+                    if (Stop && !controller.Stop) {
+                        StopWait.push_back(1);
+                        if (std::accumulate(StopWait.begin(), StopWait.end(), 0.0) > FaultDelay) {
+                            Diagnosis = 1;
                         }
                     }
-                    Real Goal;
-                    Real GoalHeading =
-                            std::accumulate(FlockHeadings.begin(), FlockHeadings.end(), 0.0) / FlockHeadings.size();
-                    Real GoalBearing =
-                            std::accumulate(FlockBearing.begin(), FlockBearing.end(), 0.0) / FlockBearing.size();
-                    if (std::accumulate(FlockRange.begin(), FlockRange.end(), 0.0) / FlockRange.size() >
-                        (30 + (15 * FlockRange.size()))) {
-                        Goal = GoalBearing;
-                        if (abs(Goal) < 15) {
-                            Left = 1;
-                            Right = 1;
-                        }
-                        else {
-                            if (Goal < 0) {
-                                Left = 1;
-                                Right = 0;
-                            }
-                            else {
-                                Left = 0;
-                                Right = 1;
-                            }
+                    else if (Stop && controller.Stop && controller.ping) {
+                        RABCompare = true;
+                        Stop = false;
+                    }
+                    if (RABCompare && !controller.RABConfirm) {
+                        RABWait.push_back(1);
+                        if (std::accumulate(RABWait.begin(), RABWait.end(), 0.0) > FaultDelay) {
+                            Diagnosis = 3;
+                            RABWait.clear();
                         }
                     }
-                    else {
-                        Goal = GoalHeading;
-                        if (abs(Heading) < abs(Goal) + 15 && abs(Heading) > abs(Goal) - 15) {
-                            Left = 1;
-                            Right = 1;
-                        }
-                        else {
-                            if (Heading < Goal) {
-                                Left = 0;
-                                Right = 1;
-                            }
-                            else {
-                                Left = 1;
-                                Right = 0;
-                            }
+                    else if (RABCompare && controller.RABConfirm) {
+                        TestLM = true;
+                        RABCompare = false;
+                    }
+                    if (TestLM && !controller.ConfirmLM) {
+                        MotorWait.push_back(1);
+                        if (std::accumulate(MotorWait.begin(), MotorWait.end(), 0.0) > FaultDelay) {
+                            Diagnosis = 4;
                         }
                     }
-                }
-                if (Alone == 1) {
-                    Left = 1;
-                    Right = 1;
-                }
-            }
-
-            // DECIDE ON A DR//
-            if (ID == DrID && Ambulance.size() > 1) {
-                BeginDiagnostic = 1;
-                if (Ambulance.at(1) < 50) {
-                    Left = 0;
-                    Right = 0;
-
-                }
-                else {
-                    if (abs(Ambulance.at(0)) < 20) {
-                        Left = 1;
-                        Right = 1;
+                    else if (TestLM && controller.ConfirmLM) {
+                        TestRM = true;
+                        TestLM = false;
+                        MotorWait.clear();
                     }
-                    else {
-                        if (Ambulance.at(0) < 0) {
-                            Left = 1;
-                            Right = 0;
+                    if (TestRM && !controller.ConfirmRM) {
+                        MotorWait.push_back(1);
+                        if (std::accumulate(MotorWait.begin(), MotorWait.end(), 0.0) > FaultDelay) {
+                            Diagnosis = 4;
                         }
-                        else {
-                            Left = 0;
-                            Right = 1;
+                    }
+                    else if (TestRM && controller.ConfirmRM) {
+                        TestStraight = true;
+                        TestRM = false;
+                    }
+                    if (TestStraight && !controller.ConfirmStraight) {
+                        StraightWait.push_back(1);
+                        if (std::accumulate(StraightWait.begin(), StraightWait.end(), 0.0) > FaultDelay) {
+                            Diagnosis = 5;
+                        }
+                    }
+                    else if (TestStraight && controller.ConfirmStraight) {
+                        TestLap = true;
+                        TestStraight = false;
+                    }
+                    if (TestLap && controller.ConfirmLap == -1) {
+                        LapWait.push_back(1);
+                        if (std::accumulate(LapWait.begin(), LapWait.end(), 0.0) > FaultDelay) {
+                            Diagnosis = 6;
                         }
                     }
                 }
-            }
-            if (ID == FaultID) {
-                wall = 0;
-
+                if (Doctor && !Diagnosed && controller.ID == DoctorsOrder && controller.Diagnosed) {
+                    Diagnosed = true;
+                }
             }
         }
-        else {
-            if (ID == FaultID && power == 0 && hang ==0) {
-                wall = 1;
-            }
 
-
-            if (cAngle.GetValue() > 0.0f) {
+        if (std::find(std::begin(Doctors), std::end(Doctors),packet.Data[0]+100) != std::end(Doctors) && Faulty == 0 && !Doctor) {
+            if (bearing > 0 && bearing < 90) {
                 Left = 1;
                 Right = 0;
+                Quarantine = true;
             }
-            else {
+            else if (bearing < 0 && bearing > -90) {
                 Left = 0;
                 Right = 1;
+                Quarantine = true;
             }
-
+        }
+        if (Doctor && packet.Data[0]+100 == DoctorsOrder) {
+            Ambulance.push_back(bearing);
+            Ambulance.push_back(range);
         }
     }
+    // BEHAVIOURS
+
+    // OBSTACLE AVOIDANCE
+    if (!Quarantine && !Doctor && Behaviour == 1) {
+        ObstacleAv();
+    }
+    // AGGREGATION
+    if (!Quarantine && !Doctor && Behaviour == 2) {
+        Aggregation();
+    }
+    // FLOCKING
+    if (!Quarantine && !Doctor && Behaviour == 3) {
+        Flocking();
+    }
+    if (!Quarantine && !Doctor && Behaviour == 4) {
+        OmegaAlg();
+    }
+    // SEND DR TO FAULTY//
+    if (Doctor && Ambulance.size() > 1) {
+        DrPursue();
+    }
+
 
     // SET NORMAL WHEEL VALUES
     RightWheel = (m_fWheelVelocity*Right);
     LeftWheel = (m_fWheelVelocity*Left);
     NoiseLeft = 0;
     NoiseRight = 0;
-
-
     // COMPLETE SENSOR FAULT //
-    if (ID == 83 && Fault == 3) {
-        if (Detected == 1) {
-            FaultID = ID;
-        }
+    if (Faulty == 3) {
         RightWheel = m_fWheelVelocity;
         LeftWheel = m_fWheelVelocity;
     }
     // POWER FAILURE //
-    if (ID == 83 && Fault == 2) {
-        if (Detected == 1) {
-            FaultID = ID;
-        }
-        power = 1;
+    if (Faulty == 2) {
+        power = true;
         RightWheel = 0;
         LeftWheel = 0;
     }
-
-
     // SOFTWARE HANG //
-    if (ID == 83 && Fault == 1) {
-        if (Detected == 1) {
-            FaultID = ID;
-        }
-        if (hang == 0) {
+    if (Faulty == 1) {
+        if (!hang) {
             hangRight = RightWheel;
             hangLeft = LeftWheel;
-            F1hang = Agent.at(2);
-            F2hang = Agent.at(3);
-            F3hang = Agent.at(4);
-            F4hang = Agent.at(5);
-            F5hang = Agent.at(6);
-            hang = 1;
+            HangVector.push_back(AgentNew[2]);
+            HangVector.push_back(AgentNew[4]);
+            HangVector.push_back(AgentNew[6]);
+            HangVector.push_back(AgentNew[8]);
+            HangVector.push_back(AgentNew[10]);
+            hang = true;
         }
         else {
             RightWheel = hangRight;
             LeftWheel = hangLeft;
         }
     }
-
-
     // COMPUTE FEATURE VECTOR
     // Initialise
-    int MidProxCoord = 0;
-    int CloseProxCoord = 0;
-    int MidProx = 0;
-    int CloseProx = 0;
-    Agent.clear();
-    AgentCoord.clear();
-    Indices.clear();
-    Indices1.clear();
-    Indices4.clear();
-    // Timestamp & ID
-    Agent.push_back(Time);
-    AgentCoord.push_back(Time);
-    Agent.push_back(-ID);
-    AgentCoord.push_back(-ID);
+
+    AgentNew.clear();
+    AgentNew.push_back(-ID);
     // Internally Calculate Wheel Velocity
     Real Velocity_Wheels = 0.5*(GetSpoofLeftWheelVelocity() + GetSpoofRightWheelVelocity());
     Real Difference_Wheels = GetSpoofLeftWheelVelocity() - GetSpoofRightWheelVelocity();
-    // Calculate Neighbours in Mid-Close Proximity Internally & Externally
-    for(CCI_RangeAndBearingSensor::SPacket packet : packets)
-    {
-
-        double bearing = ToDegrees(packet.HorizontalBearing).GetValue();
-        double range = packet.Range + RABNoise(generator);
-        MidProxCoord = MidProxCoord + 1;
-        Real TrueBearing;
-        if (bearing + Heading < -180) {
-            TrueBearing = (360 - (sqrt(pow(bearing + Heading, 2))));
-        }
-        else if (bearing + Heading > 180) {
-            TrueBearing = -(360 - (sqrt(pow(bearing + Heading, 2))));
-        }
-        else {
-            TrueBearing = bearing + Heading;
-        }
-        Real TrueRange = (range / 100);
-        NeighbourDistance.Set(TrueRange * cos(ARGOS_PI * TrueBearing / 180),
-                              TrueRange * sin(ARGOS_PI * TrueBearing / 180));
-        if (sqrt(pow(NeighbourDistance.GetX(), 2) + pow(NeighbourDistance.GetY(), 2)) < 0.3) {
-            CloseProxCoord = CloseProxCoord + 1;
-        }
-        if (ID == 83 && abs(bearing) > PMFangle && Fault == 6 || ID == 83 && Fault == 3 || power == 1 || hang == 1) {
-
-        }
-        else {
 
 
-            MidProx = MidProx + 1;
-
-
-
-
-            if (packet.Range < 30) {
-                CloseProx = CloseProx + 1;
-            }
-
-
-        }
-    }
     // Set Internal & External Neighbour Features
+    // F1 MidProx Ext
     if (MidProxCoord > 0) {
-        AgentCoord.push_back(1);
+        AgentNew.push_back(1);
     }
     else {
-        AgentCoord.push_back(0);
+        AgentNew.push_back(0);
     }
-    if (hang == 0) {
+    // F2 MidProx Int
+    if (!hang) {
         if (MidProx > 0) {
-            Agent.push_back(1);
+            AgentNew.push_back(1);
         }
         else {
-            Agent.push_back(0);
+            AgentNew.push_back(0);
         }
     }
     else {
-        Agent.push_back(F1hang);
+        AgentNew.push_back(HangVector[0]);
     }
-
+    // F3 CloseProx Ext
     if (CloseProxCoord > 0) {
-        AgentCoord.push_back(1);
+        AgentNew.push_back(1);
     }
     else {
-        AgentCoord.push_back(0);
+        AgentNew.push_back(0);
     }
-    if (hang == 0) {
+    // F4 CloseProx Int
+    if (!hang) {
         if (CloseProx > 0) {
-            Agent.push_back(1);
+            AgentNew.push_back(1);
         }
         else {
-            Agent.push_back(0);
+            AgentNew.push_back(0);
         }
     }
     else {
-        Agent.push_back(F2hang);
+        AgentNew.push_back(HangVector[1]);
     }
     // Calculate Linear Velocity Externally
     if (IntCoord->size() == IntCoord->capacity()) {
-
-        for (int i = 0; i < IntCoord->size(); i++) {
-            if (IntCoord->at(i) == ID) {
-                Indices.push_back(i);
-
-            }
-        }
-        Real CoordDistance = sqrt(pow(((IntCoord->at(Indices.front() + 1)) - (IntCoord->at(Indices.back() + 1))), 2)
-                                  + pow(((IntCoord->at(Indices.front() + 2)) - (IntCoord->at(Indices.back() + 2))), 2));
+        Real CoordDistance = sqrt(pow(((IntCoord->at(0)) - (IntCoord->at(2))), 2) + pow(((IntCoord->at(1)) - (IntCoord->at(3))), 2));
         Real CoordSpeed = CoordDistance * 10;
         // Set Linear Motion Features Internally & Externally
+        // F5 Velocity Ext
         if (CoordDistance > 0.0045) {
-            AgentCoord.push_back(1);
+            AgentNew.push_back(1);
         }
         else {
-            AgentCoord.push_back(0);
+            AgentNew.push_back(0);
         }
-        if (hang == 0) {
+        // F6 Velocity Int
+        if (!hang) {
             if ((Velocity_Wheels / 10) / 100 > 0.0045) {
-                Agent.push_back(1);
+                AgentNew.push_back(1);
             }
             else {
-                Agent.push_back(0);
+                AgentNew.push_back(0);
             }
         }
         else {
-            Agent.push_back(F3hang);
+            AgentNew.push_back(HangVector[2]);
         }
-
+        // F7 Speed Ext
         if (CoordSpeed > 0.01) {
-            AgentCoord.push_back(1);
+            AgentNew.push_back(1);
         }
         else {
-            AgentCoord.push_back(0);
+            AgentNew.push_back(0);
         }
-        if (hang == 0) {
+        // F8 Speed Int
+        if (!hang) {
             if (Velocity_Wheels / 100 > 0.01) {
-                Agent.push_back(1);
+                AgentNew.push_back(1);
             }
             else {
-                Agent.push_back(0);
+                AgentNew.push_back(0);
             }
         }
         else {
-            Agent.push_back(F4hang);
+            AgentNew.push_back(HangVector[3]);
         }
         // Calculate Angular Velocity Externally
-        YawHolder->push_back(ID);
-        YawHolder->push_back(atan2(((TrueIntCoord->at(Indices.front() + 1)) - (TrueIntCoord->at(Indices.front() + 1 + (3*RobotNumber)))),
-                                   ((TrueIntCoord->at(Indices.front() + 2)) -
-                                    (TrueIntCoord->at(Indices.front() + 2 + (3*RobotNumber))))));
+        YawHolder->push_back(atan2(((TrueIntCoord->at(0)) - (TrueIntCoord->at(2))),
+                                   ((TrueIntCoord->at(1)) - (TrueIntCoord->at(3)))));
         if (YawHolder->size() == YawHolder->capacity()) {
-            for (int i = 0; i < YawHolder->size(); i++) {
-                if (YawHolder->at(i) == ID) {
-                    Indices1.push_back(i);
-                    //std::cout << "CORRECT " << RealID << " YAW AT " << i << std::endl;
-                }
-            }
-            Real IntYawCoord = (YawHolder->at(Indices1.front() + 1) - YawHolder->at(Indices1.back() + 1)) + (YawCoordNoise(generator)*ARGOS_PI/180);
+            Real IntYawCoord = (YawHolder->front() - YawHolder->back() + (YawCoordNoise(generator)*ARGOS_PI/180));
             // Set External Angular Velocity Feature
+            // F9 AngVel Ext
+            //std::cout << ID << ": " << IntYawCoord << std::endl;
             if (fabs(IntYawCoord*180/ARGOS_PI) > 0.8 && fabs(IntYawCoord*180/ARGOS_PI) < 5) {
-                AgentCoord.push_back(1);
+                AgentNew.push_back(1);
             }
             else {
-                AgentCoord.push_back(0);
+                AgentNew.push_back(0);
             }
+
         }
         // Set Internal Angular Velocity Feature
-        if (hang == 0) {
+        // F10 AngVel Int
+        if (!hang) {
             if (Difference_Wheels == 0) {
-                Agent.push_back(0);
-
+                AgentNew.push_back(0);
             }
             else {
-                Agent.push_back(1);
+                AgentNew.push_back(1);
             }
         }
         else {
-            Agent.push_back(F5hang);
+            AgentNew.push_back(HangVector[4]);
         }
-
     }
     // WATCHDOG
-    if (hang == 0) {
-        /*if (ID == 83) {
-            std::cout << "Fine" << std::endl;
-        }*/
-        Agent.push_back(0);
-        AgentCoord.push_back(0);
+    // F11 & F12 Hang Ext & Int
+    if (!hang) {
+        AgentNew.push_back(0);
+        AgentNew.push_back(0);
     }
     else {
-        /*if (ID == 83) {
-            std::cout << "hung" << std::endl;
-        }*/
-        Agent.push_back(1);
-        AgentCoord.push_back(1);
+        AgentNew.push_back(1);
+        AgentNew.push_back(1);
     }
     // Record Data for Future Comparison
-    IntCoord->push_back(ID);
     IntCoord->push_back(X);
     IntCoord->push_back(Y);
-    TrueIntCoord->push_back(ID);
     TrueIntCoord->push_back(TrueX);
     TrueIntCoord->push_back(TrueY);
-    // Print Features To Log
-    for (int i = 0; i < Agent.size(); i++ ) {
-        if (Fault != 0 && Detected == 0 && ID == 83) {
-            if (Agent.at(i) != AgentCoord.at(i)) {
-                Detectmin++;
-                //std::cout << "Discrepency" << std::endl;
-            }
-
-        }
-        if (Agent.at(i) == -83 && Time > 10) {
-            /*std::cout << "Agent 83 Control" << std::endl;
-            std::cout << Agent[i] << std::endl;
-            std::cout << AgentCoord[i] << std::endl;
-            std::cout << Agent[i+1] << std::endl;
-            std::cout << AgentCoord[i+1] << std::endl;
-            std::cout << Agent[i+2] << std::endl;
-            std::cout << AgentCoord[i+2] << std::endl;
-            std::cout << Agent[i+3] << std::endl;
-            std::cout << AgentCoord[i+3] << std::endl;
-            std::cout << Agent[i+4] << std::endl;
-            std::cout << AgentCoord[i+4] << std::endl;
-            std::cout << Agent[i+5] << std::endl;
-            std::cout << AgentCoord[i+5] << std::endl;
-            std::cout << Agent[i+6] << std::endl;
-            std::cout << AgentCoord[i+6] << std::endl;*/
-            FeatureVectors3->push_back(-Time);
-            FeatureVectors3->push_back(Agent[i+1]);
-            FeatureVectors3->push_back(AgentCoord[i+1]);
-            FeatureVectors3->push_back(Agent[i+2]);
-            FeatureVectors3->push_back(AgentCoord[i+2]);
-            FeatureVectors3->push_back(Agent[i+3]);
-            FeatureVectors3->push_back(AgentCoord[i+3]);
-            FeatureVectors3->push_back(Agent[i+4]);
-            FeatureVectors3->push_back(AgentCoord[i+4]);
-            FeatureVectors3->push_back(Agent[i+5]);
-            FeatureVectors3->push_back(AgentCoord[i+5]);
-            FeatureVectors3->push_back(Agent[i+6]);
-            FeatureVectors3->push_back(AgentCoord[i+6]);
-            if (AgentCoord.at(i+1) == 1) {
-                InRange = 1;
-            }
-            else {
-                InRange = 0;
-            }
-        }
-    }
-
-    // DETECTION BODGE
-    if (Fault != 0 && ID == 83 && Detected == 0) {
-        if (Detectmin > 0 && InRange == 1) {
-            Detect++;
-            Detectmin = 0;
-            //std::cout << "Increment: " << Detect << std::endl;
-        }
-        else {
-            Detect = 0;
-            //std::cout << "No Discrepency, Reset" << std::endl;
-        }
-    }
-    if (Detect == DetectDelay) {
-        std::cout << "DETECTED" << std::endl;
-        Detected = 1;
-        Detect = 0;
-        TimeStart = Time;
-        DataFile << "Time: " << Time << ", " << "Behaviour: " << Behaviour << ", " << "Fault: " << Fault << ", ";
-    }
-
-
-
-    if (ID == FaultID && SnapshotTaken == 0) {
-        SnapshotTaken = 1;
-        //SnapshotFile.open ("SnapShot.csv", std::ios_base::app);
-        for (int i = 0; i < FeatureVectors3->size(); i++ ) {
-            if (FeatureVectors3->at(i) < 0) {
-                Snapshot.push_back(FeatureVectors3->at(i+1));
-                Snapshot.push_back(FeatureVectors3->at(i+2));
-                Snapshot.push_back(FeatureVectors3->at(i+3));
-                Snapshot.push_back(FeatureVectors3->at(i+4));
-                Snapshot.push_back(FeatureVectors3->at(i+5));
-                Snapshot.push_back(FeatureVectors3->at(i+6));
-                Snapshot.push_back(FeatureVectors3->at(i+7));
-                Snapshot.push_back(FeatureVectors3->at(i+8));
-                Snapshot.push_back(FeatureVectors3->at(i+9));
-                Snapshot.push_back(FeatureVectors3->at(i+10));
-                Snapshot.push_back(FeatureVectors3->at(i+12));
-                Snapshot.push_back(FeatureVectors3->at(i+11));
-                //SnapshotFile << FeatureVectors3->at(i) << ", ";
-                /*SnapshotFile << FeatureVectors3->at(i+1) << ", ";
-                SnapshotFile << FeatureVectors3->at(i+2) << ", ";
-                SnapshotFile << FeatureVectors3->at(i+3) << ", ";
-                SnapshotFile << FeatureVectors3->at(i+4) << ", ";
-                SnapshotFile << FeatureVectors3->at(i+5) << ", ";
-                SnapshotFile << FeatureVectors3->at(i+6) << ", ";
-                SnapshotFile << FeatureVectors3->at(i+7) << ", ";
-                SnapshotFile << FeatureVectors3->at(i+8) << ", ";
-                SnapshotFile << FeatureVectors3->at(i+9) << ", ";
-                SnapshotFile << FeatureVectors3->at(i+10) << ", ";
-                 SnapshotFile << FeatureVectors3->at(i+11) << ", ";
-                 SnapshotFile << FeatureVectors3->at(i+12) << ", ";
-                SnapshotFile << std::endl;*/
-            }
-            //std::cout << FeatureVectors3->at(i) << std::endl;
-        }
-        //SnapshotFile.close();
-        //std::cout << "SNAPSHOT TAKEN, BEHAVIOR: " << Behaviour << ", FAULT: " << Fault << std::endl;
-    }
 
     // USE CLASSIFIER
-    if (BeginDiagnostic > 0 && ClassBounce == 0) {
-        ClassBounce = 1;
-        Candidates.clear();
-        if (Detected == 1 && MemoryLog->size() >= MemoryLog->capacity() / MemoryBits && SnapshotTaken == 1 && ID == DrID) {
-            std::cout << "Run Classifier" << std::endl;
-            Real sumtop;
-            Real topadd;
-            Real bottomadd1;
-            Real bottomadd2;
-            Real sumbottom;
-            Real sumbottom1;
-            Real sumbottom2;
+    // Print Features To Log & Take Snapshot
 
-            Real MeanMem;
-            Real MeanSnap;
-            int j = 0;
-            for (int i = 0; i < MemoryLog->size(); i++) {
-                Real MemSum = 0;
 
-                if (MemoryLog->at(i) < 0) {
-                    for (int y = 0; y < Update.size(); y++) {
-                        if (Update.at(y) == ID) {
-                            scratch = Update.at(y+1);
-                        }
-                    }
-                    if (scratch < MemoryLog->at(i+1)) {
-                        noaccess = 1;
-                        std::cout << "FAULT " << MemoryLog->at(i) << " AT " << MemoryLog->at(i+1) << " CAN'T BE ACCESSED BY DR FROM " << scratch << std::endl;
-                    }
-                    else {
-                        noaccess = 0;
-                        std::cout << "FAULT " << MemoryLog->at(i) << " AT " << MemoryLog->at(i+1) << " IS FINE WITH DR FROM " << scratch << std::endl;
-                    }
-                    //TestCase.push_back(MemoryLog->at(i));
-                    DiagCandidate = MemoryLog->at(i);
-                    //std::cout << "DiagCandidate: " << DiagCandidate << std::endl;
-                    for (int k = i+2; k < i + Snapshot.size()+2; k++) {
-                        MemSum = MemSum + MemoryLog->at(k);
-
-                        //std::cout << "K " << MemoryLog->at(k) << std::endl;
-                    }
-                    std::cout << "MemSum = " << MemSum << " Snapshot Size = " << Snapshot.size() << std::endl;
-                    MeanMem = MemSum / Snapshot.size();
-                    MeanSnap = std::accumulate(Snapshot.begin(), Snapshot.end(), 0.0) / Snapshot.size();
-                    sumtop = 0;
-                    topadd = 0;
-                    bottomadd1 = 0;
-                    bottomadd2 = 0;
-                    sumbottom = 0;
-                    sumbottom1 = 0;
-                    sumbottom2 = 0;
-                }
-                else if (MemoryLog->at(i) < 2 && noaccess == 0) {
-                    //TestCase.push_back(MemoryLog->at(i));
-                    topadd = (Snapshot.at(j) - MeanSnap) * (MemoryLog->at(i) - MeanMem);
-                    sumtop = sumtop + topadd;
-                    bottomadd1 = pow((Snapshot.at(j) - MeanSnap), 2);
-                    bottomadd2 = pow((MemoryLog->at(i) - MeanMem), 2);
-                    sumbottom1 = sumbottom1 + bottomadd1;
-                    sumbottom2 = sumbottom2 + bottomadd2;
-                    //std::cout << "SumTop: " << sumtop << std::endl;
-                    //std::cout << "SumBottom: " << sumbottom1 << ", " << sumbottom2 << std::endl;
-                    j++;
-                    if (j == Snapshot.size()) {
-                        j = 0;
-                        sumbottom = sumbottom1 * sumbottom2;
-                        Real R = sumtop / sqrt(sumbottom);
-                        std::cout << "matches prev. fault " << -DiagCandidate << " by " << R << std::endl;
-                        //DataFile << "Previous: " << DiagCandidate << ", " << "Similarity: " << R << ", ";
-                        if (R > 0.66) {
-                            //std::cout << "MATCH" << std::endl;
-                            Candidates.push_back(R);
-                            Candidates.push_back(DiagCandidate);
-
-                        }
-                        else {
-                            //std::cout << "Not This One" << std::endl;
-
-                        }
-                    }
-                }
-
-            }
-            if (Candidates.size() == 0) {
-                std::cout << "Run Diagnostics" << std::endl;
-                BeginMOT = 1;
-
+    // FAULTY DIAGNOSTIC ROUTINES
+    if (Faulty != 0 && BeginMOT) {
+        if (Stop) {
+            LeftWheel = 0;
+            RightWheel = 0;
+        }
+        if (RABCompare) {
+            if (AgentNew.at(2) == 0) {
+                RABWait.clear();
             }
             else {
-                for (int i = 0; i < Candidates.size(); i++) {
-                    if (Candidates.at(i)== *max_element(Candidates.begin(), Candidates.end())) {
-                        ClassifierSuccess = 1;
-                        Diagnosis = -Candidates.at(i+1);
-                        std::cout << "Classified at" << Diagnosis << " with " << Candidates.at(i)*100 << "% similarity" << std::endl;
-                        DataFile << Candidates.at(i)*100 << ", ";
-                    }
+                RABWait.push_back(1);
+                if (std::accumulate(RABWait.begin(), RABWait.end(), 0.0) > ConfirmDelay) {
+                    RABConfirm = true;
+                    RABCompare = false;
+                    RABWait.clear();
                 }
             }
         }
-        else {
-            //std::cout << "Run Diagnostics" << std::endl;
-            BeginMOT = 1;
-        }
-    }
-
-    // DIAGNOSTIC TESTS
-    if (BeginMOT > 0 && ID == DrID) {
-        //std::cout << "Diagnostic Start" << std::endl;
-        if (returnping == 0) {
-            ping = 1;
-            PingWait->push_back(1);
-        }
-        else if (returnping == 1) {
-            PingWait->push_back(0);
-            //std::cout << "Ping Successful" << std::endl;
-            // STOP FAULTY ID
-            Stop = 1;
-            if (Stopping == 1) {
-                StopWait->push_back(0);
-                //COMPARE RAB
-                //std::cout << "Stopped" << std::endl;
-                RABCompare = 1;
-                if (RABReturn == 1) {
-                    RABCompare = 0;
-                    //std::cout << "No CSF" << std::endl;
-                    if (ConfirmRM == 0) {
-                        TestRM = 1;
-                    }
-                    if (ConfirmRM == 1) {
-                        TestRM = 0;
-                        if (ConfirmLM == 0) {
-                            TestLM = 1;
-                        }
-                        if (ConfirmLM == 1) {
-                            TestLM = 0;
-                            //std::cout << "NO CMF" << std::endl;
-                        }
-                    }
-                    if (std::accumulate(MotorWait->begin(), MotorWait->end(), 0.0) == MotorWait->capacity()) {
-                        //std::cout << "Complete Motor Failure" << std::endl;
-                        Diagnosis = 4;
-                    }
-                    if (ConfirmLM == 1 && ConfirmRM == 1) {
-                        if (ConfirmStraight == 0) {
-                            TestStraight = 1;
-                        }
-                        if (ConfirmStraight == 1) {
-                            TestStraight = 0;
-                            if (ConfirmLap == 0) {
-                                TestLap = 1;
-                            }
-                            if (ConfirmLap == 1) {
-                                TestLap = 0;
-                            }
-                            if (std::accumulate(LapWait->begin(), LapWait->end(), 0.0) == LapWait->capacity()) {
-                                //std::cout << "PSF" << std::endl;
-                                Diagnosis = 6;
-                                ConfirmLap = 0;
-                            }
-                        }
-                        if (std::accumulate(StraightWait->begin(), StraightWait->end(), 0.0) == StraightWait->capacity()) {
-                            //std::cout << "PMF" << std::endl;
-                            Diagnosis = 5;
-                        }
-                        // LAP & COMPARE
-                    }
-                }
-                else if (std::accumulate(RABWait->begin(), RABWait->end(), 0.0) == RABWait->capacity()) {
-                    //std::cout << "CSF" << std::endl;
-                    Diagnosis = 3;
-                }
-
-            }
-            else if (Stop == 1 && Stopping == 0 && wall == 0 || Stop == 1 && Stopping == 0 && Fault == 1) {
-                StopWait->push_back(1);
-                if (std::accumulate(StopWait->begin(), StopWait->end(), 0.0) == StopWait->capacity()) {
-                    //std::cout << "Software Hang" << std::endl;
-                    Diagnosis = 1;
-                }
-            }
-        }
-        if (std::accumulate(PingWait->begin(), PingWait->end(), 0.0) == PingWait->capacity()) {
-            //std::cout << "Power Failure" << std::endl;
-            Diagnosis = 2;
-        }
-
-    }
-    if (BeginMOT > 0 && ID == FaultID && power == 0) {
-        returnping = 1;
-        ping = 0;
-        if (Stop == 1 && Fault != 1) {
-            if (wall == 1 && Fault > 4) {
-
+        if (TestLM) {
+            Left = 1;
+            LeftWheel = (m_fWheelVelocity * Left);
+            if (AgentNew.at(7) == 0) {
+                MotorWait.clear();
             }
             else {
-                LeftWheel = 0;
-                RightWheel = 0;
-                Stopping = 1;
-                if (RABCompare == 1) {
-                    for (int i = 0; i < Agent.size(); i++) {
-                        if (Agent.at(i) == -FaultID) {
-                            int CSFFeature = Agent.at(i + 1);
-                            if (CSFFeature == 0) {
-                                RABWait->push_back(1);
-                            }
-                            else {
-                                RABWait->push_back(0);
-                                RABConfirm++;
-                                if (RABConfirm == 50) {
-                                    RABReturn = 1;
-                                    RABConfirm = 0;
-                                }
-
-                            }
-                        }
-                    }
+                MotorWait.push_back(1);
+                if (std::accumulate(MotorWait.begin(), MotorWait.end(), 0.0) > ConfirmDelay) {
+                    ConfirmLM = true;
+                    TestLM = false;
+                    MotorWait.clear();
                 }
-                else if (TestRM == 1) {
-                    Right = 1;
-                    RightWheel = (m_fWheelVelocity * Right);;
-                    for (int i = 0; i < Agent.size(); i++) {
-                        if (Agent.at(i) == -FaultID) {
-                            int RCMFFeature = AgentCoord.at(i + 4);
-                            if (RCMFFeature == 0) {
-                                MotorWait->push_back(1);
-                            }
-                            else {
-                                MotorWait->push_back(0);
-                                RCMFConfirm++;
-                                if (RCMFConfirm == 50) {
-                                    ConfirmRM = 1;
-                                    RCMFConfirm = 0;
-                                }
-
-                            }
-                        }
-                    }
-
+            }
+        }
+        if (TestRM) {
+            Right = 1;
+            RightWheel = (m_fWheelVelocity * Right);
+            if (AgentNew.at(7) == 0) {
+                MotorWait.clear();
+            }
+            else {
+                MotorWait.push_back(1);
+                if (std::accumulate(MotorWait.begin(), MotorWait.end(), 0.0) > ConfirmDelay) {
+                    ConfirmRM = true;
+                    TestRM = false;
+                    MotorWait.clear();
                 }
-                else if (TestLM == 1) {
+            }
+        }
+        if (TestStraight) {
+            Right = 1;
+            RightWheel = (m_fWheelVelocity * Right);
+            Left = 1;
+            LeftWheel = (m_fWheelVelocity * Left);
+            if (AgentNew.at(9) == 1) {
+                StraightWait.clear();
+            }
+            else {
+                StraightWait.push_back(1);
+                if (std::accumulate(StraightWait.begin(), StraightWait.end(), 0.0) > ConfirmDelay) {
+                    StraightWait.clear();
+                    ConfirmStraight = true;
+                    TestStraight = false;
+                }
+            }
+        }
+        if (TestLap) {
+            if (!LapCount) {
+                LapStart = Heading;
+                LapCount = true;
+            }
+            LapDelay++;
+            if (LapDelay > 50) {
+                if (Heading < LapStart + 10 && Heading > LapStart - 10) {
+                    ConfirmLap = 1;
+                }
+                else {
                     Left = 1;
                     LeftWheel = (m_fWheelVelocity * Left);
-                    for (int i = 0; i < Agent.size(); i++) {
-                        if (Agent.at(i) == -FaultID) {
-                            int LCMFFeature = AgentCoord.at(i + 4);
-                            if (LCMFFeature == 0) {
-                                MotorWait->push_back(1);
-                            }
-                            else {
-                                MotorWait->push_back(0);
-                                LCMFConfirm++;
-                                if (LCMFConfirm == 50) {
-                                    ConfirmLM = 1;
-                                    LCMFConfirm = 0;
-                                }
-                            }
-                        }
-                    }
                 }
-                else if (TestStraight == 1) {
-                    Right = 1;
-                    RightWheel = (m_fWheelVelocity * Right);
-                    Left = 1;
-                    LeftWheel = (m_fWheelVelocity * Left);
-                    for (int i = 0; i < Agent.size(); i++) {
-                        if (Agent.at(i) == -FaultID) {
-                            int PMFFeature = AgentCoord.at(i + 5);
-                            if (PMFFeature == 1) {
-                                StraightWait->push_back(1);
-                            }
-                            else {
-                                PMFConfirm++;
-                                if (PMFConfirm == 50) {
-                                    StraightWait->push_back(0);
-                                    ConfirmStraight = 1;
-                                    PMFConfirm = 0;
-                                }
-                            }
-                        }
-                    }
-                }
-                else if (TestLap == 1) {
-                    if (LapCount == 0) {
-                        LapStart = Heading;
-                        LapCount = 1;
-                    }
-                    LapDelay++;
-                    if (LapDelay > 50) {
-                        if (Heading < LapStart + 10 && Heading > LapStart - 10) {
-                            ConfirmStraight = 1;
-                        }
-                        else {
-                            Left = 1;
-                            LeftWheel = (m_fWheelVelocity * Left);
-                        }
-                    }
-                    else {
-                        Left = 1;
-                        LeftWheel = (m_fWheelVelocity * Left);
-                    }
-                    for (int i = 0; i < Agent.size(); i++) {
-                        if (Agent.at(i) == -FaultID) {
-                            int PSFFeature = Agent.at(i + 1);
-                            if (PSFFeature == 0) {
-                                LapWait->push_back(1);
-                            }
-                            else {
-                                LapWait->push_back(0);
-                            }
-                        }
-                    }
+            }
+            else {
+                Left = 1;
+                LeftWheel = (m_fWheelVelocity * Left);
+            }
+            if (AgentNew.at(2) == 0) {
+                LapWait.push_back(1);
+                if (std::accumulate(LapWait.begin(), LapWait.end(), 0.0) > ConfirmDelay) {
+                    ConfirmLap = -1;
                 }
             }
         }
     }
+    /*if (Faulty != 0) {
+        for (int j = 0; j < AgentNew.size() ; j++) {
+            std::cout << ID << ": " << AgentNew.at(j) << std::endl;
+        }
+    }*/
+
 
     // MOTOR FAULTS //
-    if (ID == 83 && Fault == 4) {
-        NoiseLeft = -LeftWheel;
-        //NoiseRight = -RightWheel;
-        if (Detected == 1) {
-            FaultID = ID;
+    if (Faulty == 4) {
+        if (MotorRand == 1) {
+            NoiseLeft = -LeftWheel;
+        }
+        else if (MotorRand == 2){
+            NoiseRight = -RightWheel;
         }
     }
-    if (ID == 83 && Fault == 5) {
-        NoiseLeft = -0.5*LeftWheel;
-        if (Detected == 1) {
-            FaultID = ID;
+    if (Faulty == 5) {
+        if (MotorRand == 1) {
+            NoiseLeft = -0.5*LeftWheel;
+        }
+        else if (MotorRand == 2){
+            NoiseRight = -0.5*RightWheel;
         }
     }
-    // if (Time > BounceCount + 500 + DetectDelay)
+
     // SET CONTROLLER VALUES
 
     m_pcWheels->SetLinearVelocity(LeftWheel + NoiseLeft, RightWheel + NoiseRight);
 
-    timeweight++;
-    if (Diagnosis !=0) {
-
-        if (std::find(std::begin(PowerCycle), std::end(PowerCycle),Diagnosis) != std::end(PowerCycle)
-            && std::find(std::begin(PowerCycle), std::end(PowerCycle),Fault) != std::end(PowerCycle)) {
-            std::cout << "Fault = " << Fault << ", Diagnosis = " << Diagnosis << ", Recovery: Cycle Power" << std::endl;
-            DiagReset = 1;
-            Diagnosed = 1;
-        }
-        else if (std::find(std::begin(MotorReplacement), std::end(MotorReplacement),Diagnosis) != std::end(MotorReplacement)
-                 && std::find(std::begin(MotorReplacement), std::end(MotorReplacement),Fault) != std::end(MotorReplacement)) {
-            std::cout << "Fault = " << Fault << ", Diagnosis = " << Diagnosis << ", Recovery: Replace Motor" << std::endl;
-            DiagReset = 1;
-            Diagnosed = 1;
-        }
-        else if (std::find(std::begin(SensorReplacement), std::end(SensorReplacement),Diagnosis) != std::end(SensorReplacement)
-                 && std::find(std::begin(SensorReplacement), std::end(SensorReplacement),Fault) != std::end(SensorReplacement)) {
-            std::cout << "Fault = " << Fault << ", Diagnosis = " << Diagnosis << ", Recovery: Replace Sensor" << std::endl;
-            DiagReset = 1;
-            Diagnosed = 1;
-        }
-        else {
-            std::cout << "Fault = " << Fault << ", Diagnosis = " << Diagnosis << ", FAILURE" << std::endl;
-            DataFile << "FAILURE " << Diagnosis << ", ";
-            ClassifierSuccess = 0;
-            Fail++;
-            std::cout << "Total Fails: " << Fail << std::endl;
-            if (BeginMOT == 0) {
-                Diagnosis = 0;
-                BeginMOT = 1;
-            }
-            //Diagnosed = 1;
-        }
-
+    /*if (BeginMOT) {
+        std::cout << ID << " True! AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << std::endl;
     }
-    if (DiagReset == 1) {
-        if (Diagnosed == 1) {
-            TrueTotal++;
-            MemoryLog->push_back(-Diagnosis);
-            MemoryLog->push_back(Time);
-            UpdateNum = Time;
-            if (std::find(std::begin(Update), std::end(Update),ID) != std::end(Update) && std::find(std::begin(Update), std::end(Update),DrID) == std::end(Update)) {
-                Update.push_back(DrID);
-                Update.push_back(UpdateNum);
-                std::cout << DrID << " UPDATED TO " << UpdateNum << std::endl;
-            }
-            else {
-                for (int i = 0; i < Update.size(); i++) {
-                    if (Update.at(i) == DrID && Update.at(i + 1) < UpdateNum) {
-                        Update.at(i + 1) = UpdateNum;
-                        std::cout << DrID << " UPDATED TO " << UpdateNum << std::endl;
-                    }
-                }
-            }
-            Update.push_back(DrID);
-            Update.push_back(UpdateNum);
-            for (int i = 0; i < Snapshot.size(); i++) {
-                MemoryLog->push_back(Snapshot.at(i));
-            }
-            if (Eligibility == 1 || ClassifierSuccess == 1) {
-                Total++;
-                std::cout << "Total: " << Total << std::endl;
-            }
-            if (ClassifierSuccess == 1) {
-                std::cout << "DIAGNOSED (CLASSIFIER)" << std::endl;
-                DataFile << Diagnosis << " , " << "CLASSIFIED ,";
-
-                Class++;
-                std::cout << "Total Class: " << Class << std::endl;
-
-            }
-            else {
-                std::cout << "DIAGNOSED (MOT)" << std::endl;
-                DataFile << "n/a" << ", " << Diagnosis << " , " << "DIAGNOSED ,";
-                int TimeTaken = Time - TimeStart;
-                DataFile << "Time Taken" << ", " << TimeTaken << ", ";
-                if (Eligibility == 1) {
-                    MOT++;
-                    std::cout << "Total MOT: " << MOT << std::endl;
-                    DataFile << "ELLIGIBLE";
-                }
-
-                //std::cout << "TimeTaken: " << TimeTaken << std::endl;
-            }
-            TimeStart = 0;
-            DataFile << std::endl;
-            BounceCount = Time;
-            FaultID = 0;
-            DrID = 0;
-            Fault = 0;
-            Diagnosis = 0;
-            Diagnosed = 0;
-            DrRobo.clear();
-            Ambulance.clear();
-            DrDistance.clear();
-            Snapshot.clear();
-            power = 0;
-            hang = 0;
-            FaultBounce = 0;
-            SnapshotTaken = 0;
-            Detected = 0;
-            DiagCandidate = 0;
-            F1hang = 0;
-            F2hang = 0;
-            F3hang = 0;
-            F4hang = 0;
-            F5hang = 0;
-        }
-        else {
-            std::cout << "RESET" << std::endl;
-        }
-        ClassifierSuccess = 0;
-        ClassBounce = 0;
-        BeginMOT = 0;
-        BeginDiagnostic = 0;
-        ping = 0;
-        returnping = 0;
-        Stop = 0;
-        Stopping = 0;
-        RABCompare = 0;
-        RABConfirm = 0;
-        RABReturn = 0;
-        ConfirmRM = 0;
-        TestRM = 0;
-        RCMFConfirm = 0;
-        LCMFConfirm = 0;
-        ConfirmLM = 0;
-        TestLM = 0;
-        TestStraight = 0;
-        ConfirmStraight = 0;
-        PMFConfirm = 0;
-        TestLap = 0;
-        ConfirmLap = 0;
-        LapDelay = 0;
-        LapStart = 0;
-        LapCount = 0;
-        Detect = 0;
+    else {std::cout << ID << " False!" << std::endl;};*/
 
 
-        PingWait->clear();
-        StopWait->clear();
-        RABWait->clear();
-        MotorWait->clear();
-        StraightWait->clear();
-        LapWait->clear();
-        DiagReset = 0;
+    // FAULTY RESET
 
+    if (Diagnosis !=0 && Faulty != 0) {
+
+        FaultyReset();
     }
-    if (Time == 36000 && StuckBounce == 0) {
-        StuckBounce =1;
+
+    // DOCTOR RESET
+    if (Diagnosed && Doctor) {
+        DoctorReset();
+    }
+
+    /*if (SaveMemory && Time == ExperimentLength-2) {
+        MemorySize.push_back(-ID);
+        MemorySize.push_back(MemoryLogNew->size());
+    }
+    if (SaveMemory && Time == ExperimentLength-1) {
+        for (int k = 0; k < MemorySize.size(); k++) {
+            if (MemorySize.at(k) == MemoryLogNew->capacity() || MemorySize.at(k) == *max_element(MemorySize.begin(), MemorySize.end())) {
+                MemoryIndex = k;
+                break;
+            }
+        }
+        if (ID == -MemorySize.at(MemoryIndex-1)) {
+            ImmortalID = ID;
+        }
+    }*/
+
+
+
+    if (Time == ExperimentLength && !StuckBounce && !SaveMemory || Time == ExperimentLength && !StuckBounce && ID == ImmortalID && SaveMemory) {
+        std::cout << "END" << std::endl;
+        StuckBounce = true;
         Real ClassPer = Class/Total;
         Real ClassFailPer = Fail/(Class+Fail);
+        std::string folderName = std::to_string(foldernum-1);
+        std::string seedFolder = std::to_string(CSimulator::GetInstance().GetRandomSeed());
+        std::string slashyboi = "/";
+        std::string path = folderName+slashyboi+seedFolder;
+        mkdir(folderName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        DataFile.open (folderName+"/"+seedFolder+"/Data.csv", std::ios_base::app);
+
         /*std::string folderName = std::to_string(foldernum);
         mkdir(folderName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         SpartanPercent.open (folderName + "/ClassFailPercent.csv", std::ios_base::app);
         SpartanPercent << CSimulator::GetInstance().GetRandomSeed() << "," << ClassFailPer;
         SpartanPercent.close();*/
-        DataFile << "Total Faults, " << TrueTotal << ", Elligible Total, " << Total << ", DiagTot, " << TrueTotal -(Class+Fail) <<
-        ", Elligible DiagTot, " << Total - (Class+Fail) << ", FailTot, " << Fail << ", MemoryTot, " << Class << ", %Memory," << ClassPer << ", %Failure," << ClassFailPer << std::endl;
-        std::cout << "Total " << Total << ", Class " << Class << ", Fail " << Fail << std::endl;
-        std::cout << "MEMORY % " << ClassPer << ", FAIL % " << ClassFailPer << std::endl;
-    }
-
-
-    if (timeweight == RobotNumber) {
-        timeweight = 0;
-        if (DrDistance.size()>0 && DrID == 0) {
-            //std::cout << *min_element(DrDistance.begin(), DrDistance.end()) << std::endl;
-            for (int i = 0; i < DrDistance.size(); i++ ) {
-                if (DrDistance.at(i) == *min_element(DrDistance.begin(), DrDistance.end())) {
-                    DrID = DrRobo.at(i);
-                    std::cout << "DR: " << DrID << std::endl;
-
+        Real MaxFail;
+        if (FailCoeff.size() > 0) {
+            MaxFail = *max_element(FailCoeff.begin(), FailCoeff.end());
+        }
+        DataFile << "Elligible Total, "  << "MemoryTot, "  <<
+        "FailTot, "<< "%Memory,"  << "%Failure,"  << "Avg Correlation, "  << "Avg Corr Fail, " <<
+        "Max Fail Coeff, "  << "Avg Detection Time, " << "MOTTimes, " << "MemoryTimes, " << "MemoryLog" << std::endl;
+        DataFile  << Total << ", " << Class << ", "  << Fail << ", " << ClassPer << ", " << ClassFailPer << ", "
+        << std::accumulate(CorrCoeff.begin(), CorrCoeff.end(), 0.0)/CorrCoeff.size() << ", " << std::accumulate(FailCoeff.begin(), FailCoeff.end(), 0.0)/FailCoeff.size()
+        << ", " << MaxFail << ", " << std::accumulate(DetectTime.begin(), DetectTime.end(), 0.0)/DetectTime.size() << ", ";
+        if (MOTTimes.size() > 0) {
+            DataFile << MOTTimes.at(0) << ", ";
+        }
+        else {
+            DataFile << " -nan, ";
+        }
+        if (MemoryTimes.size() > 0) {
+            DataFile << MemoryTimes.at(0) << ", ";
+        }
+        else {
+            DataFile << " -nan , ";
+        }
+        /*if (SaveMemory) {
+            DataFile << MemoryLogNew->at(0) << std::endl;
+        }*/
+        DataFile << std::endl;
+        if (MOTTimes.size() <= MemoryTimes.size()) {
+            for (int i = 1; i < MOTTimes.size(); i++) {
+                DataFile << " , , , , , , , , , " << MOTTimes.at(i) << ", " << MemoryTimes.at(i) << ", " /*<< MemoryLogNew->at(i)*/ << std::endl;
+            }
+            if (MOTTimes.size() == 0) {
+                for (int i = 1; i < MemoryTimes.size(); i++) {
+                    DataFile << " , , , , , , , , , ," << MemoryTimes.at(i) << ", " /*<< MemoryLogNew->at(i)*/ << std::endl;
                 }
             }
+            else {
+                for (int i = MOTTimes.size(); i < MemoryTimes.size(); i++) {
+                    DataFile << " , , , , , , , , , ," << MemoryTimes.at(i) << ", " /*<< MemoryLogNew->at(i)*/ << std::endl;
+                }
+            }
+            /*if (SaveMemory) {
+                for (int i = MemoryTimes.size(); i < MemoryLogNew->size(); i++) {
+                    DataFile << " , , , , , , , , , , , " << MemoryLogNew->at(i) << std::endl;
+                }
+            }*/
         }
-        DrDistance.clear();
-        DrRobo.clear();
+        else {
+            for (int i = 1; i < MemoryTimes.size(); i++) {
+                DataFile << " , , , , , , , , , " << MOTTimes.at(i) << ", " << MemoryTimes.at(i) << ", " /*<< MemoryLogNew->at(i)*/ << std::endl;
+            }
+            if (MemoryTimes.size() == 0) {
+                for (int i = 1; i < MOTTimes.size(); i++) {
+                    DataFile << " , , , , , , , , ," << MOTTimes.at(i) << " , , " /*<< MemoryLogNew->at(i)*/ << std::endl;
+                }
+            }
+            else {
+                for (int i = MemoryTimes.size(); i < MOTTimes.size(); i++) {
+                    DataFile << " , , , , , , , , ," << MOTTimes.at(i) << " , , " /*<< MemoryLogNew->at(i)*/ << std::endl;
+                }
+            }
+            /*if (SaveMemory) {
+                for (int i = MOTTimes.size(); i < MemoryLogNew->size(); i++) {
+                    DataFile << " , , , , , , , , , , , " << MemoryLogNew->at(i) << std::endl;
+                }
+            }*/
+        }
+
+        DataFile.close();
+    }
+    timeweight++;
+    if (timeweight == RobotNumber) {
+        //std::cout << Time << std::endl;
+        timeweight = 0;
 
     }
 
-    //DataFile.close();
 
-
-
-
-
-    if (ID == DrID) {
-        if (EyesOn == 0) {
-            DrID = 0;
-            std::cout << "DR LOST" << std::endl;
-            DiagReset = 1;
-        }
-        EyesOn = 0;
-    }
 
 }
 

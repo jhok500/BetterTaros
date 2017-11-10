@@ -3,6 +3,7 @@
 
 #include <argos3/core/simulator/loop_functions.h>
 #include <argos3/plugins/robots/foot-bot/simulator/footbot_entity.h>
+#include <argos3/plugins/simulator/entities/box_entity.h>
 #include <argos3/core/utility/math/angles.h>
 #include <boost/circular_buffer.hpp>
 #include <numeric>
@@ -14,6 +15,7 @@ public:
 
     LoggingLoopFunctions();
 
+
     virtual ~LoggingLoopFunctions() {}
 
 
@@ -22,19 +24,11 @@ public:
     virtual void Destroy();
     virtual void PreStep();
     virtual void PostStep();
-    Real AgentBearing_Sensor;
-    Real AgentX;
-    Real AgentY;
+
+private:
 
 
-
-
-    int Snapshot = 0;
-
-
-    Real CoordDistance;
-
-
+CBoxEntity* m_pcBox;
 
 
 

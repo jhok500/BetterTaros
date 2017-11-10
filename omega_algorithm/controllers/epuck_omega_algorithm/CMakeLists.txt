@@ -1,0 +1,5 @@
+add_library(epuck_omega_algorithm MODULE epuck_omega_algorithm.h epuck_omega_algorithm.cpp)
+target_link_libraries(epuck_omega_algorithm
+  argos3core_simulator
+  argos3plugin_simulator_epuck
+  argos3plugin_simulator_genericrobot)

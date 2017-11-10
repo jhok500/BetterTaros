@@ -36,6 +36,11 @@
 #include <argos3/plugins/robots/foot-bot/simulator/footbot_entity.h>
 #include <numeric>
 #include <argos3/core/simulator/loop_functions.h>
+#include <argos3/plugins/robots/foot-bot/control_interface/ci_footbot_light_sensor.h>
+#include "RadioActuator.h"
+#include "RadioSensor.h"
+
+
 /*
  * All the ARGoS stuff in the 'argos' namespace.
  * With this statement, you save typing argos:: every time.
@@ -43,73 +48,62 @@
 using namespace argos;
 
 
-boost::circular_buffer<Real>* FlockData;
-boost::circular_buffer<Real>* FlockCoordData;
-std::vector<Real> FlockRange;
-std::vector<Real> FlockBearing;
-std::vector<Real> FlockID;
-std::vector<Real> FlockHeadings;
-std::vector<Real> FlockCoords;
-std::vector<int> DrRobo;
-std::vector<double> DrDistance;
-std::vector<double> Ambulance;
-int Stuck = 0;
-int StuckBounce = 0;
-int ClassifierSuccess;
-int FaultID = 0;
-int DrID = 0;
+std::vector<int> FaultyIDs;
+std::vector<int> Doctors;
+std::vector<Real> DetectTime;
+std::vector<int> MemoryTimes;
+std::vector<int> MOTTimes;
+std::vector<Real> CorrCoeff;
+std::vector<Real> FailCoeff;
+std::vector<int> MemorySize;
+
+
+bool StuckBounce = false;
 int MemoryBits = 18;
-int BeginDiagnostic = 0;
-int BeginMOT = 0;
-int ClassBounce = 0;
-int Fault = 0;
+int ExperimentLength = 36000;
+int FaultsInPlay = 0;
 int PMFangle = 60;
-int DetectDelay = 100;
+int MemoryIndex;
+bool SaveMemory = false;
+int FaultDelay = 10;
+int ConfirmDelay = 5;
+int ImmortalID;
 int Behaviour = 0;
-int Diagnosis = 0;
-int FaultBounce = 0;
-int BounceCount = 0;
 int BehaviourCount = 0;
-std::vector<Real> Candidates;
-boost::circular_buffer<int>* FeatureVectors3;
-boost::circular_buffer<int>* MemoryLog;
-boost::circular_buffer<Real>* IntCoord;
-boost::circular_buffer<Real>* TrueIntCoord;
-boost::circular_buffer<Real>* YawHolder;
-std::vector<Real> AggX;
-std::vector<Real> AggY;
-std::vector<Real> Update;
+int Omega = 3;
+Real OmegaGap = 35;
 int PowerCycle [2] =  {1,2};
 int SensorReplacement [2] = {3,6};
 int MotorReplacement [2] = {4,5};
-int Detectmin;
-int Detect;
-int Detected;
-int InRange;
-int TimeStart;
 std::ofstream SnapshotFile;
 std::ofstream DataFile;
 std::ofstream SpartanPercent;
 int foldernum;
-int F1hang;
-int F2hang;
-int F3hang;
-int F4hang;
-int F5hang;
 Real Fail = 0;
-int Eligibility;
 int MOT = 0;
 Real Total = 0;
 int TrueTotal;
-int MakeBounce;
 Real Class = 0;
-std::vector<Real> Checklist;
-Real Drift = 0;
 int timeweight = 0;
-int UpdateNum;
-int noaccess = 0;
-int holdoff = 0;
-int scratch = 0;
+
+
+
+// SENSITIVITY ANALYSIS OBJECTS
+// CONST
+int FaultProb = 10000;
+
+
+// VAR
+//ArenaSide = RobotNumber/5
+Real SimilarityThreshold = 0.66;
+Real ActiveThreshold = (0.5*(1-SimilarityThreshold)) + SimilarityThreshold;
+int DetectDelay = 100;
+Real DetectRatio = 1;
+Real BearingNoise = 0.123;
+Real YawCoordinateNoise = 0.00035;
+Real CoordinateNoise = 0.000025;
+int Objects = 0;
+
 /*
  * A controller is simply an implementation of the CCI_Controller class.
  */
@@ -149,6 +143,19 @@ public:
     * so the function could have been omitted. It's here just for
     * completeness.
     */
+   virtual Real HeadingCorrect();
+   virtual void BehaviourUpdate ();
+   virtual void FaultInject ();
+    virtual void ObstacleAv ();
+    virtual void Aggregation ();
+    virtual void Flocking ();
+    virtual void OmegaAlg ();
+    virtual void DrPursue();
+    virtual void TakeSnapshot();
+    virtual void Classify();
+    virtual void ActiveMemory();
+    virtual void DoctorReset();
+    virtual void FaultyReset();
    virtual void Reset() {}
 
    /*
@@ -179,11 +186,8 @@ public:
         return RightWheel;
 
     }
-    inline Real GetFaultID() const {
 
-        return FaultID;
 
-    }
     Real NoiseLeft;
     Real NoiseRight;
 
@@ -191,16 +195,9 @@ public:
     Real hangLeft;
 
     CVector2 NeighbourDistance;
-    std::vector<Real> Agent;
-    std::vector<Real> AgentCoord;
 
-    std::vector<Real> Indices;
-    std::vector<Real> Indices1;
-
-    std::vector<Real> Indices4;
-
-
-
+protected:
+    virtual CVector2 VectorToLight();
 
 private:
 
@@ -212,6 +209,10 @@ private:
     Real* timestep;
     CCI_RangeAndBearingActuator* range_and_bearing_actuator;
     CCI_RangeAndBearingSensor* range_and_bearing_sensor;
+    CCI_FootBotLightSensor* m_pcLight;
+
+
+
 
 
    /*
@@ -238,8 +239,104 @@ private:
     * It is set to [-alpha,alpha]. */
    CRange<CRadians> m_cGoStraightAngleRange;
     CRadians cAngle;
+    int ID;
+    int Alone;
+    int Left;
+    int Right;
     Real LeftWheel;
     Real RightWheel;
+    Real X;
+    Real Y;
+    Real TrueX;
+    Real TrueY;
+    Real Heading;
+    std::vector<Real> FlockHeadings;
+    std::vector<Real> AbsoluteFlockBearing;
+    std::vector<Real> OmegaCoordX;
+    std::vector<Real> OmegaCoordY;
+    std::vector<Real> FlockCoordX;
+    std::vector<Real> FlockCoordY;
+    std::vector<Real> FlockRange;
+    std::vector<Real> FlockBearing;
+    boost::circular_buffer<int>* MemoryLogNew;
+    boost::circular_buffer<int>* DetectBodge;
+    boost::circular_buffer<int>* FaultyFeatureVectors;
+    boost::circular_buffer<int>* MemoryBounce;
+    boost::circular_buffer<Real>* YawHolder;
+    boost::circular_buffer<Real>* IntCoord;
+    boost::circular_buffer<Real>* TrueIntCoord;
+    std::vector<int> AgentNew;
+    std::vector<int> HangVector;
+    int OmegaTimer = 0;
+    std::vector<Real> OmegaTurnX;
+    std::vector<Real> OmegaTurnY;
+    int Faulty = 0;
+    int MotorRand = 0;
+    Real RValue;
+    bool hang = false;
+    bool power = false;
+    bool Doctor = false;
+    int DoctorsOrder = 0;
+    std::vector<double> Ambulance;
+    int Discrep = 0;
+    int UnderInvestigation;
+    std::vector<int> Snapshot;
+    std::vector<Real> Candidates;
+    int TimeID = 0;
+    int TimeStart;
+    bool Quarantine = false;
+
+    // DIAGNOSTICS
+    bool wall;
+    bool DiagBounce = false;
+    bool SnapTaken = false;
+    bool Eligibility = false;
+    int Diagnosis = 0;
+    bool Diagnosed = false;
+    bool FailReset = false;
+    bool BeginMOT = false;
+    bool Stop = false;
+    bool ping = false;
+    bool RABCompare = false;
+    bool RABConfirm = false;
+    bool TestLM = false;
+    bool ConfirmLM = false;
+    bool TestRM = false;
+    bool ConfirmRM = false;
+    bool TestStraight = false;
+    bool ConfirmStraight = false;
+    bool TestLap = false;
+    Real LapStart;
+    bool LapCount = false;
+    int LapDelay = 0;
+    int ConfirmLap = 0;
+    Real FaultStart = 0;
+    std::vector<int> PingWait;
+    std::vector<int> StopWait;
+    std::vector<int> RABWait;
+    std::vector<int> MotorWait;
+    std::vector<int> StraightWait;
+    std::vector<int> LapWait;
+    Real DiagCandidate = 0;
+
+    // CLASSIFICATION
+
+    Real sumtop;
+    Real topadd;
+    Real bottomadd1;
+    Real bottomadd2;
+    Real sumbottom;
+    Real sumbottom1;
+    Real sumbottom2;
+    Real MeanMem;
+    Real MeanSnap;
+    Real MemSum;
+    int Jcount;
+    Real Rcorr;
+    Real FaultTime;
+    bool ClassifierSuccess = true;
+
+
 
 };
 

@@ -1,0 +1,1436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="argos3_examples"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\usr\;CMake Files\..\..\..\usr\local\;CMake Files\..\..\..\usr\local\share\;CMake Files\..\..\..\usr\local\share\argos3\;CMake Files\..\..\..\usr\local\share\argos3\cmake\;CMake Files\cmake\;CMake Files\controllers\;CMake Files\controllers\footbot_diffusion\;CMake Files\controllers\footbot_synchronization\;CMake Files\controllers\footbot_flocking\;CMake Files\controllers\footbot_gripping\;CMake Files\controllers\footbot_foraging\;CMake Files\controllers\footbot_manualcontrol\;CMake Files\controllers\footbot_nn\;CMake Files\controllers\eyebot_circle\;CMake Files\controllers\eyebot_flocking\;CMake Files\controllers\epuck_obstacleavoidance\;CMake Files\loop_functions\;CMake Files\loop_functions\foraging_loop_functions\;CMake Files\loop_functions\mpga_loop_functions\;CMake Files\loop_functions\trajectory_loop_functions\;CMake Files\loop_functions\id_loop_functions\;CMake Files\loop_functions\manualcontrol_loop_functions\;CMake Files\loop_functions\logging_loop_functions\;CMake Files\embedding\;CMake Files\embedding\mpga\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="footbot_diffusion">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_diffusion/libfootbot_diffusion.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_diffusion"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_diffusion/Makefile&quot;  VERBOSE=1 footbot_diffusion"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_diffusion/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_diffusion/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_diffusion/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="footbot_diffusion/fast">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_diffusion/libfootbot_diffusion.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_diffusion"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_diffusion/Makefile&quot;  VERBOSE=1 footbot_diffusion/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_diffusion/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_diffusion/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_diffusion/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="footbot_synchronization">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_synchronization/libfootbot_synchronization.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_synchronization"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_synchronization/Makefile&quot;  VERBOSE=1 footbot_synchronization"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_synchronization/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_synchronization/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_synchronization/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="footbot_synchronization/fast">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_synchronization/libfootbot_synchronization.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_synchronization"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_synchronization/Makefile&quot;  VERBOSE=1 footbot_synchronization/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_synchronization/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_synchronization/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_synchronization/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="footbot_flocking">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_flocking/libfootbot_flocking.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_flocking"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_flocking/Makefile&quot;  VERBOSE=1 footbot_flocking"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_flocking/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_flocking/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_flocking/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="footbot_flocking/fast">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_flocking/libfootbot_flocking.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_flocking"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_flocking/Makefile&quot;  VERBOSE=1 footbot_flocking/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_flocking/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_flocking/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_flocking/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="footbot_gripping">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_gripping/libfootbot_gripping.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_gripping"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_gripping/Makefile&quot;  VERBOSE=1 footbot_gripping"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_gripping/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_gripping/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_gripping/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="footbot_gripping/fast">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_gripping/libfootbot_gripping.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_gripping"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_gripping/Makefile&quot;  VERBOSE=1 footbot_gripping/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_gripping/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_gripping/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_gripping/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="footbot_foraging">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_foraging/libfootbot_foraging.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_foraging"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_foraging/Makefile&quot;  VERBOSE=1 footbot_foraging"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_foraging/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_foraging/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_foraging/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="footbot_foraging/fast">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_foraging/libfootbot_foraging.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_foraging"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_foraging/Makefile&quot;  VERBOSE=1 footbot_foraging/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_foraging/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_foraging/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_foraging/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="footbot_manualcontrol">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_manualcontrol/libfootbot_manualcontrol.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_manualcontrol"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_manualcontrol/Makefile&quot;  VERBOSE=1 footbot_manualcontrol"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_manualcontrol/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_manualcontrol/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_manualcontrol/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="footbot_manualcontrol/fast">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_manualcontrol/libfootbot_manualcontrol.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_manualcontrol"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_manualcontrol/Makefile&quot;  VERBOSE=1 footbot_manualcontrol/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_manualcontrol/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_manualcontrol/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_manualcontrol/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="footbot_nn">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_nn/libfootbot_nn.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_nn"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_nn/Makefile&quot;  VERBOSE=1 footbot_nn"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_nn/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_nn/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_nn/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="footbot_nn/fast">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_nn/libfootbot_nn.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_nn"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_nn/Makefile&quot;  VERBOSE=1 footbot_nn/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_nn/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_nn/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/footbot_nn/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="eyebot_circle">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_circle/libeyebot_circle.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_circle"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_circle/Makefile&quot;  VERBOSE=1 eyebot_circle"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_circle/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_circle/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_circle/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="eyebot_circle/fast">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_circle/libeyebot_circle.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_circle"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_circle/Makefile&quot;  VERBOSE=1 eyebot_circle/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_circle/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_circle/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_circle/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="eyebot_flocking">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_flocking/libeyebot_flocking.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_flocking"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_flocking/Makefile&quot;  VERBOSE=1 eyebot_flocking"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_flocking/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_flocking/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_flocking/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="eyebot_flocking/fast">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_flocking/libeyebot_flocking.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_flocking"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_flocking/Makefile&quot;  VERBOSE=1 eyebot_flocking/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_flocking/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_flocking/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/eyebot_flocking/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="epuck_obstacleavoidance">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/epuck_obstacleavoidance/libepuck_obstacleavoidance.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/epuck_obstacleavoidance"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/epuck_obstacleavoidance/Makefile&quot;  VERBOSE=1 epuck_obstacleavoidance"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/epuck_obstacleavoidance/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/epuck_obstacleavoidance/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/epuck_obstacleavoidance/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="epuck_obstacleavoidance/fast">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/controllers/epuck_obstacleavoidance/libepuck_obstacleavoidance.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/controllers/epuck_obstacleavoidance"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/home/jhok500/argos3-examples/controllers"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/epuck_obstacleavoidance/Makefile&quot;  VERBOSE=1 epuck_obstacleavoidance/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/epuck_obstacleavoidance/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/epuck_obstacleavoidance/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/controllers/epuck_obstacleavoidance/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="foraging_loop_functions">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/foraging_loop_functions/libforaging_loop_functions.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/foraging_loop_functions"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/foraging_loop_functions/Makefile&quot;  VERBOSE=1 foraging_loop_functions"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/foraging_loop_functions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/foraging_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/foraging_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="foraging_loop_functions/fast">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/foraging_loop_functions/libforaging_loop_functions.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/foraging_loop_functions"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/foraging_loop_functions/Makefile&quot;  VERBOSE=1 foraging_loop_functions/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/foraging_loop_functions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/foraging_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/foraging_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mpga_phototaxis_loop_functions">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/libmpga_phototaxis_loop_functions.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/Makefile&quot;  VERBOSE=1 mpga_phototaxis_loop_functions"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mpga_phototaxis_loop_functions/fast">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/libmpga_phototaxis_loop_functions.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/Makefile&quot;  VERBOSE=1 mpga_phototaxis_loop_functions/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mpga">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/libmpga.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/Makefile&quot;  VERBOSE=1 mpga"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mpga/fast">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/libmpga.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/Makefile&quot;  VERBOSE=1 mpga/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/mpga_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="trajectory_loop_functions">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/trajectory_loop_functions/libtrajectory_loop_functions.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/trajectory_loop_functions"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/trajectory_loop_functions/Makefile&quot;  VERBOSE=1 trajectory_loop_functions"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/trajectory_loop_functions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/trajectory_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/trajectory_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="trajectory_loop_functions/fast">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/trajectory_loop_functions/libtrajectory_loop_functions.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/trajectory_loop_functions"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/trajectory_loop_functions/Makefile&quot;  VERBOSE=1 trajectory_loop_functions/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/trajectory_loop_functions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/trajectory_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/trajectory_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="id_loop_functions">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/id_loop_functions/libid_loop_functions.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/id_loop_functions"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/id_loop_functions/Makefile&quot;  VERBOSE=1 id_loop_functions"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/id_loop_functions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/id_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/id_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="id_loop_functions/fast">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/id_loop_functions/libid_loop_functions.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/id_loop_functions"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/id_loop_functions/Makefile&quot;  VERBOSE=1 id_loop_functions/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/id_loop_functions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/id_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/id_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="manualcontrol_loop_functions">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/manualcontrol_loop_functions/libmanualcontrol_loop_functions.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/manualcontrol_loop_functions"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/manualcontrol_loop_functions/Makefile&quot;  VERBOSE=1 manualcontrol_loop_functions"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/manualcontrol_loop_functions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/manualcontrol_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/manualcontrol_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="manualcontrol_loop_functions/fast">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/manualcontrol_loop_functions/libmanualcontrol_loop_functions.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/manualcontrol_loop_functions"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/manualcontrol_loop_functions/Makefile&quot;  VERBOSE=1 manualcontrol_loop_functions/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/manualcontrol_loop_functions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/manualcontrol_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/manualcontrol_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="logging_loop_functions">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/logging_loop_functions/liblogging_loop_functions.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/logging_loop_functions"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/logging_loop_functions/Makefile&quot;  VERBOSE=1 logging_loop_functions"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/logging_loop_functions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/logging_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/logging_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="logging_loop_functions/fast">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/logging_loop_functions/liblogging_loop_functions.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/logging_loop_functions"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/logging_loop_functions/Makefile&quot;  VERBOSE=1 logging_loop_functions/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/logging_loop_functions/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/logging_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/loop_functions/logging_loop_functions/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mpga_phototaxis">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/embedding/mpga/mpga_phototaxis" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/embedding/mpga"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/embedding/mpga/Makefile&quot;  VERBOSE=1 mpga_phototaxis"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/embedding/mpga/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/embedding/mpga/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/embedding/mpga/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="mpga_phototaxis/fast">
+				<Option output="/home/jhok500/argos3-examples/cmake-build-debug/embedding/mpga/mpga_phototaxis" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/cmake-build-debug/embedding/mpga"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DQT_OPENGL_LIB"/>
+					<Add option="-DQT_GUI_LIB"/>
+					<Add option="-DQT_CORE_LIB"/>
+					<Add directory="/usr/include/qt4"/>
+					<Add directory="/usr/include/qt4/QtOpenGL"/>
+					<Add directory="/usr/include/qt4/QtGui"/>
+					<Add directory="/usr/include/qt4/QtCore"/>
+					<Add directory="/home/jhok500/argos3-examples"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/lua5.2"/>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/embedding/mpga/Makefile&quot;  VERBOSE=1 mpga_phototaxis/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/embedding/mpga/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/embedding/mpga/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/cmake-build-debug/embedding/mpga/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/epuck_obstacleavoidance/epuck_obstacleavoidance.cpp">
+			<Option target="epuck_obstacleavoidance"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/epuck_obstacleavoidance/epuck_obstacleavoidance.h">
+			<Option target="epuck_obstacleavoidance"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/eyebot_circle/eyebot_circle.cpp">
+			<Option target="eyebot_circle"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/eyebot_circle/eyebot_circle.h">
+			<Option target="eyebot_circle"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/eyebot_circle/footbot_circle.cpp">
+			<Option target="eyebot_circle"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/eyebot_circle/footbot_circle.h">
+			<Option target="eyebot_circle"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/eyebot_flocking/eyebot_flocking.cpp">
+			<Option target="eyebot_flocking"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/eyebot_flocking/eyebot_flocking.h">
+			<Option target="eyebot_flocking"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_diffusion/footbot_diffusion.cpp">
+			<Option target="footbot_diffusion"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_diffusion/footbot_diffusion.h">
+			<Option target="footbot_diffusion"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_flocking/footbot_flocking.cpp">
+			<Option target="footbot_flocking"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_flocking/footbot_flocking.h">
+			<Option target="footbot_flocking"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_foraging/footbot_foraging.cpp">
+			<Option target="footbot_foraging"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_foraging/footbot_foraging.h">
+			<Option target="footbot_foraging"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_gripping/footbot_gripping.cpp">
+			<Option target="footbot_gripping"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_gripping/footbot_gripping.h">
+			<Option target="footbot_gripping"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_manualcontrol/footbot_manualcontrol.cpp">
+			<Option target="footbot_manualcontrol"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_manualcontrol/footbot_manualcontrol.h">
+			<Option target="footbot_manualcontrol"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_nn/footbot_nn_controller.cpp">
+			<Option target="footbot_nn"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_nn/footbot_nn_controller.h">
+			<Option target="footbot_nn"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_nn/nn/ctrnn_multilayer.cpp">
+			<Option target="footbot_nn"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_nn/nn/ctrnn_multilayer.h">
+			<Option target="footbot_nn"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_nn/nn/neural_network.cpp">
+			<Option target="footbot_nn"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_nn/nn/neural_network.h">
+			<Option target="footbot_nn"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_nn/nn/perceptron.cpp">
+			<Option target="footbot_nn"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_nn/nn/perceptron.h">
+			<Option target="footbot_nn"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_synchronization/footbot_synchronization.cpp">
+			<Option target="footbot_synchronization"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_synchronization/footbot_synchronization.h">
+			<Option target="footbot_synchronization"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/embedding/mpga/main.cpp">
+			<Option target="mpga_phototaxis"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/foraging_loop_functions/foraging_loop_functions.cpp">
+			<Option target="foraging_loop_functions"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/foraging_loop_functions/foraging_loop_functions.h">
+			<Option target="foraging_loop_functions"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/foraging_loop_functions/foraging_qt_user_functions.cpp">
+			<Option target="foraging_loop_functions"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/foraging_loop_functions/foraging_qt_user_functions.h">
+			<Option target="foraging_loop_functions"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/id_loop_functions/id_qtuser_functions.cpp">
+			<Option target="id_loop_functions"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/id_loop_functions/id_qtuser_functions.h">
+			<Option target="id_loop_functions"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/logging_loop_functions/logging_loop_functions.cpp">
+			<Option target="logging_loop_functions"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/logging_loop_functions/logging_loop_functions.h">
+			<Option target="logging_loop_functions"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/manualcontrol_loop_functions/manualcontrol_qtuser_functions.cpp">
+			<Option target="manualcontrol_loop_functions"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/manualcontrol_loop_functions/manualcontrol_qtuser_functions.h">
+			<Option target="manualcontrol_loop_functions"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/mpga_loop_functions/mpga.cpp">
+			<Option target="mpga"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/mpga_loop_functions/mpga.h">
+			<Option target="mpga"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/mpga_loop_functions/mpga_loop_functions.cpp">
+			<Option target="mpga"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/mpga_loop_functions/mpga_loop_functions.h">
+			<Option target="mpga"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/mpga_loop_functions/mpga_phototaxis_loop_functions.cpp">
+			<Option target="mpga_phototaxis_loop_functions"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/mpga_loop_functions/mpga_phototaxis_loop_functions.h">
+			<Option target="mpga_phototaxis_loop_functions"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/trajectory_loop_functions/trajectory_loop_functions.cpp">
+			<Option target="trajectory_loop_functions"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/trajectory_loop_functions/trajectory_loop_functions.h">
+			<Option target="trajectory_loop_functions"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/trajectory_loop_functions/trajectory_qtuser_functions.cpp">
+			<Option target="trajectory_loop_functions"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/trajectory_loop_functions/trajectory_qtuser_functions.h">
+			<Option target="trajectory_loop_functions"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/../../../usr/local/share/argos3/cmake/ARGoSCheckQTOpenGL.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\share\argos3\cmake\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/../../../usr/local/share/argos3/cmake/FindGSL.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\share\argos3\cmake\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/../../../usr/local/share/argos3/cmake/FindLua52.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\usr\local\share\argos3\cmake\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/cmake/FindGALIB.cmake">
+			<Option virtualFolder="CMake Files\cmake\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\controllers\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_diffusion/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\controllers\footbot_diffusion\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_synchronization/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\controllers\footbot_synchronization\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_flocking/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\controllers\footbot_flocking\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_gripping/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\controllers\footbot_gripping\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_foraging/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\controllers\footbot_foraging\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_manualcontrol/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\controllers\footbot_manualcontrol\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_nn/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\controllers\footbot_nn\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/eyebot_circle/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\controllers\eyebot_circle\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/eyebot_flocking/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\controllers\eyebot_flocking\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/epuck_obstacleavoidance/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\controllers\epuck_obstacleavoidance\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\loop_functions\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/foraging_loop_functions/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\loop_functions\foraging_loop_functions\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/mpga_loop_functions/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\loop_functions\mpga_loop_functions\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/trajectory_loop_functions/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\loop_functions\trajectory_loop_functions\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/id_loop_functions/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\loop_functions\id_loop_functions\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/manualcontrol_loop_functions/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\loop_functions\manualcontrol_loop_functions\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/loop_functions/logging_loop_functions/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\loop_functions\logging_loop_functions\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/embedding/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\embedding\"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/embedding/mpga/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\embedding\mpga\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

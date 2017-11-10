@@ -1,0 +1,10 @@
+/home/jhok500/clion-2016.1.2/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/jhok500/argos3-examples
+running rm -rf /home/jhok500/argos3-examples/build  2>&1
+running ln -s /home/jhok500/argos3-examples/cmake-build-debug /home/jhok500/argos3-examples/build  2>&1
+-- Could NOT find GALIB (missing:  GALIB_LIBRARY GALIB_INCLUDE_DIR) 
+-- GSL using gsl-config /usr/bin/gsl-config
+-- Using GSL from /usr
+-- Boost version: 1.54.0
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/jhok500/argos3-examples/cmake-build-debug
