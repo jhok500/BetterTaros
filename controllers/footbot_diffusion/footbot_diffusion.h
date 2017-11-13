@@ -206,7 +206,7 @@ private:
    /* Pointer to the foot-bot proximity sensor */
    CCI_FootBotProximitySensor* m_pcProximity;
     CCI_DifferentialSteeringSensor* wheel_encoders;
-    Real* timestep;
+    //Real* timestep;
     CCI_RangeAndBearingActuator* range_and_bearing_actuator;
     CCI_RangeAndBearingSensor* range_and_bearing_sensor;
     CCI_FootBotLightSensor* m_pcLight;
