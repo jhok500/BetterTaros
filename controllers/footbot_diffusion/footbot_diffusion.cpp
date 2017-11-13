@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "loop_functions/logging_loop_functions/logging_loop_functions.h"
+//#include "loop_functions/logging_loop_functions/logging_loop_functions.h"
 /* Function definitions for XML parsing */
 #include <argos3/core/utility/configuration/argos_configuration.h>
 /* 2D vector definition */
