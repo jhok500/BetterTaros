@@ -55,7 +55,7 @@ std::vector<int> MemoryTimes;
 std::vector<int> MOTTimes;
 std::vector<Real> CorrCoeff;
 std::vector<Real> FailCoeff;
-std::vector<int> MemorySize;
+//std::vector<int> MemorySize;
 
 
 bool StuckBounce = false;
@@ -63,7 +63,7 @@ int MemoryBits = 5;
 int ExperimentLength = 36000;
 int FaultsInPlay = 0;
 int PMFangle = 60;
-int MemoryIndex;
+//int MemoryIndex;
 bool SaveMemory = false;
 int FaultDelay = 10;
 int ConfirmDelay = 5;
@@ -75,9 +75,9 @@ Real OmegaGap = 35;
 int PowerCycle [2] =  {1,2};
 int SensorReplacement [2] = {3,6};
 int MotorReplacement [2] = {4,5};
-std::ofstream SnapshotFile;
+//std::ofstream SnapshotFile;
 std::ofstream DataFile;
-std::ofstream SpartanPercent;
+//std::ofstream SpartanPercent;
 int foldernum;
 Real Fail = 0;
 int MOT = 0;
@@ -102,7 +102,7 @@ Real DetectRatio = 1;
 Real BearingNoise = 0.123;
 Real YawCoordinateNoise = 0.00035;
 Real CoordinateNoise = 0.000025;
-int Objects = 0;
+//int Objects = 0;
 
 /*
  * A controller is simply an implementation of the CCI_Controller class.
@@ -194,7 +194,7 @@ public:
     Real hangRight;
     Real hangLeft;
 
-    CVector2 NeighbourDistance;
+    //CVector2 NeighbourDistance;
 
 protected:
     virtual CVector2 VectorToLight();
@@ -287,9 +287,9 @@ private:
     bool Quarantine = false;
 
     // DIAGNOSTICS
-    bool wall;
-    bool DiagBounce = false;
-    bool SnapTaken = false;
+    //bool wall;
+    //bool DiagBounce = false;
+    //bool SnapTaken = false;
     bool Eligibility = false;
     int Diagnosis = 0;
     bool Diagnosed = false;

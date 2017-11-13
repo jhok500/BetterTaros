@@ -193,12 +193,10 @@ void CFootBotDiffusion::ObstacleAv() {
     cAngle = cAccumulator.Angle();
     if (m_cGoStraightAngleRange.WithinMinBoundIncludedMaxBoundIncluded(cAngle) &&
         cAccumulator.Length() < m_fDelta) {
-        wall = false;
         Left = 1;
         Right = 1;
     }
     else {
-        wall = true;
         if (cAngle.GetValue() > 0.0f) {
             Left = 1;
             Right = 0;
@@ -226,7 +224,6 @@ void CFootBotDiffusion::Aggregation() {
     GoalBearing = atan2(GoalCoord.GetY(), GoalCoord.GetX()) * 180 / ARGOS_PI;
     if (m_cGoStraightAngleRange.WithinMinBoundIncludedMaxBoundIncluded(cAngle) &&
         cAccumulator.Length() < m_fDelta) {
-        wall = false;
         if (Alone == 0) {
             Left = 1;
             Right = 1;
@@ -264,7 +261,6 @@ void CFootBotDiffusion::Aggregation() {
         }
     }
     else {
-        wall = true;
         if (cAngle.GetValue() > 0.0f) {
             Left = 1;
             Right = 0;
@@ -292,7 +288,6 @@ void CFootBotDiffusion::Flocking() {
     Real GoalBearing = atan2(BearingY,BearingX)*180/ARGOS_PI;
     if (m_cGoStraightAngleRange.WithinMinBoundIncludedMaxBoundIncluded(cAngle) &&
         cAccumulator.Length() < m_fDelta) {
-        wall = false;
         if (std::accumulate(FlockRange.begin(), FlockRange.end(), 0.0) / FlockRange.size() >
             (30 + (15 * FlockRange.size()))) {
             Goal = GoalBearing;
@@ -338,7 +333,6 @@ void CFootBotDiffusion::Flocking() {
         }
     }
     else {
-        wall = true;
         if (cAngle.GetValue() > 0.0f) {
             Left = 1;
             Right = 0;
@@ -376,7 +370,6 @@ void CFootBotDiffusion::OmegaAlg() {
     }
     if (m_cGoStraightAngleRange.WithinMinBoundIncludedMaxBoundIncluded(cAngle) &&
         cAccumulator.Length() < m_fDelta && !OmegaTurning) {
-        wall = false;
         if (OmegaTimer > Omega) {
             if (Heading < OmegaBearing + 5 && Heading > OmegaBearing - 5) {
                 OmegaTimer = 0;
@@ -464,7 +457,6 @@ void CFootBotDiffusion::OmegaAlg() {
         }
     }
     else {
-        wall = true;
         OmegaTimer = 0;
         if (cAngle.GetValue() > 0.0f) {
             Left = 1;
@@ -488,7 +480,6 @@ void CFootBotDiffusion::DrPursue() {
     cAngle = cAccumulator.Angle();
     if (m_cGoStraightAngleRange.WithinMinBoundIncludedMaxBoundIncluded(cAngle) &&
         cAccumulator.Length() < m_fDelta) {
-        wall = false;
         if (Ambulance.at(1) < 50) {
             Left = 0;
             Right = 0;
@@ -513,7 +504,6 @@ void CFootBotDiffusion::DrPursue() {
         }
     }
     else {
-        wall = true;
         if (cAngle.GetValue() > 0.0f) {
             Left = 1;
             Right = 0;
@@ -532,7 +522,6 @@ void CFootBotDiffusion::TakeSnapshot() {
         //std::cout << FaultyFeatureVectors->at(i) << std::endl;
         //SnapshotFile.close();
     }
-    SnapTaken = true;
 }
 /****************************************/
 void CFootBotDiffusion::Classify() {
@@ -640,7 +629,7 @@ void CFootBotDiffusion::DoctorReset() {
     TrueTotal++;
 
     //ACTIVE MEMORY
-    if (RValue >= SimilarityThreshold) {
+    if (RValue >= ActiveThreshold) {
         ActiveMemory();
     }
         // UNIQUE FAULT TYPE AND TIME IDENTIFY
