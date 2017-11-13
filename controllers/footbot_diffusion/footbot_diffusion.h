@@ -59,7 +59,7 @@ std::vector<int> MemorySize;
 
 
 bool StuckBounce = false;
-int MemoryBits = 18;
+int MemoryBits = 5;
 int ExperimentLength = 36000;
 int FaultsInPlay = 0;
 int PMFangle = 60;
@@ -318,6 +318,7 @@ private:
     std::vector<int> StraightWait;
     std::vector<int> LapWait;
     Real DiagCandidate = 0;
+    bool ActiBounce = false;
 
     // CLASSIFICATION
 

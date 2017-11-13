@@ -113,7 +113,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
                             break;
                         case 1:
                             DetectDelay = abs(stof(cell));
-                            //DetectDelay = 100;
+                            //DetectDelay = 5;
                             break;
                         case 2:
                             DetectRatio = stof(cell);
@@ -615,30 +615,37 @@ void CFootBotDiffusion::Classify() {
 /****************************************/
 void CFootBotDiffusion::ActiveMemory() {
     for (int i = 0; i < MemoryLogNew->size(); i++) {
-        if (MemoryLogNew->at(i) == TimeID) {
+        if (MemoryLogNew->at(i) == TimeID && !ActiBounce) {
+            ActiBounce = true;
+            MemoryLogNew->erase(MemoryLogNew->begin() + i-1);
+            MemoryLogNew->erase(MemoryLogNew->begin() + i-1);
+            MemoryLogNew->push_back(-Diagnosis);
+
             MemoryLogNew->push_back(TimeID);
-            MemoryLogNew->erase(MemoryLogNew->begin() + i);
+
             for (int j = i; j < i + (DetectDelay * 6 * 2); j++) {
-                int carrier = MemoryLogNew->at(i);
-                MemoryLogNew->erase(MemoryLogNew->begin() + i - 1);
+                int carrier = MemoryLogNew->at(i-1);
+                MemoryLogNew->erase(MemoryLogNew->begin() + i-1);
                 MemoryLogNew->push_back(carrier);
             }
-            MemoryLogNew->erase(MemoryLogNew->begin() + (i - 1));
+            //MemoryLogNew->erase(MemoryLogNew->begin() + (i - 1));
         }
     }
-    //std::cout << "ACTIVE MEMORY EXECUTED" << std::endl;
+    ActiBounce = false;
+
 }
 /****************************************/
 void CFootBotDiffusion::DoctorReset() {
     DetectBodge->clear();
     TrueTotal++;
-    MemoryLogNew->push_back(-Diagnosis);
+
     //ACTIVE MEMORY
-    if (RValue >= ActiveThreshold) {
+    if (RValue >= SimilarityThreshold) {
         ActiveMemory();
     }
         // UNIQUE FAULT TYPE AND TIME IDENTIFY
     else {
+        MemoryLogNew->push_back(-Diagnosis);
         MemoryLogNew->push_back(Time);
         for (int i = 0; i < Snapshot.size(); i++) {
             MemoryLogNew->push_back(Snapshot.at(i));
@@ -648,6 +655,7 @@ void CFootBotDiffusion::DoctorReset() {
         Total++;
         //std::cout << "Total: " << Total << std::endl;
     }
+    //std::cout << MemoryLogNew->size() << ": " << MemoryLogNew->capacity() << std::endl;
     if (ClassifierSuccess) {
         //std::cout << "DIAGNOSED (CLASSIFIER)" << std::endl;
         Class++;
@@ -770,9 +778,9 @@ void CFootBotDiffusion::FaultyReset() {
         RValue = 0;
     }
     else {
-        //std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", FAILURE" << std::endl;
+        std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", FAILURE" << std::endl;
         Fail++;
-        //std::cout << "Total Fails: " << Fail << std::endl;
+        std::cout << "Total Fails: " << Fail << std::endl;
         if (RValue != 0) {
             FailCoeff.push_back(RValue);
         }
