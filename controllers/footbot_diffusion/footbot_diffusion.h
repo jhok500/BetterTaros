@@ -59,7 +59,7 @@ std::vector<Real> FailCoeff;
 
 
 bool StuckBounce = false;
-int MemoryBits = 5;
+int MemoryBits = 18;
 int ExperimentLength = 36000;
 int FaultsInPlay = 0;
 int PMFangle = 60;
