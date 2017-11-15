@@ -172,7 +172,7 @@ void CFootBotDiffusion::FaultInject() {
         }
     }
     FaultyIDs.push_back(ID);
-    std::cout << "Faulty Robot is " << ID << ": " << Faulty << std::endl;
+    //std::cout << "Faulty Robot is " << ID << ": " << Faulty << std::endl;
 
     if (std::find(MemoryLogNew->begin(), MemoryLogNew->end(),-Faulty) != MemoryLogNew->end()) {
         Eligibility = true;
@@ -590,7 +590,7 @@ void CFootBotDiffusion::Classify() {
                     RValue = Candidates.at(i);
                     Diagnosis = -Candidates.at(i+1);
                     TimeID = -Candidates.at(i+2);
-                    std::cout << "Classified as " << Diagnosis << " with " << Candidates.at(i)*100 << "% similarity" << std::endl;
+                    //std::cout << "Classified as " << Diagnosis << " with " << Candidates.at(i)*100 << "% similarity" << std::endl;
                     break;
                 }
             }
@@ -646,13 +646,13 @@ void CFootBotDiffusion::DoctorReset() {
     }
     //std::cout << MemoryLogNew->size() << ": " << MemoryLogNew->capacity() << std::endl;
     if (ClassifierSuccess) {
-        std::cout << "DIAGNOSED (CLASSIFIER)" << std::endl;
+        //std::cout << "DIAGNOSED (CLASSIFIER)" << std::endl;
         Class++;
         //std::cout << "Total Class: " << Class << std::endl;
         MemoryTimes.push_back(Time);
         CorrCoeff.push_back(RValue);
     } else {
-        std::cout << "DIAGNOSED (MOT)" << std::endl;
+        //std::cout << "DIAGNOSED (MOT)" << std::endl;
         int TimeTaken = Time - TimeStart;
         MOTTimes.push_back(Time);
         if (Eligibility) {
@@ -767,9 +767,9 @@ void CFootBotDiffusion::FaultyReset() {
         RValue = 0;
     }
     else {
-        std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", FAILURE" << std::endl;
+        //std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", FAILURE" << std::endl;
         Fail++;
-        std::cout << "Total Fails: " << Fail << std::endl;
+        //std::cout << "Total Fails: " << Fail << std::endl;
         if (RValue != 0) {
             FailCoeff.push_back(RValue);
         }
@@ -984,7 +984,7 @@ void CFootBotDiffusion::ControlStep() {
                         TimeStart = Time;
                         Doctor = true;
                         DoctorsOrder = UnderInvestigation;
-                        std::cout << "DR FOR " << DoctorsOrder << " IS " << ID << std::endl;
+                        //std::cout << "DR FOR " << DoctorsOrder << " IS " << ID << std::endl;
                         Doctors.push_back(ID);
                         Doctors.push_back(DoctorsOrder);
                         DetectTime.push_back(Time - controller.FaultStart);
@@ -1017,7 +1017,7 @@ void CFootBotDiffusion::ControlStep() {
                 if (Faulty != 0 && ID == controller.DoctorsOrder) {
                     if (controller.Diagnosis != 0 && !FailReset) {
                         Diagnosis = controller.Diagnosis;
-                        std::cout << ID << " GOT MY DIAGNOSIS " << Diagnosis << " from " << controller.ID << std::endl;
+                        //std::cout << ID << " GOT MY DIAGNOSIS " << Diagnosis << " from " << controller.ID << std::endl;
                         if (controller.RValue != 0) {
                             RValue = controller.RValue;
                         }
@@ -1146,7 +1146,7 @@ void CFootBotDiffusion::ControlStep() {
                     if (Diagnosis != 0 && Diagnosis != controller.Faulty) {
                         if (Diagnosis == 3 && controller.Faulty == 6) {}
                         else {
-                            std::cout << "MOT FAILED, CHANGING ACCORDINGLY" << std::endl;
+                            //std::cout << "MOT FAILED, CHANGING ACCORDINGLY" << std::endl;
                             Diagnosis = controller.Faulty;
                         }
                     }
@@ -1536,7 +1536,7 @@ void CFootBotDiffusion::ControlStep() {
 
 
     if (Time == ExperimentLength && !StuckBounce && !SaveMemory || Time == ExperimentLength && !StuckBounce && ID == ImmortalID && SaveMemory) {
-        std::cout << "END" << std::endl;
+        //std::cout << "END" << std::endl;
         StuckBounce = true;
         Real ClassPer = Class/Total;
         Real ClassFailPer = Fail/Total;
