@@ -131,11 +131,11 @@
 <!--   ******************
    * Visualization *
    ******************-->
-  <visualization>
+ <!-- <visualization>
     <qt-opengl>
       <user_functions library="build/loop_functions/id_loop_functions/libid_loop_functions"
                       label="id_qtuser_functions" />
     </qt-opengl>
   </visualization>
 
-</argos-configuration>
+</argos-configuration>-->
