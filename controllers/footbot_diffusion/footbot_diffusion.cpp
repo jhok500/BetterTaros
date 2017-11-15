@@ -109,14 +109,14 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
                 while (getline(myRow, cell, ',')) {
                     switch (i) {
                         case 0:
-                            SimilarityThreshold = stof(cell);
+                            //SimilarityThreshold = stof(cell);
                             break;
                         case 1:
-                            DetectDelay = abs(stof(cell));
+                            //DetectDelay = abs(stof(cell));
                             //DetectDelay = 5;
                             break;
                         case 2:
-                            DetectRatio = stof(cell);
+                            //DetectRatio = stof(cell);
                             //DetectRatio = 1;
                             break;
 
@@ -172,7 +172,7 @@ void CFootBotDiffusion::FaultInject() {
         }
     }
     FaultyIDs.push_back(ID);
-    //std::cout << "Faulty Robot is " << ID << ": " << Faulty << std::endl;
+    std::cout << "Faulty Robot is " << ID << ": " << Faulty << std::endl;
 
     if (std::find(MemoryLogNew->begin(), MemoryLogNew->end(),-Faulty) != MemoryLogNew->end()) {
         Eligibility = true;
@@ -590,7 +590,7 @@ void CFootBotDiffusion::Classify() {
                     RValue = Candidates.at(i);
                     Diagnosis = -Candidates.at(i+1);
                     TimeID = -Candidates.at(i+2);
-                    //std::cout << "Classified as " << Diagnosis << " with " << Candidates.at(i)*100 << "% similarity" << std::endl;
+                    std::cout << "Classified as " << Diagnosis << " with " << Candidates.at(i)*100 << "% similarity" << std::endl;
                     break;
                 }
             }
@@ -646,13 +646,13 @@ void CFootBotDiffusion::DoctorReset() {
     }
     //std::cout << MemoryLogNew->size() << ": " << MemoryLogNew->capacity() << std::endl;
     if (ClassifierSuccess) {
-        //std::cout << "DIAGNOSED (CLASSIFIER)" << std::endl;
+        std::cout << "DIAGNOSED (CLASSIFIER)" << std::endl;
         Class++;
         //std::cout << "Total Class: " << Class << std::endl;
         MemoryTimes.push_back(Time);
         CorrCoeff.push_back(RValue);
     } else {
-        //std::cout << "DIAGNOSED (MOT)" << std::endl;
+        std::cout << "DIAGNOSED (MOT)" << std::endl;
         int TimeTaken = Time - TimeStart;
         MOTTimes.push_back(Time);
         if (Eligibility) {
@@ -774,10 +774,15 @@ void CFootBotDiffusion::FaultyReset() {
             FailCoeff.push_back(RValue);
         }
         if (!BeginMOT) {
-            Diagnosis = 0;
+            BeginMOT = true;
             FailReset = true;
-            //std::cout << "Try Diagnosis From Scratch" << std::endl;
+            Diagnosis = 0;
         }
+        else {
+            Diagnosis = Faulty;
+        }
+        //std::cout << "Try Diagnosis From Scratch" << std::endl;
+
     }
 }
 /****************************************/
@@ -905,6 +910,7 @@ void CFootBotDiffusion::ControlStep() {
     int CloseProxCoord = 0;
     int MidProx = 0;
     int CloseProx = 0;
+    int InvestigateBounce = 0;
     for (CCI_RangeAndBearingSensor::SPacket packet : packets) {
         double bearing = ToDegrees(packet.HorizontalBearing).GetValue();
         std::normal_distribution<double> RABNoise(0,packet.Range*0.05);
@@ -950,6 +956,9 @@ void CFootBotDiffusion::ControlStep() {
                     if (UnderInvestigation == controller.ID && controller.Faulty == 0) {
                         UnderInvestigation = 0;
                     }
+                    if (controller.ID == UnderInvestigation) {
+                        InvestigateBounce++;
+                    }
                     // Record monitored robots BFV if unusual
                     if (controller.ID == UnderInvestigation && controller.Faulty != 0) {
                         for (int i = 1; i < controller.AgentNew.size(); i++) {
@@ -975,7 +984,7 @@ void CFootBotDiffusion::ControlStep() {
                         TimeStart = Time;
                         Doctor = true;
                         DoctorsOrder = UnderInvestigation;
-                        //std::cout << "DR FOR " << DoctorsOrder << " IS " << ID << std::endl;
+                        std::cout << "DR FOR " << DoctorsOrder << " IS " << ID << std::endl;
                         Doctors.push_back(ID);
                         Doctors.push_back(DoctorsOrder);
                         DetectTime.push_back(Time - controller.FaultStart);
@@ -1008,7 +1017,7 @@ void CFootBotDiffusion::ControlStep() {
                 if (Faulty != 0 && ID == controller.DoctorsOrder) {
                     if (controller.Diagnosis != 0 && !FailReset) {
                         Diagnosis = controller.Diagnosis;
-                        //std::cout << ID << " GOT MY DIAGNOSIS " << Diagnosis << " from " << controller.ID << std::endl;
+                        std::cout << ID << " GOT MY DIAGNOSIS " << Diagnosis << " from " << controller.ID << std::endl;
                         if (controller.RValue != 0) {
                             RValue = controller.RValue;
                         }
@@ -1134,8 +1143,16 @@ void CFootBotDiffusion::ControlStep() {
                             Diagnosis = 6;
                         }
                     }
+                    if (Diagnosis != 0 && Diagnosis != controller.Faulty) {
+                        if (Diagnosis == 3 && controller.Faulty == 6) {}
+                        else {
+                            std::cout << "MOT FAILED, CHANGING ACCORDINGLY" << std::endl;
+                            Diagnosis = controller.Faulty;
+                        }
+                    }
                 }
                 if (Doctor && !Diagnosed && controller.ID == DoctorsOrder && controller.Diagnosed) {
+
                     Diagnosed = true;
                 }
             }
@@ -1156,6 +1173,10 @@ void CFootBotDiffusion::ControlStep() {
         if (Doctor && packet.Data[0]+100 == DoctorsOrder) {
             Ambulance.push_back(bearing);
             Ambulance.push_back(range);
+        }
+        if (InvestigateBounce == 0) {
+            UnderInvestigation = 0;
+            DetectBodge->clear();
         }
     }
     // BEHAVIOURS
@@ -1518,7 +1539,12 @@ void CFootBotDiffusion::ControlStep() {
         std::cout << "END" << std::endl;
         StuckBounce = true;
         Real ClassPer = Class/Total;
-        Real ClassFailPer = Fail/(Class+Fail);
+        Real ClassFailPer = Fail/Total;
+        Real AvCor = 0;
+        if (CorrCoeff.size()>0) {
+            AvCor = std::accumulate(CorrCoeff.begin(), CorrCoeff.end(), 0.0) / CorrCoeff.size();
+        }
+        Real FailCor = 0;
         std::string folderName = std::to_string(foldernum-1);
         std::string seedFolder = std::to_string(CSimulator::GetInstance().GetRandomSeed());
         std::string slashyboi = "/";
@@ -1532,72 +1558,21 @@ void CFootBotDiffusion::ControlStep() {
         SpartanPercent.open (folderName + "/ClassFailPercent.csv", std::ios_base::app);
         SpartanPercent << CSimulator::GetInstance().GetRandomSeed() << "," << ClassFailPer;
         SpartanPercent.close();*/
-        Real MaxFail;
+        Real MaxFail = 0;
         if (FailCoeff.size() > 0) {
+            FailCor = std::accumulate(FailCoeff.begin(), FailCoeff.end(), 0.0)/FailCoeff.size();
             MaxFail = *max_element(FailCoeff.begin(), FailCoeff.end());
         }
-        DataFile << "Elligible Total, "  << "MemoryTot, "  <<
+        Real AvDetTime = 0;
+        if (DetectTime.size()>0) {
+            AvDetTime = std::accumulate(DetectTime.begin(), DetectTime.end(), 0.0)/DetectTime.size();
+        }
+        DataFile << "Abs Total, " << "Elligible Total, "  << "MemoryTot, "  <<
         "FailTot, "<< "%Memory,"  << "%Failure,"  << "Avg Correlation, "  << "Avg Corr Fail, " <<
-        "Max Fail Coeff, "  << "Avg Detection Time, " << "MOTTimes, " << "MemoryTimes, " << "MemoryLog" << std::endl;
-        DataFile  << Total << ", " << Class << ", "  << Fail << ", " << ClassPer << ", " << ClassFailPer << ", "
-        << std::accumulate(CorrCoeff.begin(), CorrCoeff.end(), 0.0)/CorrCoeff.size() << ", " << std::accumulate(FailCoeff.begin(), FailCoeff.end(), 0.0)/FailCoeff.size()
-        << ", " << MaxFail << ", " << std::accumulate(DetectTime.begin(), DetectTime.end(), 0.0)/DetectTime.size() << ", ";
-        if (MOTTimes.size() > 0) {
-            DataFile << MOTTimes.at(0) << ", ";
-        }
-        else {
-            DataFile << " -nan, ";
-        }
-        if (MemoryTimes.size() > 0) {
-            DataFile << MemoryTimes.at(0) << ", ";
-        }
-        else {
-            DataFile << " -nan , ";
-        }
-        /*if (SaveMemory) {
-            DataFile << MemoryLogNew->at(0) << std::endl;
-        }*/
-        DataFile << std::endl;
-        if (MOTTimes.size() <= MemoryTimes.size()) {
-            for (int i = 1; i < MOTTimes.size(); i++) {
-                DataFile << " , , , , , , , , , " << MOTTimes.at(i) << ", " << MemoryTimes.at(i) << ", " /*<< MemoryLogNew->at(i)*/ << std::endl;
-            }
-            if (MOTTimes.size() == 0) {
-                for (int i = 1; i < MemoryTimes.size(); i++) {
-                    DataFile << " , , , , , , , , , ," << MemoryTimes.at(i) << ", " /*<< MemoryLogNew->at(i)*/ << std::endl;
-                }
-            }
-            else {
-                for (int i = MOTTimes.size(); i < MemoryTimes.size(); i++) {
-                    DataFile << " , , , , , , , , , ," << MemoryTimes.at(i) << ", " /*<< MemoryLogNew->at(i)*/ << std::endl;
-                }
-            }
-            /*if (SaveMemory) {
-                for (int i = MemoryTimes.size(); i < MemoryLogNew->size(); i++) {
-                    DataFile << " , , , , , , , , , , , " << MemoryLogNew->at(i) << std::endl;
-                }
-            }*/
-        }
-        else {
-            for (int i = 1; i < MemoryTimes.size(); i++) {
-                DataFile << " , , , , , , , , , " << MOTTimes.at(i) << ", " << MemoryTimes.at(i) << ", " /*<< MemoryLogNew->at(i)*/ << std::endl;
-            }
-            if (MemoryTimes.size() == 0) {
-                for (int i = 1; i < MOTTimes.size(); i++) {
-                    DataFile << " , , , , , , , , ," << MOTTimes.at(i) << " , , " /*<< MemoryLogNew->at(i)*/ << std::endl;
-                }
-            }
-            else {
-                for (int i = MemoryTimes.size(); i < MOTTimes.size(); i++) {
-                    DataFile << " , , , , , , , , ," << MOTTimes.at(i) << " , , " /*<< MemoryLogNew->at(i)*/ << std::endl;
-                }
-            }
-            /*if (SaveMemory) {
-                for (int i = MOTTimes.size(); i < MemoryLogNew->size(); i++) {
-                    DataFile << " , , , , , , , , , , , " << MemoryLogNew->at(i) << std::endl;
-                }
-            }*/
-        }
+        "Max Fail Coeff, "  << "Avg Detection Time, " <<  std::endl;
+        DataFile  << TrueTotal << ", " << Total << ", " << Class << ", "  << Fail << ", " << ClassPer << ", " << ClassFailPer << ", "
+        << AvCor << ", " << FailCor << ", " << MaxFail << ", " << AvDetTime << std::endl;
+
 
         DataFile.close();
     }
