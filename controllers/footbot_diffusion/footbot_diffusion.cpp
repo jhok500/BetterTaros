@@ -109,14 +109,14 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
                 while (getline(myRow, cell, ',')) {
                     switch (i) {
                         case 0:
-                            //SimilarityThreshold = stof(cell);
+                            SimilarityThreshold = stof(cell);
                             break;
                         case 1:
-                            //DetectDelay = abs(stof(cell));
+                            DetectDelay = abs(stof(cell));
                             //DetectDelay = 5;
                             break;
                         case 2:
-                            //DetectRatio = stof(cell);
+                            DetectRatio = stof(cell);
                             //DetectRatio = 1;
                             break;
 
