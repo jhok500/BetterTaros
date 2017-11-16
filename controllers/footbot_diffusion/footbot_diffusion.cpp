@@ -1569,9 +1569,9 @@ void CFootBotDiffusion::ControlStep() {
         }
         DataFile << "Abs Total, " << "Elligible Total, "  << "MemoryTot, "  <<
         "FailTot, "<< "%Memory,"  << "%Failure,"  << "Avg Correlation, "  << "Avg Corr Fail, " <<
-        "Max Fail Coeff, "  << "Avg Detection Time, " <<  std::endl;
+        "Max Fail Coeff, "  << "Avg Detection Time, " << "Param1, " << "Param2, " << "Param3, " <<  std::endl;
         DataFile  << TrueTotal << ", " << Total << ", " << Class << ", "  << Fail << ", " << ClassPer << ", " << ClassFailPer << ", "
-        << AvCor << ", " << FailCor << ", " << MaxFail << ", " << AvDetTime << std::endl;
+        << AvCor << ", " << FailCor << ", " << MaxFail << ", " << AvDetTime << ", " << SimilarityThreshold << ", " << DetectDelay << ", " << DetectRatio << std::endl;
 
 
         DataFile.close();
