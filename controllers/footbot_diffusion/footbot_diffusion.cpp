@@ -130,7 +130,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
     }
 
 //shit loads
-    std::cout << ParamRow << ", " << SimilarityThreshold << ", " << DetectDelay << ", " << DetectRatio << std::endl;
+    //std::cout << CSimulator::GetInstance().GetRandomSeed() << ", " << SimilarityThreshold << ", " << DetectDelay << ", " << DetectRatio << std::endl;
     IntCoord = new boost::circular_buffer<double>(2*2);
     TrueIntCoord = new boost::circular_buffer<double>(2*2);
     YawHolder = new boost::circular_buffer<double>(2);
@@ -1569,9 +1569,9 @@ void CFootBotDiffusion::ControlStep() {
         }
         DataFile << "Abs Total, " << "Elligible Total, "  << "MemoryTot, "  <<
         "FailTot, "<< "%Memory,"  << "%Failure,"  << "Avg Correlation, "  << "Avg Corr Fail, " <<
-        "Max Fail Coeff, "  << "Avg Detection Time, " << "Param1, " << "Param2, " << "Param3, " <<  std::endl;
+        "Max Fail Coeff, "  << "Avg Detection Time, " << "Param1, " << "Param2, " << "Param3, " << "Seed" <<  std::endl;
         DataFile  << TrueTotal << ", " << Total << ", " << Class << ", "  << Fail << ", " << ClassPer << ", " << ClassFailPer << ", "
-        << AvCor << ", " << FailCor << ", " << MaxFail << ", " << AvDetTime << ", " << SimilarityThreshold << ", " << DetectDelay << ", " << DetectRatio << std::endl;
+        << AvCor << ", " << FailCor << ", " << MaxFail << ", " << AvDetTime << ", " << SimilarityThreshold << ", " << DetectDelay << ", " << DetectRatio << "," << CSimulator::GetInstance().GetRandomSeed() << std::endl;
 
 
         DataFile.close();
