@@ -8,7 +8,7 @@
     <system threads="0" />
     <experiment length="3601"
                 ticks_per_second="10"
-                random_seed="11" />
+                random_seed="1" />
   </framework>
 
   <!-- *************** -->
@@ -32,7 +32,7 @@
 
         <!--<radio_receiver implementation="default" />-->
       </sensors>
-      <params alpha="7.5" delta="0.1" velocity="5" foldernum="3"/>
+      <params alpha="7.5" delta="0.1" velocity="5" foldernum="2"/>
     </footbot_diffusion_controller>
 
   </controllers>
@@ -131,6 +131,11 @@
 <!--   ******************
    * Visualization *
    ******************-->
-
+  <!--<visualization>
+    <qt-opengl>
+      <user_functions library="build/loop_functions/id_loop_functions/libid_loop_functions"
+                      label="id_qtuser_functions" />
+    </qt-opengl>
+  </visualization>-->
 
 </argos-configuration>

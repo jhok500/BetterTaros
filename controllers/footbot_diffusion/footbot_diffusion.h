@@ -82,6 +82,7 @@ int foldernum;
 Real Fail = 0;
 int MOT = 0;
 Real Total = 0;
+Real ElligibleMOT = 0;
 int TrueTotal;
 Real Class = 0;
 int timeweight = 0;

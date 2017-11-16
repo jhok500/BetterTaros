@@ -130,7 +130,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
     }
 
 //shit loads
-    //std::cout << CSimulator::GetInstance().GetRandomSeed() << ", " << SimilarityThreshold << ", " << DetectDelay << ", " << DetectRatio << std::endl;
+    //std::cout << ParamRow << ", " << SimilarityThreshold << ", " << DetectDelay << ", " << DetectRatio << std::endl;
     IntCoord = new boost::circular_buffer<double>(2*2);
     TrueIntCoord = new boost::circular_buffer<double>(2*2);
     YawHolder = new boost::circular_buffer<double>(2);
@@ -174,12 +174,6 @@ void CFootBotDiffusion::FaultInject() {
     FaultyIDs.push_back(ID);
     //std::cout << "Faulty Robot is " << ID << ": " << Faulty << std::endl;
 
-    if (std::find(MemoryLogNew->begin(), MemoryLogNew->end(),-Faulty) != MemoryLogNew->end()) {
-        Eligibility = true;
-    }
-    else {
-        Eligibility = false;
-    }
 }
 /****************************************/
 void CFootBotDiffusion::ObstacleAv() {
@@ -627,7 +621,7 @@ void CFootBotDiffusion::ActiveMemory() {
 void CFootBotDiffusion::DoctorReset() {
     DetectBodge->clear();
     TrueTotal++;
-
+    //std::cout << ID << ", " << DoctorsOrder << ": " << FailReset << ", " << Eligibility << std::endl;
     //ACTIVE MEMORY
     if (RValue >= ActiveThreshold) {
         ActiveMemory();
@@ -640,14 +634,21 @@ void CFootBotDiffusion::DoctorReset() {
             MemoryLogNew->push_back(Snapshot.at(i));
         }
     }
-    if (Eligibility || ClassifierSuccess) {
+    if (Eligibility && !ClassifierSuccess && !FailReset) {
         Total++;
+        ElligibleMOT++;
         //std::cout << "Total: " << Total << std::endl;
+    }
+    if (FailReset && Eligibility) {
+        //std::cout << "AAAAAA" << std::endl;
+        Fail++;
+        Total++;
     }
     //std::cout << MemoryLogNew->size() << ": " << MemoryLogNew->capacity() << std::endl;
     if (ClassifierSuccess) {
         //std::cout << "DIAGNOSED (CLASSIFIER)" << std::endl;
         Class++;
+        Total++;
         //std::cout << "Total Class: " << Class << std::endl;
         MemoryTimes.push_back(Time);
         CorrCoeff.push_back(RValue);
@@ -765,22 +766,19 @@ void CFootBotDiffusion::FaultyReset() {
         FailReset = false;
         FaultStart = 0;
         RValue = 0;
+        //std::cout << ID << ": CUREED" << std::endl;
     }
     else {
-        //std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", FAILURE" << std::endl;
-        Fail++;
+        //std::cout << ID << ": Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", FAILURE" << std::endl;
         //std::cout << "Total Fails: " << Fail << std::endl;
         if (RValue != 0) {
             FailCoeff.push_back(RValue);
         }
-        if (!BeginMOT) {
-            BeginMOT = true;
-            FailReset = true;
-            Diagnosis = 0;
-        }
-        else {
-            Diagnosis = Faulty;
-        }
+
+        BeginMOT = true;
+        FailReset = true;
+        Diagnosis = 0;
+
         //std::cout << "Try Diagnosis From Scratch" << std::endl;
 
     }
@@ -981,6 +979,12 @@ void CFootBotDiffusion::ControlStep() {
                     if (std::accumulate(DetectBodge->begin(), DetectBodge->end(), 0.0) >= DetectDelay*DetectRatio && DetectBodge->size() == DetectBodge->capacity()
                             && FaultyFeatureVectors->size() == FaultyFeatureVectors->capacity()) {
                         //std::cout << "DETECTED" << std::endl;
+                        if (std::find(MemoryLogNew->begin(), MemoryLogNew->end(),-controller.Faulty) != MemoryLogNew->end()) {
+                            Eligibility = true;
+                        }
+                        else {
+                            Eligibility = false;
+                        }
                         TimeStart = Time;
                         Doctor = true;
                         DoctorsOrder = UnderInvestigation;
@@ -999,7 +1003,7 @@ void CFootBotDiffusion::ControlStep() {
                             if (controller.MemoryLogNew->at(i) < 0 &&
                                 (std::find(MemoryLogNew->begin(), MemoryLogNew->end(),
                                            controller.MemoryLogNew->at(i + 1)) == MemoryLogNew->end())) {
-                                //std::cout << ID << " Shares With " << controller.ID << std::endl;
+                                //std::cout << controller.ID << " Shares Info on " << controller.MemoryLogNew->at(i) << " With " << ID << std::endl;
 
                                 for (int j = i; j < i + ((12 * DetectDelay) + 2); j++) {
                                     MemoryLogNew->push_back(controller.MemoryLogNew->at(j));
@@ -1060,14 +1064,14 @@ void CFootBotDiffusion::ControlStep() {
                     }
                 }
                 // Doctor
-                /*if (controller.FailReset) {
-                    std::cout << controller.ID << " HAS TRUE FAIL RESET AS DETERMINED BY " << ID << std::endl;
-                }*/
-                if (Doctor && controller.ID == DoctorsOrder && controller.FailReset && !BeginMOT) {
-                    BeginMOT = true;
-                    Diagnosis = 0;
-                    ClassifierSuccess = false;
-                    //std::cout << "Class failed now try MOT" << std::endl;
+                if (Doctor && controller.ID == DoctorsOrder && controller.FailReset) {
+                    FailReset = true;
+                    if (!BeginMOT) {
+                        BeginMOT = true;
+                        Diagnosis = 0;
+                        ClassifierSuccess = false;
+                        //std::cout << "Class failed now try MOT" << std::endl;
+                    }
                 }
                 if (Doctor && controller.ID == DoctorsOrder && controller.BeginMOT && !controller.Diagnosed) {
                     //std::cout << "Doctor Beginning Diagnosis" << std::endl;
@@ -1567,11 +1571,11 @@ void CFootBotDiffusion::ControlStep() {
         if (DetectTime.size()>0) {
             AvDetTime = std::accumulate(DetectTime.begin(), DetectTime.end(), 0.0)/DetectTime.size();
         }
-        DataFile << "Abs Total, " << "Elligible Total, "  << "MemoryTot, "  <<
+        DataFile << "Abs Total, " << "Elligible Total, "  << "MemoryTot, "  << "ElligibleMOT," <<
         "FailTot, "<< "%Memory,"  << "%Failure,"  << "Avg Correlation, "  << "Avg Corr Fail, " <<
-        "Max Fail Coeff, "  << "Avg Detection Time, " << "Param1, " << "Param2, " << "Param3, " << "Seed" <<  std::endl;
-        DataFile  << TrueTotal << ", " << Total << ", " << Class << ", "  << Fail << ", " << ClassPer << ", " << ClassFailPer << ", "
-        << AvCor << ", " << FailCor << ", " << MaxFail << ", " << AvDetTime << ", " << SimilarityThreshold << ", " << DetectDelay << ", " << DetectRatio << "," << CSimulator::GetInstance().GetRandomSeed() << std::endl;
+        "Max Fail Coeff, "  << "Avg Detection Time " <<  std::endl;
+        DataFile  << TrueTotal << ", " << Total << ", " << Class << ", " << ElligibleMOT << ", "  << Fail << ", " << ClassPer << ", " << ClassFailPer << ", "
+        << AvCor << ", " << FailCor << ", " << MaxFail << ", " << AvDetTime <<  std::endl;
 
 
         DataFile.close();
