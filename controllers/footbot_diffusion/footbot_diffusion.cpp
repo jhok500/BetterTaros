@@ -9,7 +9,7 @@
 #include <argos3/core/utility/configuration/argos_configuration.h>
 /* 2D vector definition */
 #include <argos3/core/utility/math/vector2.h>
-
+//UPLOADboy36
 
 /****************************************/
 
@@ -130,7 +130,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
     }
 
 //shit loads
-    //std::cout << ParamRow << ", " << SimilarityThreshold << ", " << DetectDelay << ", " << DetectRatio << std::endl;
+    std::cout << ParamRow << ", " << SimilarityThreshold << ", " << DetectDelay << ", " << DetectRatio << std::endl;
     IntCoord = new boost::circular_buffer<double>(2*2);
     TrueIntCoord = new boost::circular_buffer<double>(2*2);
     YawHolder = new boost::circular_buffer<double>(2);
