@@ -128,9 +128,9 @@
   </media>
 
 
-<!--   ******************
+   ******************
    * Visualization *
-   ******************-->
+   ******************
   <!--<visualization>
     <qt-opengl>
       <user_functions library="build/loop_functions/id_loop_functions/libid_loop_functions"

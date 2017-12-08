@@ -9,7 +9,7 @@
 #include <argos3/core/utility/configuration/argos_configuration.h>
 /* 2D vector definition */
 #include <argos3/core/utility/math/vector2.h>
-//UPLOADboy36
+//UploadBoy37
 
 /****************************************/
 
@@ -97,7 +97,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
     std::ifstream myfile("LHC_Parameters_for_Runs.csv");
     int lineNumber = 0;
     int lineNumberSought = ParamRow;
-
+    //std::cout << foldernum << std::endl;
 //do you have any idea how much code a PhD candidate copy pastes in a year?
 
     if (myfile.is_open()) {
@@ -128,6 +128,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
 
         myfile.close();
     }
+    //DetectDelay = 20;
 
 //shit loads
     //std::cout << ParamRow << ", " << SimilarityThreshold << ", " << DetectDelay << ", " << DetectRatio << std::endl;
@@ -639,7 +640,7 @@ void CFootBotDiffusion::DoctorReset() {
         ElligibleMOT++;
         //std::cout << "Total: " << Total << std::endl;
     }
-    if (FailReset && Eligibility) {
+    if (FailReset) {
         //std::cout << "AAAAAA" << std::endl;
         Fail++;
         Total++;
@@ -1371,6 +1372,7 @@ void CFootBotDiffusion::ControlStep() {
         AgentNew.push_back(1);
         AgentNew.push_back(1);
     }
+
     // Record Data for Future Comparison
     IntCoord->push_back(X);
     IntCoord->push_back(Y);
@@ -1474,9 +1476,9 @@ void CFootBotDiffusion::ControlStep() {
             }
         }
     }
-    /*if (Faulty != 0) {
+    /*if (ID == 100) {
         for (int j = 0; j < AgentNew.size() ; j++) {
-            std::cout << ID << ": " << AgentNew.at(j) << std::endl;
+            std::cout << AgentNew.at(j) << std::endl;
         }
     }*/
 
