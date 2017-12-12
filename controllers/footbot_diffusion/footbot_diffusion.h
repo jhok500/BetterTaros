@@ -55,7 +55,7 @@ std::vector<int> MemoryTimes;
 std::vector<int> MOTTimes;
 std::vector<Real> CorrCoeff;
 std::vector<Real> FailCoeff;
-//std::vector<int> MemorySize;
+std::vector<int> MemorySize;
 
 
 bool StuckBounce = false;
@@ -63,8 +63,8 @@ int MemoryBits = 18;
 int ExperimentLength = 36000;
 int FaultsInPlay = 0;
 int PMFangle = 60;
-//int MemoryIndex;
-bool SaveMemory = false;
+int MemoryIndex;
+bool SaveMemory = true;
 int FaultDelay = 10;
 int ConfirmDelay = 5;
 int ImmortalID;
@@ -77,6 +77,7 @@ int SensorReplacement [2] = {3,6};
 int MotorReplacement [2] = {4,5};
 //std::ofstream SnapshotFile;
 std::ofstream DataFile;
+std::ofstream MemorySave;
 //std::ofstream SpartanPercent;
 int foldernum;
 Real Fail = 0;
@@ -96,13 +97,15 @@ int FaultProb = 10000;
 
 // VAR
 //ArenaSide = RobotNumber/5
-Real SimilarityThreshold = 0.66;
+Real SimilarityThreshold = 0.56;
 Real ActiveThreshold = (0.5*(1-SimilarityThreshold)) + SimilarityThreshold;
-int DetectDelay = 100;
-Real DetectRatio = 1;
+int DetectDelay = 30;
+Real DetectRatio = 0.88;
+
 Real BearingNoise = 0.123;
 Real YawCoordinateNoise = 0.00035;
 Real CoordinateNoise = 0.000025;
+Real RangeNoiseMultiplier = 0.05;
 
 //int Objects = 0;
 
@@ -245,6 +248,7 @@ private:
     int Alone;
     int Left;
     int Right;
+    bool wall;
     Real LeftWheel;
     Real RightWheel;
     Real X;

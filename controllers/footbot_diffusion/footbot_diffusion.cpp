@@ -109,15 +109,19 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
                 while (getline(myRow, cell, ',')) {
                     switch (i) {
                         case 0:
-                            SimilarityThreshold = stof(cell);
+                            //BearingNoise = stof(cell);
+                            //SimilarityThreshold = 0;
                             break;
                         case 1:
-                            DetectDelay = abs(stof(cell));
+                            //YawCoordinateNoise = stof(cell);
                             //DetectDelay = 5;
                             break;
                         case 2:
-                            DetectRatio = stof(cell);
+                            //CoordinateNoise = stof(cell);
                             //DetectRatio = 1;
+                            break;
+                        case 3:
+                            //RangeNoiseMultiplier = stof(cell);
                             break;
 
                     }
@@ -131,7 +135,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
     //DetectDelay = 20;
 
 //shit loads
-    //std::cout << ParamRow << ", " << SimilarityThreshold << ", " << DetectDelay << ", " << DetectRatio << std::endl;
+    //std::cout << BearingNoise << ", " << YawCoordinateNoise << ", " << CoordinateNoise << ", " << RangeNoiseMultiplier << std::endl;
     IntCoord = new boost::circular_buffer<double>(2*2);
     TrueIntCoord = new boost::circular_buffer<double>(2*2);
     YawHolder = new boost::circular_buffer<double>(2);
@@ -912,7 +916,7 @@ void CFootBotDiffusion::ControlStep() {
     int InvestigateBounce = 0;
     for (CCI_RangeAndBearingSensor::SPacket packet : packets) {
         double bearing = ToDegrees(packet.HorizontalBearing).GetValue();
-        std::normal_distribution<double> RABNoise(0,packet.Range*0.05);
+        std::normal_distribution<double> RABNoise(0,packet.Range*RangeNoiseMultiplier);
         double range = packet.Range + RABNoise(generator);
         for (auto &map_element : foot_bots){
             CFootBotEntity &foot_bot = *any_cast<CFootBotEntity *>(map_element.second);
@@ -1523,7 +1527,7 @@ void CFootBotDiffusion::ControlStep() {
         DoctorReset();
     }
 
-    /*if (SaveMemory && Time == ExperimentLength-2) {
+    if (SaveMemory && Time == ExperimentLength-2) {
         MemorySize.push_back(-ID);
         MemorySize.push_back(MemoryLogNew->size());
     }
@@ -1537,7 +1541,7 @@ void CFootBotDiffusion::ControlStep() {
         if (ID == -MemorySize.at(MemoryIndex-1)) {
             ImmortalID = ID;
         }
-    }*/
+    }
 
 
 
@@ -1559,6 +1563,7 @@ void CFootBotDiffusion::ControlStep() {
         mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         DataFile.open (folderName+"/"+seedFolder+"/Data.csv", std::ios_base::app);
 
+
         /*std::string folderName = std::to_string(foldernum);
         mkdir(folderName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         SpartanPercent.open (folderName + "/ClassFailPercent.csv", std::ios_base::app);
@@ -1578,9 +1583,15 @@ void CFootBotDiffusion::ControlStep() {
         "Max Fail Coeff, "  << "Avg Detection Time " <<  std::endl;
         DataFile  << TrueTotal << ", " << Total << ", " << Class << ", " << ElligibleMOT << ", "  << Fail << ", " << ClassPer << ", " << ClassFailPer << ", "
         << AvCor << ", " << FailCor << ", " << MaxFail << ", " << AvDetTime <<  std::endl;
-
-
         DataFile.close();
+        if (SaveMemory) {
+            MemorySave.open (folderName+"/"+seedFolder+"/MemoryLog.csv", std::ios_base::app);
+            for (int j = 0; j < MemoryLogNew->size(); j++) {
+                MemorySave << MemoryLogNew->at(j) << ",";
+            }
+            MemorySave << 8 << std::endl;
+            MemorySave.close();
+        }
     }
     timeweight++;
     if (timeweight == RobotNumber) {
