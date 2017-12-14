@@ -9,7 +9,7 @@
 #include <argos3/core/utility/configuration/argos_configuration.h>
 /* 2D vector definition */
 #include <argos3/core/utility/math/vector2.h>
-//UploadBoy37
+//UploadBoyImport
 
 /****************************************/
 
@@ -70,6 +70,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
     robot_name = robot_name.substr(2, robot_name.size());
     int id = atoi(robot_name.c_str());
     range_and_bearing_actuator->SetData(0, id);
+
 
 
 
@@ -143,6 +144,31 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
     MemoryLogNew = new boost::circular_buffer<int>(((DetectDelay*6*2)+2)*MemoryBits);
     DetectBodge = new boost::circular_buffer<int>(DetectDelay);
     MemoryBounce = new boost::circular_buffer<int>(1000);
+
+    if (ImportMemory) {
+        std::string rowm, cellm;
+        std::ifstream memoryfile("MemoryLog.csv");
+        if (memoryfile.is_open()) {
+
+            while (getline(memoryfile, rowm)) {
+                std::istringstream myRowm(rowm);
+                int i = 0;
+                while (getline(myRowm, cellm, ',')) {
+
+                    if (stof(cellm) == 8) {
+                        break;
+                    }
+                    else {
+                        //std::cout << "push back " << stof(cellm) << std::endl;
+                        MemoryLogNew->push_back(stof(cellm));
+                    }
+                    i++;
+                }
+
+            }
+        }
+    }
+    //std::cout << id << ", " << MemoryLogNew->size() << std::endl;
 
 
 }
@@ -838,6 +864,8 @@ void CFootBotDiffusion::ControlStep() {
 
     // CODE STARTS HERE
 
+
+
     CFootBotEntity &entity = dynamic_cast<CFootBotEntity &>(CSimulator::GetInstance().GetSpace().GetEntity(GetId()));
     CRadians yaw, pitch, roll;
     /****************************************/
@@ -845,7 +873,7 @@ void CFootBotDiffusion::ControlStep() {
     robot_name = robot_name.substr(2, robot_name.size());
     int id = atoi(robot_name.c_str());
     ID = id+100;
-
+    //std::cout << ID << ": " << MemoryLogNew->size() << std::endl;
     entity.GetEmbodiedEntity().GetOriginAnchor().Orientation.ToEulerAngles(yaw, pitch, roll);
     // Add noise
     unsigned seed = Time;
