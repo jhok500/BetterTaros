@@ -146,8 +146,11 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
     MemoryBounce = new boost::circular_buffer<int>(1000);
 
     if (ImportMemory) {
+        std::string folderAccess = std::to_string(foldernum-1);
+        std::string seedAccess = std::to_string(CSimulator::GetInstance().GetRandomSeed());
         std::string rowm, cellm;
-        std::ifstream memoryfile("MemoryLog.csv");
+        std::ifstream memoryfile(folderAccess+"/"+seedAccess+"/MemoryLog.csv");
+
         if (memoryfile.is_open()) {
 
             while (getline(memoryfile, rowm)) {
