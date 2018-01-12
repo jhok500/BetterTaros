@@ -57,6 +57,20 @@ std::vector<Real> CorrCoeff;
 std::vector<Real> FailCoeff;
 std::vector<int> MemorySize;
 
+boost::circular_buffer<double>* Dis2Beacons;
+
+bool FirstBoy = false;
+int FirstTime = 0;
+Real FirstAvDis2Beac = 0;
+bool HalfBoy = false;
+int HalfTime = 0;
+Real HalfAvDis2Beac = 0;
+bool AllBoys = false;
+int AllTime = 0;
+Real AllAvDis2Beac = 0;
+int countyboy = 0;
+bool snappyboy = false;
+
 
 bool StuckBounce = false;
 int MemoryBits = 18;
@@ -65,7 +79,7 @@ int FaultsInPlay = 0;
 int PMFangle = 60;
 int MemoryIndex;
 bool SaveMemory = false;
-bool ImportMemory = true;
+bool ImportMemory = false;
 int FaultDelay = 10;
 int ConfirmDelay = 5;
 int ImmortalID;

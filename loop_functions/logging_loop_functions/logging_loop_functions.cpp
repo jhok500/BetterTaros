@@ -1,6 +1,7 @@
 #include "logging_loop_functions.h"
 
 #include <controllers/footbot_diffusion/footbot_diffusion.h>
+#include <argos3/plugins/simulator/entities/light_entity.h>
 #include <argos3/plugins/simulator/entities/box_entity.h>
 #include <argos3/plugins/simulator/physics_engines/dynamics2d/dynamics2d_differentialsteering_control.h>
 #include <boost/utility/binary.hpp>
@@ -18,7 +19,8 @@ CVector2 cPosInternalA;
 
 LoggingLoopFunctions::LoggingLoopFunctions() :
 m_pcBox(NULL)
-{}
+{
+}
 
 /****************************************/
 /****************************************/
@@ -89,11 +91,22 @@ void LoggingLoopFunctions::PreStep() {
         CVector3 RandPos = {1,1,0};
         CQuaternion Ori = {1,0,0,0};
         CVector3 Size = {0.3,0.3,0.5};
-        m_pcBox = new CBoxEntity("box", RandPos, Ori, false, Size, 10000.0f);
+        //m_pcBox = new CBoxEntity("box", RandPos, Ori, false, Size, 10000.0f);
+
+        //std::cout << CSimulator::GetInstance().GetSpace().GetEntitiesByType("light").size() << std::endl;
+
         /*if (GetSpace().GetSimulationClock() > 500 && CSimulator::GetInstance().GetSpace().GetEntitiesByType("box").size() == 4) {
             CallEntityOperation<CSpaceOperationAddEntity, CSpace, void>(CSimulator::GetInstance().GetSpace(), *m_pcBox);
 
             AddEntity(*m_pcBox);
+        }*/
+
+        /*if (CSimulator::GetInstance().GetSpace().GetEntitiesByType("light").size() == 1) {
+            CAny maybeLight = CSimulator::GetInstance().GetSpace().GetEntitiesByType("light").begin()->second;
+            auto light = any_cast<CLightEntity*>(maybeLight);
+            if(GetSpace().GetSimulationClock() > 500) {
+                light->MoveTo({2, 2, 0.1}, light->GetOrientation());
+            }
         }*/
 
 

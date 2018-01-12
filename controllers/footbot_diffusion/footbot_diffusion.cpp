@@ -144,6 +144,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
     MemoryLogNew = new boost::circular_buffer<int>(((DetectDelay*6*2)+2)*MemoryBits);
     DetectBodge = new boost::circular_buffer<int>(DetectDelay);
     MemoryBounce = new boost::circular_buffer<int>(1000);
+    Dis2Beacons = new boost::circular_buffer<double> (10);
 
     if (ImportMemory) {
         std::string folderAccess = std::to_string(foldernum-1);
@@ -843,6 +844,7 @@ CVector2 CFootBotDiffusion::VectorToLight() {
 void CFootBotDiffusion::ControlStep() {
     if (timeweight == 0) {
         Time = Time + 1;
+        countyboy = 0;
     }
     int RobotNumber = CSimulator::GetInstance().GetSpace().GetEntitiesByType("foot-bot").size();
 
@@ -912,7 +914,8 @@ void CFootBotDiffusion::ControlStep() {
         Diagnosis = 0;
     }
     // FAULT INJECTION
-    int prob = rand() % FaultProb;
+    //int prob = rand() % FaultProb;
+    int prob = 0;
     if (prob > FaultProb - 2 && Faulty == 0 && !Doctor && FaultsInPlay < 0.5*RobotNumber) {
         FaultsInPlay++;
         FaultStart = Time;
@@ -920,9 +923,57 @@ void CFootBotDiffusion::ControlStep() {
     }
     // BEHAVIOUR SWITCH
     if (Time > (BehaviourCount*5000)) {
-        BehaviourUpdate();
-        //Behaviour = 2;
+        //BehaviourUpdate();
+        Behaviour = 4;
     }
+
+    // AVERAGE TIME TO BEACON
+
+    Real DisToBeacon = sqrt(pow(X-3,2)+pow(Y-3,2));
+
+    Dis2Beacons->push_back(DisToBeacon);
+
+    if (DisToBeacon < 0.8) {
+        countyboy++;
+    }
+
+
+
+
+    if (countyboy > 0 && !FirstBoy) {
+
+        FirstBoy = true;
+        FirstTime = Time;
+        FirstAvDis2Beac = std::accumulate(Dis2Beacons->begin(), Dis2Beacons->end(), 0.0)/Dis2Beacons->size();
+        std::cout << FirstTime << " at " << FirstAvDis2Beac << std::endl;
+    }
+    if (countyboy >= 5 && !HalfBoy) {
+        HalfBoy = true;
+        HalfTime = Time;
+        HalfAvDis2Beac = std::accumulate(Dis2Beacons->begin(), Dis2Beacons->end(), 0.0)/Dis2Beacons->size();
+        std::cout << FirstTime << " at " << HalfAvDis2Beac << std::endl;
+    }
+    if (countyboy == 10 && !AllBoys) {
+        AllBoys = true;
+        AllTime = Time;
+        AllAvDis2Beac = std::accumulate(Dis2Beacons->begin(), Dis2Beacons->end(), 0.0)/Dis2Beacons->size();
+        std::cout << FirstTime << " at " << AllAvDis2Beac << std::endl;
+
+        std::string folderName = std::to_string(foldernum-1);
+        std::string seedFolder = std::to_string(CSimulator::GetInstance().GetRandomSeed());
+        std::string slashyboi = "/";
+        std::string path = folderName+slashyboi+seedFolder;
+        mkdir(folderName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        DataFile.open (folderName+"/"+seedFolder+"/Data.csv", std::ios_base::app);
+        DataFile << "FirstTime," << "FirstAvDist," << "HalfTime," << "HalfAvDist," << "AllTime," << "AllAvDist" << std::endl;
+        DataFile << FirstTime << "," << FirstAvDis2Beac << "," << HalfTime << "," << HalfAvDis2Beac << "," << AllTime << "," << AllAvDis2Beac << std::endl;
+        DataFile.close();
+    }
+
+
+
+
 
     //if (Time > 10000) {std::cout << "AVERAGE FAIL COEFF = " << std::accumulate(FailCoeff.begin(), FailCoeff.end(), 0.0)/FailCoeff.size() << std::endl;}
 
@@ -1576,7 +1627,7 @@ void CFootBotDiffusion::ControlStep() {
 
 
 
-    if (Time == ExperimentLength && !StuckBounce && !SaveMemory || Time == ExperimentLength && !StuckBounce && ID == ImmortalID && SaveMemory) {
+    /*if (Time == ExperimentLength && !StuckBounce && !SaveMemory || Time == ExperimentLength && !StuckBounce && ID == ImmortalID && SaveMemory) {
         //std::cout << "END" << std::endl;
         StuckBounce = true;
         Real ClassPer = Class/Total;
@@ -1593,13 +1644,6 @@ void CFootBotDiffusion::ControlStep() {
         mkdir(folderName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         DataFile.open (folderName+"/"+seedFolder+"/Data.csv", std::ios_base::app);
-
-
-        /*std::string folderName = std::to_string(foldernum);
-        mkdir(folderName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-        SpartanPercent.open (folderName + "/ClassFailPercent.csv", std::ios_base::app);
-        SpartanPercent << CSimulator::GetInstance().GetRandomSeed() << "," << ClassFailPer;
-        SpartanPercent.close();*/
         Real MaxFail = 0;
         if (FailCoeff.size() > 0) {
             FailCor = std::accumulate(FailCoeff.begin(), FailCoeff.end(), 0.0)/FailCoeff.size();
@@ -1623,16 +1667,16 @@ void CFootBotDiffusion::ControlStep() {
             MemorySave << 8 << std::endl;
             MemorySave.close();
         }
-    }
+    }*/
+
+
+
+
     timeweight++;
     if (timeweight == RobotNumber) {
         //std::cout << Time << std::endl;
         timeweight = 0;
-
     }
-
-
-
 }
 
 

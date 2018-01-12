@@ -68,6 +68,7 @@ loop_functions/logging_loop_functions/CMakeFiles/logging_loop_functions.dir/logg
 loop_functions/logging_loop_functions/CMakeFiles/logging_loop_functions.dir/logging_loop_functions.cpp.o: /usr/local/include/argos3/plugins/simulator/entities/box_entity.h
 loop_functions/logging_loop_functions/CMakeFiles/logging_loop_functions.dir/logging_loop_functions.cpp.o: /usr/local/include/argos3/plugins/simulator/entities/led_entity.h
 loop_functions/logging_loop_functions/CMakeFiles/logging_loop_functions.dir/logging_loop_functions.cpp.o: /usr/local/include/argos3/plugins/simulator/entities/led_equipped_entity.h
+loop_functions/logging_loop_functions/CMakeFiles/logging_loop_functions.dir/logging_loop_functions.cpp.o: /usr/local/include/argos3/plugins/simulator/entities/light_entity.h
 loop_functions/logging_loop_functions/CMakeFiles/logging_loop_functions.dir/logging_loop_functions.cpp.o: /usr/local/include/argos3/plugins/simulator/entities/wheeled_entity.h
 loop_functions/logging_loop_functions/CMakeFiles/logging_loop_functions.dir/logging_loop_functions.cpp.o: /usr/local/include/argos3/plugins/simulator/physics_engines/dynamics2d/chipmunk-physics/include/chipmunk.h
 loop_functions/logging_loop_functions/CMakeFiles/logging_loop_functions.dir/logging_loop_functions.cpp.o: /usr/local/include/argos3/plugins/simulator/physics_engines/dynamics2d/chipmunk-physics/include/chipmunk_types.h

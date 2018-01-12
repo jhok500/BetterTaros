@@ -79,6 +79,8 @@ logging_loop_functions.h
 /home/jhok500/argos3-examples/loop_functions/logging_loop_functions/logging_loop_functions.h
 controllers/footbot_diffusion/footbot_diffusion.h
 -
+argos3/plugins/simulator/entities/light_entity.h
+-
 argos3/plugins/simulator/entities/box_entity.h
 -
 argos3/plugins/simulator/physics_engines/dynamics2d/dynamics2d_differentialsteering_control.h
@@ -718,6 +720,12 @@ argos3/core/simulator/entity/composable_entity.h
 argos3/plugins/simulator/entities/led_entity.h
 -
 map
+-
+
+/usr/local/include/argos3/plugins/simulator/entities/light_entity.h
+argos3/core/simulator/entity/positional_entity.h
+-
+argos3/plugins/simulator/entities/led_equipped_entity.h
 -
 
 /usr/local/include/argos3/plugins/simulator/entities/wheeled_entity.h
