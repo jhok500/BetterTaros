@@ -110,7 +110,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
                 while (getline(myRow, cell, ',')) {
                     switch (i) {
                         case 0:
-                            NumFault = stof(cell);
+                            //NumFault = stof(cell);
                             //BearingNoise = stof(cell);
                             //SimilarityThreshold = 0;
                             break;
@@ -803,27 +803,28 @@ void CFootBotDiffusion::FaultyReset() {
         }
         if (std::find(std::begin(PowerCycle), std::end(PowerCycle), Diagnosis) != std::end(PowerCycle)
             && std::find(std::begin(PowerCycle), std::end(PowerCycle), Faulty) != std::end(PowerCycle)) {
-            //std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Cycle Power" << std::endl;
+            std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Cycle Power" << std::endl;
         } else if (std::find(std::begin(MotorReplacement), std::end(MotorReplacement), Diagnosis) !=
                    std::end(MotorReplacement)
                    && std::find(std::begin(MotorReplacement), std::end(MotorReplacement), Faulty) !=
                       std::end(MotorReplacement)) {
-            //std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Replace Motor" << std::endl;
+            std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Replace Motor" << std::endl;
 
         } else if (std::find(std::begin(SensorReplacement), std::end(SensorReplacement), Diagnosis) != std::end(SensorReplacement)
                    && std::find(std::begin(SensorReplacement), std::end(SensorReplacement), Faulty) != std::end(SensorReplacement)) {
-            //std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Replace Sensor" << std::endl;
+            std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Replace Sensor" << std::endl;
         }
         Faulty = 0;
         Diagnosed = true;
         FaultsInPlay--;
+        //std::cout << "Faults in play: " << FaultsInPlay << std::endl;
         FailReset = false;
         FaultStart = 0;
         RValue = 0;
         //std::cout << ID << ": CUREED" << std::endl;
     }
     else {
-        //std::cout << ID << ": Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", FAILURE" << std::endl;
+        std::cout << ID << ": Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", FAILURE" << std::endl;
         //std::cout << "Total Fails: " << Fail << std::endl;
         if (RValue != 0) {
             FailCoeff.push_back(RValue);
@@ -933,18 +934,18 @@ void CFootBotDiffusion::ControlStep() {
         Diagnosis = 0;
     }
     // FAULT INJECTION
-    //int prob = rand() % FaultProb;
-    /*if (prob > FaultProb - 2 && Faulty == 0 && !Doctor && FaultsInPlay < 0.5*RobotNumber) {
+    int prob = rand() % FaultProb;
+    if (prob > FaultProb - 2 && Faulty == 0 && !Doctor && FaultsInPlay < 0.5*RobotNumber) {
         FaultsInPlay++;
         FaultStart = Time;
         FaultInject();
-    }*/
-    if (Time == 500) {
-
+        //std::cout << "Faults in play: " << FaultsInPlay << std::endl;
+    }
+    /*if (Time == 500) {
         if (ID <= NumFault) {
             FaultInjectOmega();
         }
-    }
+    }*/
     // BEHAVIOUR SWITCH
     if (Time > (BehaviourCount*5000)) {
         //BehaviourUpdate();
@@ -963,62 +964,6 @@ void CFootBotDiffusion::ControlStep() {
 
 
 
-
-    if (countyboy > 0 && !FirstBoy) {
-        FirstBoy = true;
-        FirstTime = Time;
-    }
-
-    if (countyboy >= 0.5*((RobotNumber+99)- NumFault) && !HalfBoy) {
-        HalfBoy = true;
-        HalfTime = Time;
-        std::cout << "HalfBoys" << std::endl;
-    }
-    if (countyboy == (RobotNumber+99)- NumFault && !AllBoys) {
-        AllBoys = true;
-        AllTime = Time;
-        std::cout << "AllBoys" << std::endl;
-    }
-    if (Time == 24388 && ID == 109) {
-        DistAtFirst = std::accumulate(Dis2Beacons->begin(), Dis2Beacons->end(), 0.0)/Dis2Beacons->size();
-        std::cout << DistAtFirst << std::endl;
-    }
-    if (Time == 25548 && ID == 109) {
-        DistAtHalf = std::accumulate(Dis2Beacons->begin(), Dis2Beacons->end(), 0.0)/Dis2Beacons->size();
-        std::cout << DistAtHalf << std::endl;
-    }
-    if (Time == 26909 && ID == 109) {
-        DistAtAll = std::accumulate(Dis2Beacons->begin(), Dis2Beacons->end(), 0.0)/Dis2Beacons->size();
-        std::cout << DistAtAll << std::endl;
-    }
-
-    if (Time > 270000 || AllBoys) {
-        std::string folderName = std::to_string(foldernum-1);
-        std::string seedFolder = std::to_string(CSimulator::GetInstance().GetRandomSeed());
-        std::string slashyboi = "/";
-        std::string path = folderName+slashyboi+seedFolder;
-        mkdir(folderName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-        mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-        if (!FirstBoy) {
-            FirstTime = Time;
-        }
-        if (!HalfBoy) {
-            HalfTime = Time;
-        }
-        if (!AllBoys) {
-            AllTime = Time;
-        }
-        DataFile.open (folderName+"/"+seedFolder+"/Data.csv", std::ios_base::app);
-        DataFile << "DistAtFirst," <<  "DistAtHalf," << "AllAvDist," << "FirstTime," << "HalfTime," << "AllTime" << std::endl;
-        DataFile <<  DistAtFirst << "," << DistAtHalf << "," << DistAtAll << "," << FirstTime << "," << HalfTime << "," << AllTime << std::endl;
-        DataFile.close();
-        CSimulator::GetInstance().Terminate();
-    }
-
-
-
-
-
     //if (Time > 10000) {std::cout << "AVERAGE FAIL COEFF = " << std::accumulate(FailCoeff.begin(), FailCoeff.end(), 0.0)/FailCoeff.size() << std::endl;}
 
     std::ostringstream oss;
@@ -1033,6 +978,7 @@ void CFootBotDiffusion::ControlStep() {
         //std::cout << ID << " forgets about " << UnderInvestigation << " ALT" << std::endl;
     }
 
+
     Ambulance.clear();
     Alone = 0;
     int MidProxCoord = 0;
@@ -1040,6 +986,8 @@ void CFootBotDiffusion::ControlStep() {
     int MidProx = 0;
     int CloseProx = 0;
     int InvestigateBounce = 0;
+    int DoctorBounce = 0;
+
     for (CCI_RangeAndBearingSensor::SPacket packet : packets) {
         double bearing = ToDegrees(packet.HorizontalBearing).GetValue();
         std::normal_distribution<double> RABNoise(0,packet.Range*RangeNoiseMultiplier);
@@ -1076,6 +1024,9 @@ void CFootBotDiffusion::ControlStep() {
                 FlockCoordY.push_back(controller.Y);
                 FlockHeadings.push_back(controller.Heading);
                 // DETECTION
+                if (controller.ID == DoctorsOrder && Doctor) {
+                    DoctorBounce++;
+                }
                 if (!FaultAnalysis && !Doctor && Faulty == 0 && std::find(std::begin(Doctors), std::end(Doctors), controller.ID) == std::end(Doctors)) {
                     // Begin monitoring robot when found to be faulty
                     if (UnderInvestigation == 0 && controller.Faulty != 0) {
@@ -1088,6 +1039,7 @@ void CFootBotDiffusion::ControlStep() {
                     if (controller.ID == UnderInvestigation) {
                         InvestigateBounce++;
                     }
+
                     // Record monitored robots BFV if unusual
                     if (controller.ID == UnderInvestigation && controller.Faulty != 0) {
                         for (int i = 1; i < controller.AgentNew.size(); i++) {
@@ -1109,7 +1061,7 @@ void CFootBotDiffusion::ControlStep() {
                     // Declare detected fault & assign doctor
                     if (std::accumulate(DetectBodge->begin(), DetectBodge->end(), 0.0) >= DetectDelay*DetectRatio && DetectBodge->size() == DetectBodge->capacity()
                             && FaultyFeatureVectors->size() == FaultyFeatureVectors->capacity()) {
-                        //std::cout << "DETECTED" << std::endl;
+                        std::cout << "DETECTED" << std::endl;
                         if (std::find(MemoryLogNew->begin(), MemoryLogNew->end(),-controller.Faulty) != MemoryLogNew->end()) {
                             Eligibility = true;
                         }
@@ -1119,10 +1071,11 @@ void CFootBotDiffusion::ControlStep() {
                         TimeStart = Time;
                         Doctor = true;
                         DoctorsOrder = UnderInvestigation;
-                        //std::cout << "DR FOR " << DoctorsOrder << " IS " << ID << std::endl;
+                        std::cout << "DR FOR " << DoctorsOrder << " IS " << ID << std::endl;
                         Doctors.push_back(ID);
                         Doctors.push_back(DoctorsOrder);
                         DetectTime.push_back(Time - controller.FaultStart);
+                        DetectEDTime.push_back(Time);
                         TakeSnapshot();
                         Classify();
                     }
@@ -1309,6 +1262,53 @@ void CFootBotDiffusion::ControlStep() {
         if (Doctor && packet.Data[0]+100 == DoctorsOrder) {
             Ambulance.push_back(bearing);
             Ambulance.push_back(range);
+        }
+        if (DoctorBounce == 0 && Doctor && Time > DetectEDTime.back()) {
+            DoctorsOrder = 0;
+            Doctor = false;
+            UnderInvestigation = 0;
+            DetectBodge->clear();
+            for (int i = 0; i < Doctors.size(); i++) {
+                if (Doctors.at(i) == ID) {
+                    std::cout << "ERASING: " << Doctors.at(i) << std::endl;
+                    Doctors.erase(Doctors.begin() + i);
+                    std::cout << " AND " << Doctors.at(i) << " FROM DETECTED IDS" << std::endl;
+                    Doctors.erase(Doctors.begin() + i);
+                }
+            }
+            Candidates.clear();
+            TimeID = 0;
+            TimeStart = 0;
+            RValue = 0;
+            Diagnosis = 0;
+            Diagnosed = false;
+            Ambulance.clear();
+            Snapshot.clear();
+            DiagCandidate = 0;
+            ClassifierSuccess = true;
+            BeginMOT = false;
+            ping = false;
+            Stop = false;
+            RABCompare = false;
+            RABConfirm = false;
+            ConfirmRM = false;
+            TestRM = false;
+            ConfirmLM = false;
+            TestLM = false;
+            TestStraight = false;
+            ConfirmStraight = false;
+            TestLap = false;
+            ConfirmLap = 0;
+            LapDelay = 0;
+            LapStart = 0;
+            LapCount = false;
+            FailReset = false;
+            PingWait.clear();
+            StopWait.clear();
+            RABWait.clear();
+            MotorWait.clear();
+            StraightWait.clear();
+            LapWait.clear();
         }
         if (InvestigateBounce == 0) {
             UnderInvestigation = 0;
@@ -1636,13 +1636,6 @@ void CFootBotDiffusion::ControlStep() {
 
     m_pcWheels->SetLinearVelocity(LeftWheel + NoiseLeft, RightWheel + NoiseRight);
 
-
-    /*if (BeginMOT) {
-        std::cout << ID << " True! AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << std::endl;
-    }
-    else {std::cout << ID << " False!" << std::endl;};*/
-
-
     // FAULTY RESET
 
     if (Diagnosis !=0 && Faulty != 0) {
@@ -1673,7 +1666,7 @@ void CFootBotDiffusion::ControlStep() {
 
 
 
-    /*if (Time == ExperimentLength && !StuckBounce && !SaveMemory || Time == ExperimentLength && !StuckBounce && ID == ImmortalID && SaveMemory) {
+    if (Time == ExperimentLength && !StuckBounce && !SaveMemory || Time == ExperimentLength && !StuckBounce && ID == ImmortalID && SaveMemory) {
         //std::cout << "END" << std::endl;
         StuckBounce = true;
         Real ClassPer = Class/Total;
@@ -1689,7 +1682,7 @@ void CFootBotDiffusion::ControlStep() {
         std::string path = folderName+slashyboi+seedFolder;
         mkdir(folderName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-        DataFile.open (folderName+"/"+seedFolder+"/Data.csv", std::ios_base::app);
+        /*DataFile.open (folderName+"/"+seedFolder+"/Data.csv", std::ios_base::app);
         Real MaxFail = 0;
         if (FailCoeff.size() > 0) {
             FailCor = std::accumulate(FailCoeff.begin(), FailCoeff.end(), 0.0)/FailCoeff.size();
@@ -1704,8 +1697,9 @@ void CFootBotDiffusion::ControlStep() {
         "Max Fail Coeff, "  << "Avg Detection Time " <<  std::endl;
         DataFile  << TrueTotal << ", " << Total << ", " << Class << ", " << ElligibleMOT << ", "  << Fail << ", " << ClassPer << ", " << ClassFailPer << ", "
         << AvCor << ", " << FailCor << ", " << MaxFail << ", " << AvDetTime <<  std::endl;
-        DataFile.close();
-        if (SaveMemory) {
+        DataFile.close();*/
+        if (SaveMemory && !SaveBounce) {
+            SaveBounce = true;
             MemorySave.open (folderName+"/"+seedFolder+"/MemoryLog.csv", std::ios_base::app);
             for (int j = 0; j < MemoryLogNew->size(); j++) {
                 MemorySave << MemoryLogNew->at(j) << ",";
@@ -1713,7 +1707,9 @@ void CFootBotDiffusion::ControlStep() {
             MemorySave << 8 << std::endl;
             MemorySave.close();
         }
-    }*/
+        std::cout << TrueTotal << std::endl;
+        CSimulator::GetInstance().Terminate();
+    }
 
 
 

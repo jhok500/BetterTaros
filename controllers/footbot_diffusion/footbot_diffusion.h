@@ -51,6 +51,7 @@ using namespace argos;
 std::vector<int> FaultyIDs;
 std::vector<int> Doctors;
 std::vector<Real> DetectTime;
+std::vector<Real> DetectEDTime;
 std::vector<int> MemoryTimes;
 std::vector<int> MOTTimes;
 std::vector<Real> CorrCoeff;
@@ -74,16 +75,16 @@ Real DistAtAll = 0;
 int countyboy = 0;
 int NumFault = 100;
 
-int FaultType = 1;
-bool FaultAnalysis = true;
-
+int FaultType = 2;
+bool FaultAnalysis = false;
+bool SaveBounce = false;
 bool StuckBounce = false;
 int MemoryBits = 18;
-int ExperimentLength = 36000;
+int ExperimentLength = 80000;
 int FaultsInPlay = 0;
 int PMFangle = 60;
 int MemoryIndex;
-bool SaveMemory = false;
+bool SaveMemory = true;
 bool ImportMemory = false;
 int FaultDelay = 10;
 int ConfirmDelay = 5;
@@ -317,6 +318,8 @@ private:
     //bool wall;
     //bool DiagBounce = false;
     //bool SnapTaken = false;
+
+
     bool Eligibility = false;
     int Diagnosis = 0;
     bool Diagnosed = false;

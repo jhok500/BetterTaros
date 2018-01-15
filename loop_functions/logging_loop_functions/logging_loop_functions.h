@@ -24,6 +24,7 @@ public:
     virtual void Destroy();
     virtual void PreStep();
     virtual void PostStep();
+    int counter = 1;
 
 private:
 

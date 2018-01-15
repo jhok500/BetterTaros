@@ -131,13 +131,18 @@ void LoggingLoopFunctions::PreStep() {
             AddEntity(*m_pcBox);
         }*/
 
-        /*if (CSimulator::GetInstance().GetSpace().GetEntitiesByType("light").size() == 1) {
+        if (CSimulator::GetInstance().GetSpace().GetEntitiesByType("light").size() == 1) {
             CAny maybeLight = CSimulator::GetInstance().GetSpace().GetEntitiesByType("light").begin()->second;
             auto light = any_cast<CLightEntity*>(maybeLight);
-            if(GetSpace().GetSimulationClock() > 500) {
-                light->MoveTo({2, 2, 0.1}, light->GetOrientation());
+            Real coordX = rand() % 6;
+            Real coordY = rand() % 6;
+            if(GetSpace().GetSimulationClock() % 5000 == 0 && GetSpace().GetSimulationClock() > 0) {
+
+                light->MoveTo({coordX-3, coordY-3, 0.1}, light->GetOrientation());
+
+
             }
-        }*/
+        }
 
 
         for (CCI_RangeAndBearingSensor::SPacket packet : packets) {
