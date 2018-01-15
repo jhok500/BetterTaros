@@ -9,7 +9,7 @@
 #include <argos3/core/utility/configuration/argos_configuration.h>
 /* 2D vector definition */
 #include <argos3/core/utility/math/vector2.h>
-//UploadBoyImport
+//UploadBoyOmegaFault
 
 /****************************************/
 
@@ -110,6 +110,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
                 while (getline(myRow, cell, ',')) {
                     switch (i) {
                         case 0:
+                            NumFault = stof(cell);
                             //BearingNoise = stof(cell);
                             //SimilarityThreshold = 0;
                             break;
@@ -136,6 +137,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
     //DetectDelay = 20;
 
 //shit loads
+    //std::cout << NumFault << std::endl;
     //std::cout << BearingNoise << ", " << YawCoordinateNoise << ", " << CoordinateNoise << ", " << RangeNoiseMultiplier << std::endl;
     IntCoord = new boost::circular_buffer<double>(2*2);
     TrueIntCoord = new boost::circular_buffer<double>(2*2);
@@ -208,6 +210,23 @@ void CFootBotDiffusion::FaultInject() {
     }
     FaultyIDs.push_back(ID);
     //std::cout << "Faulty Robot is " << ID << ": " << Faulty << std::endl;
+
+}
+
+/****************************************/
+
+void CFootBotDiffusion::FaultInjectOmega() {
+
+    Faulty = FaultType;
+    if (Faulty == 4 || Faulty == 5) {
+        if (Time % 2 == 0) {
+            MotorRand = 1;
+        }
+        else {
+            MotorRand = 2;
+        }
+    }
+    FaultyIDs.push_back(ID);
 
 }
 /****************************************/
@@ -915,11 +934,16 @@ void CFootBotDiffusion::ControlStep() {
     }
     // FAULT INJECTION
     //int prob = rand() % FaultProb;
-    int prob = 0;
-    if (prob > FaultProb - 2 && Faulty == 0 && !Doctor && FaultsInPlay < 0.5*RobotNumber) {
+    /*if (prob > FaultProb - 2 && Faulty == 0 && !Doctor && FaultsInPlay < 0.5*RobotNumber) {
         FaultsInPlay++;
         FaultStart = Time;
         FaultInject();
+    }*/
+    if (Time == 500) {
+
+        if (ID <= NumFault) {
+            FaultInjectOmega();
+        }
     }
     // BEHAVIOUR SWITCH
     if (Time > (BehaviourCount*5000)) {
@@ -933,7 +957,7 @@ void CFootBotDiffusion::ControlStep() {
 
     Dis2Beacons->push_back(DisToBeacon);
 
-    if (DisToBeacon < 0.8) {
+    if (DisToBeacon < 0.8 && Faulty == 0) {
         countyboy++;
     }
 
@@ -941,34 +965,54 @@ void CFootBotDiffusion::ControlStep() {
 
 
     if (countyboy > 0 && !FirstBoy) {
-
         FirstBoy = true;
         FirstTime = Time;
-        FirstAvDis2Beac = std::accumulate(Dis2Beacons->begin(), Dis2Beacons->end(), 0.0)/Dis2Beacons->size();
-        std::cout << FirstTime << " at " << FirstAvDis2Beac << std::endl;
     }
-    if (countyboy >= 5 && !HalfBoy) {
+
+    if (countyboy >= 0.5*((RobotNumber+99)- NumFault) && !HalfBoy) {
         HalfBoy = true;
         HalfTime = Time;
-        HalfAvDis2Beac = std::accumulate(Dis2Beacons->begin(), Dis2Beacons->end(), 0.0)/Dis2Beacons->size();
-        std::cout << FirstTime << " at " << HalfAvDis2Beac << std::endl;
+        std::cout << "HalfBoys" << std::endl;
     }
-    if (countyboy == 10 && !AllBoys) {
+    if (countyboy == (RobotNumber+99)- NumFault && !AllBoys) {
         AllBoys = true;
         AllTime = Time;
-        AllAvDis2Beac = std::accumulate(Dis2Beacons->begin(), Dis2Beacons->end(), 0.0)/Dis2Beacons->size();
-        std::cout << FirstTime << " at " << AllAvDis2Beac << std::endl;
+        std::cout << "AllBoys" << std::endl;
+    }
+    if (Time == 24388 && ID == 109) {
+        DistAtFirst = std::accumulate(Dis2Beacons->begin(), Dis2Beacons->end(), 0.0)/Dis2Beacons->size();
+        std::cout << DistAtFirst << std::endl;
+    }
+    if (Time == 25548 && ID == 109) {
+        DistAtHalf = std::accumulate(Dis2Beacons->begin(), Dis2Beacons->end(), 0.0)/Dis2Beacons->size();
+        std::cout << DistAtHalf << std::endl;
+    }
+    if (Time == 26909 && ID == 109) {
+        DistAtAll = std::accumulate(Dis2Beacons->begin(), Dis2Beacons->end(), 0.0)/Dis2Beacons->size();
+        std::cout << DistAtAll << std::endl;
+    }
 
+    if (Time > 270000 || AllBoys) {
         std::string folderName = std::to_string(foldernum-1);
         std::string seedFolder = std::to_string(CSimulator::GetInstance().GetRandomSeed());
         std::string slashyboi = "/";
         std::string path = folderName+slashyboi+seedFolder;
         mkdir(folderName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
         mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        if (!FirstBoy) {
+            FirstTime = Time;
+        }
+        if (!HalfBoy) {
+            HalfTime = Time;
+        }
+        if (!AllBoys) {
+            AllTime = Time;
+        }
         DataFile.open (folderName+"/"+seedFolder+"/Data.csv", std::ios_base::app);
-        DataFile << "FirstTime," << "FirstAvDist," << "HalfTime," << "HalfAvDist," << "AllTime," << "AllAvDist" << std::endl;
-        DataFile << FirstTime << "," << FirstAvDis2Beac << "," << HalfTime << "," << HalfAvDis2Beac << "," << AllTime << "," << AllAvDis2Beac << std::endl;
+        DataFile << "DistAtFirst," <<  "DistAtHalf," << "AllAvDist," << "FirstTime," << "HalfTime," << "AllTime" << std::endl;
+        DataFile <<  DistAtFirst << "," << DistAtHalf << "," << DistAtAll << "," << FirstTime << "," << HalfTime << "," << AllTime << std::endl;
         DataFile.close();
+        CSimulator::GetInstance().Terminate();
     }
 
 
@@ -1032,7 +1076,7 @@ void CFootBotDiffusion::ControlStep() {
                 FlockCoordY.push_back(controller.Y);
                 FlockHeadings.push_back(controller.Heading);
                 // DETECTION
-                if (!Doctor && Faulty == 0 && std::find(std::begin(Doctors), std::end(Doctors), controller.ID) == std::end(Doctors)) {
+                if (!FaultAnalysis && !Doctor && Faulty == 0 && std::find(std::begin(Doctors), std::end(Doctors), controller.ID) == std::end(Doctors)) {
                     // Begin monitoring robot when found to be faulty
                     if (UnderInvestigation == 0 && controller.Faulty != 0) {
                         UnderInvestigation = controller.ID;
@@ -1100,7 +1144,8 @@ void CFootBotDiffusion::ControlStep() {
                     }
                     else {
                         //std::cout << ID << " doesn't share with " << controller.ID << std::endl;
-                        MemoryBounce->push_back(0);}
+                        MemoryBounce->push_back(0);
+                    }
                 }
 
                 // DIAGNOSTIC ROUTINE
@@ -1590,6 +1635,7 @@ void CFootBotDiffusion::ControlStep() {
     // SET CONTROLLER VALUES
 
     m_pcWheels->SetLinearVelocity(LeftWheel + NoiseLeft, RightWheel + NoiseRight);
+
 
     /*if (BeginMOT) {
         std::cout << ID << " True! AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << std::endl;

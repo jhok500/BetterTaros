@@ -20,6 +20,36 @@ CVector2 cPosInternalA;
 LoggingLoopFunctions::LoggingLoopFunctions() :
 m_pcBox(NULL)
 {
+    /*if (countyboy > 0 && !FirstBoy) {
+        FirstBoy = true;
+        FirstTime = Time;
+        FirstAvDis2Beac = std::accumulate(Dis2Beacons->begin(), Dis2Beacons->end(), 0.0)/Dis2Beacons->size();
+        //std::cout << FirstTime << " at " << FirstAvDis2Beac << std::endl;
+    }
+    if (countyboy >= 5 && !HalfBoy) {
+        HalfBoy = true;
+        HalfTime = Time;
+        HalfAvDis2Beac = std::accumulate(Dis2Beacons->begin(), Dis2Beacons->end(), 0.0)/Dis2Beacons->size();
+        //std::cout << FirstTime << " at " << HalfAvDis2Beac << std::endl;
+    }
+    if (countyboy == 10 && !AllBoys) {
+        AllBoys = true;
+        AllTime = Time;
+        AllAvDis2Beac = std::accumulate(Dis2Beacons->begin(), Dis2Beacons->end(), 0.0)/Dis2Beacons->size();
+        //std::cout << FirstTime << " at " << AllAvDis2Beac << std::endl;
+
+        std::string folderName = std::to_string(foldernum-1);
+        std::string seedFolder = std::to_string(CSimulator::GetInstance().GetRandomSeed());
+        std::string slashyboi = "/";
+        std::string path = folderName+slashyboi+seedFolder;
+        mkdir(folderName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        DataFile.open (folderName+"/"+seedFolder+"/Data.csv", std::ios_base::app);
+        DataFile << "FirstTime," << "FirstAvDist," << "HalfTime," << "HalfAvDist," << "AllTime," << "AllAvDist" << std::endl;
+        DataFile << FirstTime << "," << FirstAvDis2Beac << "," << HalfTime << "," << HalfAvDis2Beac << "," << AllTime << "," << AllAvDis2Beac << std::endl;
+        DataFile.close();
+        CSimulator::GetInstance().Terminate();
+    }*/
 }
 
 /****************************************/

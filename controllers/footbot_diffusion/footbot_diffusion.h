@@ -62,15 +62,20 @@ boost::circular_buffer<double>* Dis2Beacons;
 bool FirstBoy = false;
 int FirstTime = 0;
 Real FirstAvDis2Beac = 0;
+Real DistAtFirst = 0;
 bool HalfBoy = false;
 int HalfTime = 0;
+Real DistAtHalf = 0;
 Real HalfAvDis2Beac = 0;
 bool AllBoys = false;
 int AllTime = 0;
 Real AllAvDis2Beac = 0;
+Real DistAtAll = 0;
 int countyboy = 0;
-bool snappyboy = false;
+int NumFault = 100;
 
+int FaultType = 1;
+bool FaultAnalysis = true;
 
 bool StuckBounce = false;
 int MemoryBits = 18;
@@ -166,6 +171,7 @@ public:
    virtual Real HeadingCorrect();
    virtual void BehaviourUpdate ();
    virtual void FaultInject ();
+    virtual void FaultInjectOmega ();
     virtual void ObstacleAv ();
     virtual void Aggregation ();
     virtual void Flocking ();
