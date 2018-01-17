@@ -110,7 +110,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
                 while (getline(myRow, cell, ',')) {
                     switch (i) {
                         case 0:
-                            //NumFault = stof(cell);
+                            NumFault = stof(cell);
                             //BearingNoise = stof(cell);
                             //SimilarityThreshold = 0;
                             break;
@@ -803,16 +803,16 @@ void CFootBotDiffusion::FaultyReset() {
         }
         if (std::find(std::begin(PowerCycle), std::end(PowerCycle), Diagnosis) != std::end(PowerCycle)
             && std::find(std::begin(PowerCycle), std::end(PowerCycle), Faulty) != std::end(PowerCycle)) {
-            std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Cycle Power" << std::endl;
+            //std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Cycle Power" << std::endl;
         } else if (std::find(std::begin(MotorReplacement), std::end(MotorReplacement), Diagnosis) !=
                    std::end(MotorReplacement)
                    && std::find(std::begin(MotorReplacement), std::end(MotorReplacement), Faulty) !=
                       std::end(MotorReplacement)) {
-            std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Replace Motor" << std::endl;
+            //std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Replace Motor" << std::endl;
 
         } else if (std::find(std::begin(SensorReplacement), std::end(SensorReplacement), Diagnosis) != std::end(SensorReplacement)
                    && std::find(std::begin(SensorReplacement), std::end(SensorReplacement), Faulty) != std::end(SensorReplacement)) {
-            std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Replace Sensor" << std::endl;
+            //std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Replace Sensor" << std::endl;
         }
         Faulty = 0;
         Diagnosed = true;
@@ -934,18 +934,19 @@ void CFootBotDiffusion::ControlStep() {
         Diagnosis = 0;
     }
     // FAULT INJECTION
-    int prob = rand() % FaultProb;
+    /*int prob = rand() % FaultProb;
     if (prob > FaultProb - 2 && Faulty == 0 && !Doctor && FaultsInPlay < 0.5*RobotNumber) {
         FaultsInPlay++;
         FaultStart = Time;
         FaultInject();
         //std::cout << "Faults in play: " << FaultsInPlay << std::endl;
-    }
-    /*if (Time == 500) {
+    }*/
+    if (Time == 500) {
         if (ID <= NumFault) {
             FaultInjectOmega();
+            //FaultInject();
         }
-    }*/
+    }
     // BEHAVIOUR SWITCH
     if (Time > (BehaviourCount*5000)) {
         //BehaviourUpdate();
@@ -1061,7 +1062,7 @@ void CFootBotDiffusion::ControlStep() {
                     // Declare detected fault & assign doctor
                     if (std::accumulate(DetectBodge->begin(), DetectBodge->end(), 0.0) >= DetectDelay*DetectRatio && DetectBodge->size() == DetectBodge->capacity()
                             && FaultyFeatureVectors->size() == FaultyFeatureVectors->capacity()) {
-                        std::cout << "DETECTED" << std::endl;
+                        //std::cout << "DETECTED" << std::endl;
                         if (std::find(MemoryLogNew->begin(), MemoryLogNew->end(),-controller.Faulty) != MemoryLogNew->end()) {
                             Eligibility = true;
                         }
@@ -1071,7 +1072,7 @@ void CFootBotDiffusion::ControlStep() {
                         TimeStart = Time;
                         Doctor = true;
                         DoctorsOrder = UnderInvestigation;
-                        std::cout << "DR FOR " << DoctorsOrder << " IS " << ID << std::endl;
+                        //std::cout << "DR FOR " << DoctorsOrder << " IS " << ID << std::endl;
                         Doctors.push_back(ID);
                         Doctors.push_back(DoctorsOrder);
                         DetectTime.push_back(Time - controller.FaultStart);
@@ -1270,9 +1271,9 @@ void CFootBotDiffusion::ControlStep() {
             DetectBodge->clear();
             for (int i = 0; i < Doctors.size(); i++) {
                 if (Doctors.at(i) == ID) {
-                    std::cout << "ERASING: " << Doctors.at(i) << std::endl;
+                    //std::cout << "ERASING: " << Doctors.at(i) << std::endl;
                     Doctors.erase(Doctors.begin() + i);
-                    std::cout << " AND " << Doctors.at(i) << " FROM DETECTED IDS" << std::endl;
+                    //std::cout << " AND " << Doctors.at(i) << " FROM DETECTED IDS" << std::endl;
                     Doctors.erase(Doctors.begin() + i);
                 }
             }

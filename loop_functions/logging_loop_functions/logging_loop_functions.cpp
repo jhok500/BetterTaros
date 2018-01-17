@@ -131,7 +131,7 @@ void LoggingLoopFunctions::PreStep() {
             AddEntity(*m_pcBox);
         }*/
 
-        if (CSimulator::GetInstance().GetSpace().GetEntitiesByType("light").size() == 1) {
+        /*if (CSimulator::GetInstance().GetSpace().GetEntitiesByType("light").size() == 1) {
             CAny maybeLight = CSimulator::GetInstance().GetSpace().GetEntitiesByType("light").begin()->second;
             auto light = any_cast<CLightEntity*>(maybeLight);
             Real coordX = rand() % 6;
@@ -142,7 +142,7 @@ void LoggingLoopFunctions::PreStep() {
 
 
             }
-        }
+        }*/
 
 
         for (CCI_RangeAndBearingSensor::SPacket packet : packets) {
