@@ -1,0 +1,2 @@
+Options: 
+CMake: 3.8.2@/home/jhok500/clion-2016.1.2/bin/cmake/bin/cmake

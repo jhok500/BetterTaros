@@ -80,12 +80,13 @@ bool FaultAnalysis = false;
 bool SaveBounce = false;
 bool StuckBounce = false;
 int MemoryBits = 18;
-int ExperimentLength = 80000;
+int ExperimentLength = 36000;
+int faultCount = 0;
 int FaultsInPlay = 0;
 int PMFangle = 60;
 int MemoryIndex;
 bool SaveMemory = false;
-bool ImportMemory = true;
+bool ImportMemory = false;
 int FaultDelay = 10;
 int ConfirmDelay = 5;
 int ImmortalID;
@@ -108,8 +109,21 @@ Real ElligibleMOT = 0;
 int TrueTotal;
 Real Class = 0;
 int timeweight = 0;
+int DeadTotal = 0;
 
 
+
+Real MemoryCorrect = 0;
+Real MemoryIncorrectBodge = 0;
+Real MemoryIncorrect = 0;
+Real MemoryCorrectBodge = 0;
+Real MemoryFly = 0;
+Real MOTCorrect = 0;
+Real MOTIncorrect = 0;
+Real MOTIncorrectBodge = 0;
+Real MOTCorrectBodge = 0;
+Real MOTNull = 0;
+Real FaultMissed = 0;
 
 // SENSITIVITY ANALYSIS OBJECTS
 // CONST
@@ -183,6 +197,12 @@ public:
     virtual void ActiveMemory();
     virtual void DoctorReset();
     virtual void FaultyReset();
+
+    virtual void CSFTest();
+    virtual void CMFTestLeft();
+    virtual void CMFTestRight();
+    virtual void PMFTest();
+    virtual void PSFTest();
    virtual void Reset() {}
 
    /*
@@ -288,6 +308,8 @@ private:
     std::vector<Real> FlockBearing;
     boost::circular_buffer<int>* MemoryLogNew;
     boost::circular_buffer<int>* DetectBodge;
+    boost::circular_buffer<int>* ClassCheck;
+    boost::circular_buffer<int>* ClassConfirm;
     boost::circular_buffer<int>* FaultyFeatureVectors;
     boost::circular_buffer<int>* MemoryBounce;
     boost::circular_buffer<Real>* YawHolder;
@@ -299,6 +321,7 @@ private:
     std::vector<Real> OmegaTurnX;
     std::vector<Real> OmegaTurnY;
     int Faulty = 0;
+    bool FaultResolved = false;
     int MotorRand = 0;
     Real RValue;
     bool hang = false;
@@ -307,7 +330,7 @@ private:
     int DoctorsOrder = 0;
     std::vector<double> Ambulance;
     int Discrep = 0;
-    int UnderInvestigation;
+    int UnderInvestigation = 0;
     std::vector<int> Snapshot;
     std::vector<Real> Candidates;
     int TimeID = 0;
@@ -322,8 +345,11 @@ private:
 
     bool Eligibility = false;
     int Diagnosis = 0;
+    int DiagnosisConfirm = 0;
+    bool DiagnosisConfirmed = false;
+    bool DiagnosisFailed = false;
+    bool Dead = false;
     bool Diagnosed = false;
-    bool FailReset = false;
     bool BeginMOT = false;
     bool Stop = false;
     bool ping = false;
@@ -336,6 +362,7 @@ private:
     bool TestStraight = false;
     bool ConfirmStraight = false;
     bool TestLap = false;
+    bool partialsensorboy = false;
     Real LapStart;
     bool LapCount = false;
     int LapDelay = 0;
@@ -349,6 +376,7 @@ private:
     std::vector<int> LapWait;
     Real DiagCandidate = 0;
     bool ActiBounce = false;
+    int resetCounter = 0;
 
     // CLASSIFICATION
 
@@ -366,6 +394,7 @@ private:
     Real Rcorr;
     Real FaultTime;
     bool ClassifierSuccess = true;
+    bool ClassifyCheck = false;
 
 
 

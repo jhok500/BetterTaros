@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="Project"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="footbot_diffusion">
+				<Option output="/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/libfootbot_diffusion.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 footbot_diffusion"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="footbot_diffusion/fast">
+				<Option output="/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/libfootbot_diffusion.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/usr/include/c++/4.7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/4.7/."/>
+					<Add directory="/usr/include/c++/4.7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/4.7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 footbot_diffusion/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/jhok500/argos3-examples/controllers/footbot_diffusion/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_diffusion/footbot_diffusion.cpp">
+			<Option target="footbot_diffusion"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_diffusion/footbot_diffusion.h">
+			<Option target="footbot_diffusion"/>
+		</Unit>
+		<Unit filename="/home/jhok500/argos3-examples/controllers/footbot_diffusion/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
