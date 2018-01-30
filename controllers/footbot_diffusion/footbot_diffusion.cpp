@@ -972,7 +972,7 @@ void CFootBotDiffusion::ControlStep() {
         FaultStart = Time;
         FaultInject();
     }
-    if (Faulty) {
+    if (Faulty && !Dead) {
         faultCount++;
     }
 
@@ -1370,21 +1370,39 @@ void CFootBotDiffusion::ControlStep() {
                         //std::cout << "checking diagnosis " << DiagnosisConfirm << std::endl;
                         if (DiagnosisConfirm == 4 && !controller.ConfirmLM) {
                             TestLM = true;
+                            MotorWait.push_back(1);
+                            if (std::accumulate(MotorWait.begin(), MotorWait.end(), 0.0) > FaultDelay) {
+                                DiagnosisFailed = true;
+                            }
                         }
                         else if (DiagnosisConfirm == 4 && controller.ConfirmLM && !controller.ConfirmRM) {
                             TestRM = true;
+                            MotorWait.push_back(1);
+                            if (std::accumulate(MotorWait.begin(), MotorWait.end(), 0.0) > FaultDelay) {
+                                DiagnosisFailed = true;
+                            }
                         }
                         else if (DiagnosisConfirm == 4 && controller.ConfirmLM && controller.ConfirmRM) {
                             DiagnosisConfirmed = true;
                         }
                         if (DiagnosisConfirm == 5 && !controller.ConfirmStraight) {
                             TestStraight = true;
+                            StraightWait.push_back(1);
+                            if (std::accumulate(StraightWait.begin(), StraightWait.end(), 0.0) > FaultDelay) {
+                                DiagnosisFailed = true;
+                            }
                         }
                         else if (DiagnosisConfirm == 5 && controller.ConfirmStraight) {
                             DiagnosisConfirmed = true;
                         }
-                        if (DiagnosisConfirm == 6 && !controller.ConfirmLap) {
+                        if (DiagnosisConfirm == 6 && controller.ConfirmLap != 0) {
                             TestLap = true;
+                            if (controller.ConfirmLap == -1) {
+                                LapWait.push_back(1);
+                            }
+                            if (std::accumulate(LapWait.begin(), LapWait.end(), 0.0) > FaultDelay) {
+                                DiagnosisFailed = true;
+                            }
                         }
                         else if (DiagnosisConfirm == 6 && controller.ConfirmLap) {
                             DiagnosisConfirmed = true;
@@ -1713,6 +1731,8 @@ void CFootBotDiffusion::ControlStep() {
         // Calculate Angular Velocity Externally
         YawHolder->push_back(atan2(((TrueIntCoord->at(0)) - (TrueIntCoord->at(2))),
                                    ((TrueIntCoord->at(1)) - (TrueIntCoord->at(3)))));
+
+
         if (YawHolder->size() == YawHolder->capacity()) {
             Real IntYawCoord = (YawHolder->front() - YawHolder->back() + (YawCoordNoise(generator)*ARGOS_PI/180));
             // Set External Angular Velocity Feature
@@ -1906,7 +1926,7 @@ void CFootBotDiffusion::ControlStep() {
 
 
 
-    
+
 
 
 
