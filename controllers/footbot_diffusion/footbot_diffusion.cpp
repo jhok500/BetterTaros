@@ -122,6 +122,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
                             break;
                         case 3:
                             //RangeNoiseMultiplier = stof(cell);
+                            doublecheck = stof(cell);
                             break;
 
                     }
@@ -139,8 +140,8 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
     FaultyFeatureVectors = new boost::circular_buffer<int>(((6*2))*DetectDelay);
     MemoryLogNew = new boost::circular_buffer<int>(((DetectDelay*6*2)+2)*MemoryBits);
     DetectBodge = new boost::circular_buffer<int>(DetectDelay);
-    ClassCheck = new boost::circular_buffer<int>(10);
-    ClassConfirm = new boost::circular_buffer<int>(10);
+    ClassCheck = new boost::circular_buffer<int>(doublecheck);
+    ClassConfirm = new boost::circular_buffer<int>(doublecheck);
     MemoryBounce = new boost::circular_buffer<int>(1000);
     Dis2Beacons = new boost::circular_buffer<double> (10);
 
@@ -185,7 +186,7 @@ void CFootBotDiffusion::BehaviourUpdate() {
     srand(Time);
     BehaviourCount++;
     Behaviour = rand() % 3+1;
-    //std::cout << "Behaviour is " << Behaviour << std::endl;
+    std::cout << "Behaviour is " << Behaviour << std::endl;
 }
 /****************************************/
 
@@ -201,7 +202,7 @@ void CFootBotDiffusion::FaultInject() {
         }
     }
     FaultyIDs.push_back(ID);
-    //std::cout << "Faulty Robot is " << ID << ": " << Faulty << std::endl;
+    std::cout << "Faulty Robot is " << ID << ": " << Faulty << std::endl;
 
 }
 
@@ -521,7 +522,7 @@ void CFootBotDiffusion::DrPursue() {
             Right = 0;
             if (!ClassifierSuccess) {
                 BeginMOT = true;
-                //std::cout << " Begin MOT " << std::endl;
+                std::cout << " Begin MOT " << std::endl;
             }
         }
         else {
@@ -602,7 +603,7 @@ void CFootBotDiffusion::Classify() {
             }
         }
         if (Candidates.size() == 0) {
-            //std::cout << "Run Diagnostics" << std::endl;
+            std::cout << "Run Diagnostics" << std::endl;
             ClassifierSuccess = false;
         }
         else {
@@ -612,7 +613,7 @@ void CFootBotDiffusion::Classify() {
                     Diagnosis = -Candidates.at(i+1);
                     ClassifyCheck = true;
                     TimeID = -Candidates.at(i+2);
-                    //std::cout << "Classified as " << Diagnosis << " with " << Candidates.at(i)*100 << "% similarity" << std::endl;
+                    std::cout << "Classified as " << Diagnosis << " with " << Candidates.at(i)*100 << "% similarity" << std::endl;
                     break;
                 }
             }
@@ -746,33 +747,34 @@ void CFootBotDiffusion::FaultyReset() {
     ClassifyCheck = false;
     ClassCheck->clear();
     ClassConfirm->clear();
-        for (int i = 0; i < FaultyIDs.size(); i++) {
-            if (FaultyIDs.at(i) == ID) {
-                FaultyIDs.erase(FaultyIDs.begin() + i);
-            }
+    for (int i = 0; i < FaultyIDs.size(); i++) {
+        if (FaultyIDs.at(i) == ID) {
+            FaultyIDs.erase(FaultyIDs.begin() + i);
         }
-        for (int i = 0; i < Doctors.size(); i++) {
-            if (Doctors.at(i) == ID) {
-                Doctors.erase(Doctors.begin() + i);
-                Doctors.erase(Doctors.begin() + i - 1);
-            }
+    }
+    for (int i = 0; i < Doctors.size(); i++) {
+        if (Doctors.at(i) == ID) {
+            Doctors.erase(Doctors.begin() + i);
+            Doctors.erase(Doctors.begin() + i - 1);
         }
-        if (Diagnosis == 1 || Diagnosis == 2) {
-            //std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Cycle Power" << std::endl;
-        } else if (Diagnosis == 4 || Diagnosis == 5) {
-            //std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Replace Motor" << std::endl;
+    }
+    if (Diagnosis == 1 || Diagnosis == 2) {
+        std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Cycle Power" << std::endl;
+    } else if (Diagnosis == 4 || Diagnosis == 5) {
+        std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Replace Motor" << std::endl;
 
-        } else if (Diagnosis == 3 || Diagnosis == 6) {
-            //std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Replace Sensor" << std::endl;
-        }
+    } else if (Diagnosis == 3 || Diagnosis == 6) {
+        std::cout << "Fault = " << Faulty << ", Diagnosis = " << Diagnosis << ", Recovery: Replace Sensor" << std::endl;
+    }
 
     if (FaultResolved) {
         Faulty = 0;
         FaultResolved = false;
     }
     else {
-        //std::cout << "Fault not resolved" << std::endl;
+        std::cout << "Fault not resolved" << std::endl;
         FaultMissed++;
+        EscapedFaults.push_back(Faulty);
     }
     Diagnosed = true;
 
@@ -962,7 +964,7 @@ void CFootBotDiffusion::ControlStep() {
     FlockCoordY.clear();
     OmegaCoordX.clear();
     OmegaCoordY.clear();
-    if (Faulty == 0 && Diagnosed && !Doctor && !Dead) {
+    if (Diagnosed && !Doctor && !Dead) {
         Diagnosed = false;
         Diagnosis = 0;
     }
@@ -999,7 +1001,7 @@ void CFootBotDiffusion::ControlStep() {
     }
 
     if (Faulty != 0 && FaultResolved && std::find(std::begin(Doctors), std::end(Doctors),ID) == Doctors.end()) {
-        //std::cout << "Faulty Robot was resolved anyway" << std::endl;
+        std::cout << "Faulty Robot was resolved anyway" << std::endl;
         MemoryCorrect++;
         MemoryFly++;
         Diagnosis = Faulty;
@@ -1034,7 +1036,9 @@ void CFootBotDiffusion::ControlStep() {
                 }
                 // Normal Sensor Function
                 if (abs(bearing) > PMFangle && Faulty == 6 && !FaultResolved || Faulty == 3 && !FaultResolved || power && !FaultResolved|| hang && !FaultResolved) {
-                    partialsensorboy = false;
+                    if (TestLap && controller.DoctorsOrder == ID && Faulty == 6) {
+                        partialsensorboy = false;
+                    }
                 }
                 else {
                     Alone++;
@@ -1050,7 +1054,6 @@ void CFootBotDiffusion::ControlStep() {
                     if (TestLap && controller.DoctorsOrder == ID) {
                         partialsensorboy = true;
                     }
-                    else {partialsensorboy = false;}
                 }
                 // Gather Behaviour Data
                 FlockCoordX.push_back(controller.X);
@@ -1059,8 +1062,9 @@ void CFootBotDiffusion::ControlStep() {
                 // DETECTION
                 if (controller.ID == DoctorsOrder && Doctor) {
                     DoctorBounce++;
+                    std::cout << ID << " eyes on " << controller.ID << std::endl;
                 }
-                if (!FaultAnalysis && !Doctor && Faulty == 0 && std::find(std::begin(Doctors), std::end(Doctors), controller.ID) == std::end(Doctors)) {
+                if (!Doctor && Faulty == 0 && std::find(std::begin(Doctors), std::end(Doctors), controller.ID) == std::end(Doctors)) {
                     // Begin monitoring robot when found to be faulty
                     if (UnderInvestigation == 0 && controller.Faulty != 0) {
                         UnderInvestigation = controller.ID;
@@ -1094,7 +1098,7 @@ void CFootBotDiffusion::ControlStep() {
                     // Declare detected fault & assign doctor
                     if (std::accumulate(DetectBodge->begin(), DetectBodge->end(), 0.0) >= DetectDelay*DetectRatio && DetectBodge->size() == DetectBodge->capacity()
                             && FaultyFeatureVectors->size() == FaultyFeatureVectors->capacity()) {
-                        //std::cout << "DETECTED" << std::endl;
+                        std::cout << "DETECTED" << std::endl;
                         if (std::find(MemoryLogNew->begin(), MemoryLogNew->end(),-controller.Faulty) != MemoryLogNew->end()) {
                             Eligibility = true;
                         }
@@ -1104,7 +1108,7 @@ void CFootBotDiffusion::ControlStep() {
                         TimeStart = Time;
                         Doctor = true;
                         DoctorsOrder = UnderInvestigation;
-                        //std::cout << "DR FOR " << DoctorsOrder << " IS " << ID << std::endl;
+                        std::cout << "DR FOR " << DoctorsOrder << " IS " << ID << std::endl;
                         Doctors.push_back(ID);
                         Doctors.push_back(DoctorsOrder);
                         DetectTime.push_back(Time - controller.FaultStart);
@@ -1139,14 +1143,17 @@ void CFootBotDiffusion::ControlStep() {
                          && std::find(std::begin(MotorReplacement), std::end(MotorReplacement), Faulty) != std::end(MotorReplacement) && !FaultResolved ||
                         std::find(std::begin(SensorReplacement), std::end(SensorReplacement), controller.Diagnosis) != std::end(SensorReplacement)
                          && std::find(std::begin(SensorReplacement), std::end(SensorReplacement), Faulty) != std::end(SensorReplacement) && !FaultResolved) {
-                        //std::cout << "Fault Resolved" << std::endl;
+                        std::cout << "Fault Resolved" << std::endl;
                         FaultResolved = true;
+                        ConfirmLap = 0;
+                        LapWait.clear();
                     }
                     if (controller.DiagnosisConfirmed && Diagnosis == controller.Diagnosis) {
                         DiagnosisConfirmed = true;
+                        std::cout << "aligning diagnoses" << controller.Diagnosis << ":" << Diagnosis << std::endl;
                     }
                     if (controller.DiagnosisFailed) {
-                        //std::cout << "Fault unresolvable. Killing robot" << std::endl;
+                        std::cout << "Fault unresolvable. Killing robot" << std::endl;
                         Dead = true;
                         DeadTotal++;
                     }
@@ -1165,47 +1172,47 @@ void CFootBotDiffusion::ControlStep() {
                     }
 
                     if (controller.BeginMOT && !Diagnosed) {
-                        //std::cout << "Faulty Beginning Diagnosis" << std::endl;
+                        std::cout << "Faulty Beginning Diagnosis" << std::endl;
                         BeginMOT = true;
                         if (controller.ping && Faulty != 2 || controller.ping && Faulty == 2 && FaultResolved) {
                             ping = true;
-                            //std::cout << "Faulty Pinging" << std::endl;
+                            std::cout << "Faulty Pinging" << std::endl;
                         }
                         if (controller.Stop && Faulty != 1 || controller.Stop && Faulty == 1 && FaultResolved) {
                             Stop = true;
-                            //std::cout << "Faulty Stopping" << std::endl;
+                            std::cout << "Faulty Stopping" << std::endl;
                         }
                         if (controller.RABCompare) {
                             RABCompare = true;
-                            //std::cout << "Testing Sensor " << std::endl;
+                            std::cout << "Testing Sensor " << std::endl;
                         }
                         if (controller.TestLM && !ConfirmLM) {
                             TestLM = true;
-                            //std::cout << "Testing LM" << std::endl;
+                            std::cout << "Testing LM" << std::endl;
                         }
                         if (controller.TestRM && !ConfirmRM) {
                             TestRM = true;
-                            //std::cout << "Testing RM" << std::endl;
+                            std::cout << "Testing RM" << std::endl;
                         }
                         if (controller.TestStraight && !ConfirmStraight) {
                             TestStraight = true;
-                            //std::cout << "Testing Straight" << std::endl;
+                            std::cout << "Testing Straight" << std::endl;
                         }
                         if (controller.TestLap  && ConfirmLap != 1){
                             TestLap = true;
-                            //std::cout << "Testing Lap" << std::endl;
+                            std::cout << "Testing Lap" << std::endl;
                         }
 
                         if (controller.DiagnosisConfirm != 0 && DiagnosisConfirm == 0) {
                             DiagnosisConfirm = controller.DiagnosisConfirm;
-                            //std::cout << "confirming diagnosis: " << DiagnosisConfirm << std::endl;
+                            std::cout << "confirming diagnosis: " << DiagnosisConfirm << std::endl;
                         }
                     }
                 }
                 // Doctor
 
                 if (Doctor && controller.ID == DoctorsOrder && controller.BeginMOT && !controller.Diagnosed && DiagnosisConfirm == 0) {
-                    //std::cout << "Doctor Beginning Diagnosis" << std::endl;
+                    std::cout << "Doctor Beginning Diagnosis" << std::endl;
                     if (!controller.ping) {
                         ping = true;
 
@@ -1323,18 +1330,21 @@ void CFootBotDiffusion::ControlStep() {
                         Discrep = 0;
                         ClassCheck->push_back(1);
                         ClassConfirm->push_back(0);
+                        std::cout << "nah " << std::accumulate(ClassCheck->begin(), ClassCheck->end(), 0.0) << std::endl;
                     } else {
                         ClassCheck->push_back(0);
                         ClassConfirm->push_back(1);
+                        std::cout << "yeh " << std::accumulate(ClassConfirm->begin(), ClassConfirm->end(), 0.0) << std::endl;
                     }
                     if (std::accumulate(ClassCheck->begin(), ClassCheck->end(), 0.0) == ClassCheck->capacity()) {
                         if (!controller.FaultResolved) {
                             MemoryIncorrect++;
-                            //std::cout << "MEMINCORRECT" << std::endl;
+                            std::cout << "MEMINCORRECT" << std::endl;
                         }
                         else {
                             MemoryCorrectBodge++;
-                            //std::cout << "MEMCORRECTBODGE" << std::endl;
+                            std::cout << "MEMCORRECTBODGE" << std::endl;
+                            ClassBodgeFaults.push_back(controller.Faulty);
                         }
                         ClassifierSuccess = false;
                         Diagnosis = 0;
@@ -1347,11 +1357,11 @@ void CFootBotDiffusion::ControlStep() {
                     else if (std::accumulate(ClassConfirm->begin(), ClassConfirm->end(), 0.0) == ClassConfirm->capacity()) {
                         if (controller.FaultResolved) {
                             MemoryCorrect++;
-                            //std::cout << "MEMCORRECT" << std::endl;
+                            std::cout << "MEMCORRECT" << std::endl;
                         }
                         else {
                             MemoryIncorrectBodge++;
-                            //std::cout << "MEMINCORRECTBODGE" << std::endl;
+                            std::cout << "MEMINCORRECTBODGE" << std::endl;
                         }
                         DiagnosisConfirmed = true;
                         Diagnosed = true;
@@ -1367,7 +1377,7 @@ void CFootBotDiffusion::ControlStep() {
                     DiagnosisConfirm = Diagnosis;
                     if (Diagnosis > 3) {
 
-                        //std::cout << "checking diagnosis " << DiagnosisConfirm << std::endl;
+                        std::cout << "checking diagnosis " << DiagnosisConfirm << std::endl;
                         if (DiagnosisConfirm == 4 && !controller.ConfirmLM) {
                             TestLM = true;
                             MotorWait.push_back(1);
@@ -1395,7 +1405,7 @@ void CFootBotDiffusion::ControlStep() {
                         else if (DiagnosisConfirm == 5 && controller.ConfirmStraight) {
                             DiagnosisConfirmed = true;
                         }
-                        if (DiagnosisConfirm == 6 && controller.ConfirmLap != 0) {
+                        if (DiagnosisConfirm == 6 && controller.ConfirmLap != 1) {
                             TestLap = true;
                             if (controller.ConfirmLap == -1) {
                                 LapWait.push_back(1);
@@ -1404,8 +1414,9 @@ void CFootBotDiffusion::ControlStep() {
                                 DiagnosisFailed = true;
                             }
                         }
-                        else if (DiagnosisConfirm == 6 && controller.ConfirmLap) {
+                        else if (DiagnosisConfirm == 6 && controller.ConfirmLap == 1) {
                             DiagnosisConfirmed = true;
+                            std::cout << "CONFIRMED PSF" << std::endl;
                         }
                     }
                     else {
@@ -1414,6 +1425,7 @@ void CFootBotDiffusion::ControlStep() {
                 }
 
                 if (Doctor && !Diagnosed && controller.ID == DoctorsOrder && controller.DiagnosisConfirmed && BeginMOT) {
+                    std::cout << "checkity check" << std::endl;
                     if (std::find(std::begin(PowerCycle), std::end(PowerCycle), Diagnosis) != std::end(PowerCycle)
                         && std::find(std::begin(PowerCycle), std::end(PowerCycle), controller.Faulty) != std::end(PowerCycle) && controller.FaultResolved ||
                         std::find(std::begin(MotorReplacement), std::end(MotorReplacement), Diagnosis) != std::end(MotorReplacement)
@@ -1421,11 +1433,11 @@ void CFootBotDiffusion::ControlStep() {
                         std::find(std::begin(SensorReplacement), std::end(SensorReplacement), Diagnosis) != std::end(SensorReplacement)
                         && std::find(std::begin(SensorReplacement), std::end(SensorReplacement), controller.Faulty) != std::end(SensorReplacement) && controller.FaultResolved) {
                         MOTCorrect++;
-                        //std::cout << "MOTCORRECT" << std::endl;
+                        std::cout << "MOTCORRECT" << std::endl;
                     }
                     else {
                         MOTIncorrectBodge++;
-                        //std::cout << "MOTINCORRECTBODGE" << std::endl;
+                        std::cout << "MOTINCORRECTBODGE" << std::endl;
                     }
                     Diagnosed = true;
                 }
@@ -1436,22 +1448,29 @@ void CFootBotDiffusion::ControlStep() {
                     }
                 }
             }
-            if (DiagnosisFailed && Time - resetCounter > 0 || ConfirmLap == 1) {
+            if (DiagnosisFailed && Time - resetCounter > 0 || ConfirmLap == 1 && controller.ID == DoctorsOrder && !DiagnosisConfirmed && !controller.DiagnosisConfirmed
+                    || ConfirmLap == 1 && ID == controller.DoctorsOrder && !DiagnosisConfirmed && !controller.DiagnosisConfirmed) {
                 if (ConfirmLap == 1) {
-                    //std::cout << "there was no fault" << std::endl;
+                    std::cout << ID << ": " << DoctorsOrder << " there was no fault" << std::endl;
                     for (int i = 0; i < Doctors.size(); i++) {
-                        if (Doctors.at(i) == ID || Doctors.at(i) == controller.ID && ID == controller.DoctorsOrder) {
+                        std::cout << Doctors.at(i) << " /" << Doctors.size() << std::endl;
+                        if (Doctors.at(i) == ID && Doctor) {
                             Doctors.erase(Doctors.begin() + i);
+                            Doctors.erase(Doctors.begin() + i);
+                        }
+                        else if (Doctors.at(i) == ID && Faulty != 0) {
+                            Doctors.erase(Doctors.begin() + i);
+                            Doctors.erase(Doctors.begin() + i - 1);
                         }
                     }
                 }
                 if (DiagnosisFailed) {
                     if (controller.FaultResolved) {
                         MOTCorrectBodge++;
-                        //std::cout << "MOTCORRECTBODGE" << std::endl;
+                        std::cout << "MOTCORRECTBODGE" << std::endl;
                     } else {
                         MOTIncorrect++;
-                        //std::cout << "MOTINCORRECT" << std::endl;
+                        std::cout << "MOTINCORRECT" << std::endl;
                     }
                 }
                 resetCounter = 0;
@@ -1523,17 +1542,37 @@ void CFootBotDiffusion::ControlStep() {
 
 
     }
-    if (DoctorBounce == 0 && Doctor && Time > DetectEDTime.back() || ConfirmLap == 1) {
-        DoctorsOrder = 0;
+    if (DoctorBounce == 0 && Doctor && Time > TimeStart || ConfirmLap == 1 && !DiagnosisConfirmed && Doctor) {
+
+
+        if (DoctorBounce == 0 && Doctor) {
+            for (int i = 0; i < Doctors.size(); i++) {
+                if (Doctors.at(i) == ID) {
+                    std::cout << Doctors.at(i) << "sacks off " << std::endl;
+                    Doctors.erase(Doctors.begin() + i);
+                    std::cout << Doctors.at(i) << std::endl;
+                    Doctors.erase(Doctors.begin() + i);
+                }
+            }
+        }
+        else if (ConfirmLap == 1) {
+            for (int i = 0; i < Doctors.size(); i++) {
+                if (Doctor && Doctors.at(i) == ID) {
+                    std::cout << "erasing from doctors: " << Doctors.at(i) << std::endl;
+                    Doctors.erase(Doctors.begin() + i);
+                    Doctors.erase(Doctors.begin() + i);
+                }
+                else if (Faulty != 0 && Doctors.at(i) == ID) {
+                    std::cout << "erasing from doctors: " << Doctors.at(i) << std::endl;
+                    Doctors.erase(Doctors.begin() + i);
+                    Doctors.erase(Doctors.begin() + i - 1);
+                }
+            }
+        }
         Doctor = false;
         UnderInvestigation = 0;
         DetectBodge->clear();
-        for (int i = 0; i < Doctors.size(); i++) {
-            if (Doctors.at(i) == ID) {
-                Doctors.erase(Doctors.begin() + i);
-                Doctors.erase(Doctors.begin() + i);
-            }
-        }
+        DoctorsOrder = 0;
         Candidates.clear();
         TimeID = 0;
         TimeStart = 0;
@@ -1808,6 +1847,7 @@ void CFootBotDiffusion::ControlStep() {
             //std::cout << ID << " PSF TEST " << std::endl;
             PSFTest();
         }
+
         if (DiagnosisConfirm == 4) {
             //std::cout << ID << " CMF TEST CONFIRM " << std::endl;
             if (TestLM) {
@@ -1822,7 +1862,7 @@ void CFootBotDiffusion::ControlStep() {
             PMFTest();
         }
         if (DiagnosisConfirm == 6) {
-            //std::cout << ID << " PSF TEST CONFIRM " << std::endl;
+            std::cout << ID << " PSF TEST CONFIRM " << std::endl;
             PSFTest();
         }
     }
@@ -1850,6 +1890,9 @@ void CFootBotDiffusion::ControlStep() {
     if (!Dead) {
 
         m_pcWheels->SetLinearVelocity(LeftWheel + NoiseLeft, RightWheel + NoiseRight);
+    }
+    else {
+        m_pcWheels->SetLinearVelocity(0, 0);
     }
 
     // FAULTY RESET
@@ -1893,9 +1936,8 @@ void CFootBotDiffusion::ControlStep() {
     if (Time == ExperimentLength && !StuckBounce) {
         //std::cout << "END" << std::endl;
         StuckBounce = true;
-        Real ClassPer = MemoryCorrect/Total;
-        Real ClassFailPer = MemoryIncorrect/(MemoryCorrect+MemoryIncorrect+MemoryCorrectBodge);
-        Real ClassBodgePer = MemoryCorrectBodge/(MemoryCorrect+MemoryIncorrect+MemoryCorrectBodge);
+        Real ClassPer = MemoryCorrect/TrueTotal;
+        Real ClassFailPer = MemoryIncorrect/(MemoryCorrect+MemoryIncorrect+MemoryCorrectBodge + MemoryIncorrectBodge);
 
 
         Real AvCor = 0;
@@ -1917,8 +1959,8 @@ void CFootBotDiffusion::ControlStep() {
         if (DetectTime.size()>0) {
             AvDetTime = std::accumulate(DetectTime.begin(), DetectTime.end(), 0.0)/DetectTime.size();
         }
-        DataFile << "Abs Total, " << "Elligible Total, "  << "MemoryPer, "  << "ClassFail, " << "Total Failure, " << "Avg Correlation, "  << "Avg Corr Fail, "  << "Avg Detection Time " <<  std::endl;
-        DataFile  << TrueTotal << ", " << Total << ", " << ClassPer << ", "  << ClassFailPer << ", " << DeadTotal << ", " << AvCor << ", " << FailCor << ", " << AvDetTime <<  std::endl;
+        DataFile << "Abs Total, "   << "MemoryPer, "  << "ClassFail, " << "Total Failure, " << "Avg Correlation, "  << "Avg Detection Time " <<  std::endl;
+        DataFile  << TrueTotal << ", " << ClassPer << ", "  << ClassFailPer << ", " << DeadTotal << ", " << AvCor << ", "  << AvDetTime <<  std::endl;
         DataFile.close();
 
         CSimulator::GetInstance().Terminate();

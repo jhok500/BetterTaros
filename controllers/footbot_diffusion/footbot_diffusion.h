@@ -57,6 +57,8 @@ std::vector<int> MOTTimes;
 std::vector<Real> CorrCoeff;
 std::vector<Real> FailCoeff;
 std::vector<int> MemorySize;
+std::vector<int> EscapedFaults;
+std::vector<int> ClassBodgeFaults;
 
 boost::circular_buffer<double>* Dis2Beacons;
 
@@ -132,11 +134,11 @@ int FaultProb = 10000;
 
 // VAR
 //ArenaSide = RobotNumber/5
-Real SimilarityThreshold = 0.56;
+Real SimilarityThreshold = 0.624;
 Real ActiveThreshold = (0.5*(1-SimilarityThreshold)) + SimilarityThreshold;
 int DetectDelay = 30;
 Real DetectRatio = 0.88;
-
+int doublecheck = 20;
 Real BearingNoise = 0.123;
 Real YawCoordinateNoise = 0.00035;
 Real CoordinateNoise = 0.000025;
@@ -310,6 +312,7 @@ private:
     boost::circular_buffer<int>* DetectBodge;
     boost::circular_buffer<int>* ClassCheck;
     boost::circular_buffer<int>* ClassConfirm;
+
     boost::circular_buffer<int>* FaultyFeatureVectors;
     boost::circular_buffer<int>* MemoryBounce;
     boost::circular_buffer<Real>* YawHolder;
@@ -377,6 +380,7 @@ private:
     Real DiagCandidate = 0;
     bool ActiBounce = false;
     int resetCounter = 0;
+    bool BackToNorm = false;
 
     // CLASSIFICATION
 
