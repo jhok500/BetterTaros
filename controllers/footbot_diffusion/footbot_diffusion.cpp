@@ -133,7 +133,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
 
         myfile.close();
     }
-    //std::cout << "Parameters: " << SimilarityThreshold << ", " << DetectDelay << ", " << DetectRatio << std::endl;
+    //std::cout << "Parameters: " << SimilarityThreshold << ", " << DetectDelay << ", " << DetectRatio << ", " << doublecheck << std::endl;
     IntCoord = new boost::circular_buffer<double>(2*2);
     TrueIntCoord = new boost::circular_buffer<double>(2*2);
     YawHolder = new boost::circular_buffer<double>(2);
@@ -1002,8 +1002,6 @@ void CFootBotDiffusion::ControlStep() {
 
     if (Faulty != 0 && FaultResolved && std::find(std::begin(Doctors), std::end(Doctors),ID) == Doctors.end()) {
         //std::cout << "Faulty Robot was resolved anyway" << std::endl;
-        MemoryCorrect++;
-        MemoryFly++;
         Diagnosis = Faulty;
         Diagnosed = true;
         FaultyReset();
@@ -1452,6 +1450,7 @@ void CFootBotDiffusion::ControlStep() {
                     || ConfirmLap == 1 && ID == controller.DoctorsOrder && !DiagnosisConfirmed && !controller.DiagnosisConfirmed) {
                 if (ConfirmLap == 1) {
                     //std::cout << ID << ": " << DoctorsOrder << " there was no fault" << std::endl;
+                    TrueTotal++;
                     for (int i = 0; i < Doctors.size(); i++) {
                         //std::cout << Doctors.at(i) << " /" << Doctors.size() << std::endl;
                         if (Doctors.at(i) == ID && Doctor) {
@@ -1928,7 +1927,7 @@ void CFootBotDiffusion::ControlStep() {
     }
 
     /*if (Time % 10000 == 0 && ID == 100) {
-        std::cout << MemoryCorrect << ", " << MemoryIncorrectBodge << ", " << MemoryIncorrect << ", " << MemoryCorrectBodge << ", " << MemoryFly << std::endl;
+        std::cout << MemoryCorrect << ", " << MemoryIncorrectBodge << ", " << MemoryIncorrect << ", " << MemoryCorrectBodge << std::endl;
         std::cout << MOTCorrect << ", " << MOTIncorrectBodge << ", " << MOTIncorrect << ", " << MOTCorrectBodge << ", " << MOTNull << std::endl;
         std::cout << Total << ", " << TrueTotal << std::endl;
         std::cout << "Faults in play: " << FaultsInPlay << std::endl;
