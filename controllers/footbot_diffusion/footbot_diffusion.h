@@ -88,7 +88,7 @@ int FaultsInPlay = 0;
 int PMFangle = 60;
 int MemoryIndex;
 bool SaveMemory = false;
-bool ImportMemory = false;
+bool ImportMemory = true;
 int FaultDelay = 10;
 int ConfirmDelay = 5;
 int ImmortalID;
@@ -134,11 +134,11 @@ int FaultProb = 10000;
 
 // VAR
 //ArenaSide = RobotNumber/5
-Real SimilarityThreshold = 0.624;
+Real SimilarityThreshold = 0.56;
 Real ActiveThreshold = (0.5*(1-SimilarityThreshold)) + SimilarityThreshold;
-int DetectDelay = 30;
-Real DetectRatio = 0.88;
-int doublecheck = 20;
+int DetectDelay = 29;
+Real DetectRatio = 0.86;
+int doublecheck = 29;
 Real BearingNoise = 0.123;
 Real YawCoordinateNoise = 0.00035;
 Real CoordinateNoise = 0.000025;

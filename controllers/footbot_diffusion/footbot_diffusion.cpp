@@ -109,20 +109,21 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
                 while (getline(myRow, cell, ',')) {
                     switch (i) {
                         case 0:
+                            //NumFault = stof(cell);
                             //BearingNoise = stof(cell);
-                            SimilarityThreshold = stof(cell);
+                            //SimilarityThreshold = stof(cell);
                             break;
                         case 1:
                             //YawCoordinateNoise = stof(cell);
-                            DetectDelay = stof(cell);
+                            //DetectDelay = stof(cell);
                             break;
                         case 2:
                             //CoordinateNoise = stof(cell);
-                            DetectRatio = stof(cell);
+                            //DetectRatio = stof(cell);
                             break;
                         case 3:
                             //RangeNoiseMultiplier = stof(cell);
-                            doublecheck = stof(cell);
+                            //doublecheck = stof(cell);
                             break;
 
                     }
@@ -133,6 +134,7 @@ void CFootBotDiffusion::Init(TConfigurationNode& t_node) {
 
         myfile.close();
     }
+
     //std::cout << "Parameters: " << SimilarityThreshold << ", " << DetectDelay << ", " << DetectRatio << ", " << doublecheck << std::endl;
     IntCoord = new boost::circular_buffer<double>(2*2);
     TrueIntCoord = new boost::circular_buffer<double>(2*2);
@@ -185,12 +187,14 @@ Real CFootBotDiffusion::HeadingCorrect() {
 void CFootBotDiffusion::BehaviourUpdate() {
     srand(Time);
     BehaviourCount++;
-    Behaviour = rand() % 3+1;
+    //Behaviour = rand() % 3+1;
+    Behaviour = 4;
     //std::cout << "Behaviour is " << Behaviour << std::endl;
 }
 /****************************************/
 
 void CFootBotDiffusion::FaultInject() {
+    TrueTotal++;
     srand(Time);
     Faulty = rand() % 6 + 1;
     if (Faulty == 4 || Faulty == 5) {
@@ -202,7 +206,7 @@ void CFootBotDiffusion::FaultInject() {
         }
     }
     FaultyIDs.push_back(ID);
-    //std::cout << "Faulty Robot is " << ID << ": " << Faulty << std::endl;
+    std::cout << "Faulty Robot is " << ID << ": " << Faulty << std::endl;
 
 }
 
@@ -646,7 +650,6 @@ void CFootBotDiffusion::ActiveMemory() {
 void CFootBotDiffusion::DoctorReset() {
     DetectBodge->clear();
     //std::cout << "DETECT CLEARED" << std::endl;
-    TrueTotal++;
     if (Eligibility) {
         Total++;
     }
@@ -772,13 +775,13 @@ void CFootBotDiffusion::FaultyReset() {
         FaultResolved = false;
     }
     else {
-        //std::cout << "Fault not resolved" << std::endl;
+        std::cout << "Fault not resolved" << std::endl;
         FaultMissed++;
         EscapedFaults.push_back(Faulty);
     }
     Diagnosed = true;
 
-    FaultStart = 0;
+    //FaultStart = 0;
     RValue = 0;
 
 
@@ -969,13 +972,80 @@ void CFootBotDiffusion::ControlStep() {
         Diagnosis = 0;
     }
     // FAULT INJECTION
-    int prob = rand() % FaultProb;
+    /*int prob = rand() % FaultProb;
     if (prob > FaultProb - 2 && Faulty == 0 && !Dead && !Doctor && FaultsInPlay < 0.5*RobotNumber) {
         FaultStart = Time;
         FaultInject();
     }
     if (Faulty && !Dead) {
         faultCount++;
+    }*/
+    if (Time == 500) {
+
+        if (ID <= NumFault) {
+            FaultInjectOmega();
+        }
+    }
+    Real DisToBeacon = sqrt(pow(X-3,2)+pow(Y-3,2));
+
+    Dis2Beacons->push_back(DisToBeacon);
+
+    if (DisToBeacon < 0.8 && Faulty == 0) {
+        countyboy++;
+    }
+
+
+
+
+    if (countyboy > 0 && !FirstBoy) {
+        FirstBoy = true;
+        FirstTime = Time;
+    }
+
+    if (countyboy >= 0.5*((RobotNumber+99)- NumFault) && !HalfBoy) {
+        HalfBoy = true;
+        HalfTime = Time;
+        std::cout << "HalfBoys" << std::endl;
+    }
+    if (countyboy == (RobotNumber+99)- NumFault && !AllBoys) {
+        AllBoys = true;
+        AllTime = Time;
+        std::cout << "AllBoys" << std::endl;
+    }
+    if (Time == 24388 && ID == 109) {
+        DistAtFirst = std::accumulate(Dis2Beacons->begin(), Dis2Beacons->end(), 0.0)/Dis2Beacons->size();
+        std::cout << DistAtFirst << std::endl;
+    }
+    if (Time == 25548 && ID == 109) {
+        DistAtHalf = std::accumulate(Dis2Beacons->begin(), Dis2Beacons->end(), 0.0)/Dis2Beacons->size();
+        std::cout << DistAtHalf << std::endl;
+    }
+    if (Time == 26909 && ID == 109) {
+        DistAtAll = std::accumulate(Dis2Beacons->begin(), Dis2Beacons->end(), 0.0)/Dis2Beacons->size();
+        std::cout << DistAtAll << std::endl;
+    }
+
+    if (Time > 270000 && ID == 109|| AllBoys && ID == 109) {
+        std::string folderName = std::to_string(foldernum-1);
+        std::string seedFolder = std::to_string(CSimulator::GetInstance().GetRandomSeed());
+        std::string slashyboi = "/";
+        std::string path = folderName+slashyboi+seedFolder;
+        mkdir(folderName.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        mkdir(path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+        if (!FirstBoy) {
+            FirstTime = Time;
+        }
+        if (!HalfBoy) {
+            HalfTime = Time;
+        }
+        if (!AllBoys) {
+            AllTime = Time;
+        }
+        DataFile.open (folderName+"/"+seedFolder+"/Data.csv", std::ios_base::app);
+        DataFile << "DistAtFirst," <<  "DistAtHalf," << "AllAvDist," << "FirstTime," << "HalfTime," << "AllTime" << std::endl;
+        DataFile <<  DistAtFirst << "," << DistAtHalf << "," << DistAtAll << "," << FirstTime << "," << HalfTime << "," << AllTime << std::endl;
+        DataFile.close();
+        CSimulator::GetInstance().Terminate();
     }
 
     // BEHAVIOUR SWITCH
@@ -1001,11 +1071,13 @@ void CFootBotDiffusion::ControlStep() {
     }
 
     if (Faulty != 0 && FaultResolved && std::find(std::begin(Doctors), std::end(Doctors),ID) == Doctors.end()) {
-        //std::cout << "Faulty Robot was resolved anyway" << std::endl;
+        std::cout << "Faulty Robot was resolved anyway" << std::endl;
         Diagnosis = Faulty;
         Diagnosed = true;
         FaultyReset();
     }
+
+
 
 
     Ambulance.clear();
@@ -1096,7 +1168,7 @@ void CFootBotDiffusion::ControlStep() {
                     // Declare detected fault & assign doctor
                     if (std::accumulate(DetectBodge->begin(), DetectBodge->end(), 0.0) >= DetectDelay*DetectRatio && DetectBodge->size() == DetectBodge->capacity()
                             && FaultyFeatureVectors->size() == FaultyFeatureVectors->capacity()) {
-                        //std::cout << "DETECTED" << std::endl;
+                        std::cout << controller.ID << " DETECTED BY " << ID << " AFTER " << Time - controller.FaultStart << std::endl;
                         if (std::find(MemoryLogNew->begin(), MemoryLogNew->end(),-controller.Faulty) != MemoryLogNew->end()) {
                             Eligibility = true;
                         }
@@ -1106,6 +1178,7 @@ void CFootBotDiffusion::ControlStep() {
                         TimeStart = Time;
                         Doctor = true;
                         DoctorsOrder = UnderInvestigation;
+
                         //std::cout << "DR FOR " << DoctorsOrder << " IS " << ID << std::endl;
                         Doctors.push_back(ID);
                         Doctors.push_back(DoctorsOrder);
@@ -1141,7 +1214,7 @@ void CFootBotDiffusion::ControlStep() {
                          && std::find(std::begin(MotorReplacement), std::end(MotorReplacement), Faulty) != std::end(MotorReplacement) && !FaultResolved ||
                         std::find(std::begin(SensorReplacement), std::end(SensorReplacement), controller.Diagnosis) != std::end(SensorReplacement)
                          && std::find(std::begin(SensorReplacement), std::end(SensorReplacement), Faulty) != std::end(SensorReplacement) && !FaultResolved) {
-                        //std::cout << "Fault Resolved" << std::endl;
+                        std::cout << "Fault Resolved" << std::endl;
                         FaultResolved = true;
                         ConfirmLap = 0;
                         LapWait.clear();
@@ -1151,7 +1224,7 @@ void CFootBotDiffusion::ControlStep() {
                         //std::cout << "aligning diagnoses" << controller.Diagnosis << ":" << Diagnosis << std::endl;
                     }
                     if (controller.DiagnosisFailed) {
-                        //std::cout << "Fault unresolvable. Killing robot" << std::endl;
+                        std::cout << "Fault unresolvable. Killing robot" << std::endl;
                         Dead = true;
                         DeadTotal++;
                     }
@@ -1213,7 +1286,11 @@ void CFootBotDiffusion::ControlStep() {
                     //std::cout << "Doctor Beginning Diagnosis" << std::endl;
                     if (!controller.ping) {
                         ping = true;
-
+                        //std::cout << " pinging faulty" << std::endl;
+                    }
+                    if (!ping && controller.ping) {
+                        ping = true;
+                        //std::cout << "faulty was already pung" << std::endl;
                     }
                     if (ping && !controller.ping) {
                         PingWait.push_back(1);
@@ -1234,6 +1311,7 @@ void CFootBotDiffusion::ControlStep() {
                     }
                     else if (Stop && controller.Stop && controller.ping) {
                         RABCompare = true;
+                        //std::cout << " CSFing faulty" << std::endl;
                         Stop = false;
                     }
                     if (RABCompare && !controller.RABConfirm) {
@@ -1449,8 +1527,7 @@ void CFootBotDiffusion::ControlStep() {
             if (DiagnosisFailed && Time - resetCounter > 0 || ConfirmLap == 1 && controller.ID == DoctorsOrder && !DiagnosisConfirmed && !controller.DiagnosisConfirmed
                     || ConfirmLap == 1 && ID == controller.DoctorsOrder && !DiagnosisConfirmed && !controller.DiagnosisConfirmed) {
                 if (ConfirmLap == 1) {
-                    //std::cout << ID << ": " << DoctorsOrder << " there was no fault" << std::endl;
-                    TrueTotal++;
+                    std::cout << ID << ": " << DoctorsOrder << " there was no fault" << std::endl;
                     for (int i = 0; i < Doctors.size(); i++) {
                         //std::cout << Doctors.at(i) << " /" << Doctors.size() << std::endl;
                         if (Doctors.at(i) == ID && Doctor) {
@@ -1932,7 +2009,7 @@ void CFootBotDiffusion::ControlStep() {
         std::cout << Total << ", " << TrueTotal << std::endl;
         std::cout << "Faults in play: " << FaultsInPlay << std::endl;
     }*/
-    if (Time == ExperimentLength && !StuckBounce) {
+   /* if (Time == ExperimentLength && !StuckBounce) {
         //std::cout << "END" << std::endl;
         StuckBounce = true;
         Real ClassPer = MemoryCorrect/TrueTotal;
@@ -1961,9 +2038,18 @@ void CFootBotDiffusion::ControlStep() {
         DataFile << "Abs Total, "   << "MemoryPer, "  << "ClassFail, " << "Total Failure, " << "Avg Correlation, "  << "Avg Detection Time " <<  std::endl;
         DataFile  << TrueTotal << ", " << ClassPer << ", "  << ClassFailPer << ", " << DeadTotal << ", " << AvCor << ", "  << AvDetTime <<  std::endl;
         DataFile.close();
+        std::cout << "AVERAGE TIMES " << AvDetTime << std::endl;
+        if (SaveMemory) {
+            MemorySave.open (folderName+"/"+seedFolder+"/MemoryLog.csv", std::ios_base::app);
+            for (int j = 0; j < MemoryLogNew->size(); j++) {
+                MemorySave << MemoryLogNew->at(j) << ",";
+            }
+            MemorySave << 8 << std::endl;
+            MemorySave.close();
+        }
 
         CSimulator::GetInstance().Terminate();
-    }
+    }*/
 
 
 
