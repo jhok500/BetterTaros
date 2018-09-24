@@ -46,7 +46,7 @@
  * With this statement, you save typing argos:: every time.
  */
 using namespace argos;
-
+std::vector<int> FeatureVector;
 
 std::vector<int> FaultyIDs;
 std::vector<int> Doctors;
@@ -77,12 +77,22 @@ Real DistAtAll = 0;
 int countyboy = 0;
 int NumFault = 104;
 
+
+
+Real DecH1 = 0;
+Real DecH2 = 0;
+Real DecH3 = 0;
+Real DecH4 = 0;
+Real DecH5 = 0;
+Real DecH6 = 0;
+Real DecCor = 0;
+
 int FaultType = 2;
 bool FaultAnalysis = false;
 bool SaveBounce = false;
 bool StuckBounce = false;
 int MemoryBits = 18;
-int ExperimentLength = 36000;
+int ExperimentLength = 3000;
 int faultCount = 0;
 int FaultsInPlay = 0;
 int PMFangle = 60;
@@ -92,7 +102,7 @@ bool ImportMemory = true;
 int FaultDelay = 10;
 int ConfirmDelay = 5;
 int ImmortalID;
-int Behaviour = 0;
+int Behaviour = 1;
 int BehaviourCount = 0;
 int Omega = 3;
 Real OmegaGap = 35;
@@ -192,19 +202,10 @@ public:
     virtual void ObstacleAv ();
     virtual void Aggregation ();
     virtual void Flocking ();
-    virtual void OmegaAlg ();
-    virtual void DrPursue();
-    virtual void TakeSnapshot();
-    virtual void Classify();
-    virtual void ActiveMemory();
-    virtual void DoctorReset();
-    virtual void FaultyReset();
 
-    virtual void CSFTest();
-    virtual void CMFTestLeft();
-    virtual void CMFTestRight();
-    virtual void PMFTest();
-    virtual void PSFTest();
+    virtual void Decision();
+
+
    virtual void Reset() {}
 
    /*
@@ -399,6 +400,17 @@ private:
     Real FaultTime;
     bool ClassifierSuccess = true;
     bool ClassifyCheck = false;
+
+    bool F1p = false;
+    bool F2p = false;
+    bool F3p = false;
+    bool F4p = false;
+    bool F5p = false;
+    bool F1e = false;
+    bool F2e = false;
+    bool F3e = false;
+    bool F4e = false;
+    bool F5e = false;
 
 
 
